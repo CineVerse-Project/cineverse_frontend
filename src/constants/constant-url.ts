@@ -14,3 +14,6 @@ export const ROUTES = {
     FORGOT_PASSWORD: "/forgot-password",
     RESET_PASSWORD: "/reset-password",
 };
+
+
+export const API_SERVER_URL = process.env.REACT_APP_API_URL;
