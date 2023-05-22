@@ -6,6 +6,7 @@ import HomeUser from "./components/common/HomeUser";
 import LayoutAdmin from "./components/common/LayoutAdmin";
 import RevenueReport from "./components/pages/admin/report/RevenueReport";
 import TicketReport from "./components/pages/admin/report/TicketReport";
+import ScheduleList from "./components/pages/admin/schedule/ScheduleList";
 
 function App() {
     // Nếu muốn Hiển thị User Side thì sửa thành false, Admin Side thì true
@@ -21,11 +22,12 @@ function App() {
                             <Route index element={<Dashboard />} />
                             <Route path="revenue" element={<RevenueReport />} />
                             <Route path="ticket" element={<TicketReport />} />
+                            <Route path="schedule" element={<ScheduleList />} />
                             <Route path="*" element={<Dashboard />} />
                         </Route>
                     )}
 
-                    {/* Admin Side */}
+                    {/* User Side */}
                     {!isAdmin && (
                         <Route path="/" element={<HomeUser />}>
                             {/* <Route index element={<Dashboard />} />
