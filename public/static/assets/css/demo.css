@@ -105,3 +105,87 @@
   text-align: center;
   margin-top: 1rem;
 }
+
+.btn-red{
+  font-family: 'Roboto',sans-serif;
+  padding:10px 30px;
+  border:none;
+  color:white;
+  background-color: #c23b1a;
+  cursor: pointer;
+}
+
+.btn-red:hover{
+  font-family: 'Roboto',sans-serif;
+  padding:10px 30px;
+  border:none;
+  color:white;
+  background-color: #64200f;
+  cursor: pointer;
+}
+
+.text-shadow{
+  color:#c23b1a;
+  text-shadow: 0px 1px #5e0000;
+}
+
+.input-red{
+  width: 100%;
+  padding-left:10px;
+  border:1px solid gray;
+  outline: gray;
+  height: 36px;
+}
+
+.input-red:focus{
+  width: 100%;
+  border: 1px solid #c23b1a;
+  padding-left:10px;
+  height: 36px;
+}
+
+/* .input-red:active{
+  width: 100%;
+  padding:6px 12px;
+  border: 1px solid #c23b1a
+} */
+
+.icons{
+  position: relative;
+}
+
+.input-icons {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.icons i{
+  position: absolute;
+
+  right: 0px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.input-field {
+  width: 100%;
+  padding: 10px;
+  text-align: center;
+}
+
+input[type="radio"]:checked{
+  background-color:#c23b1a;
+}
+
+.select-gender{
+  width: 100%;
+}
+
+.text-red{
+  color:#ec3608;
+}
+
+.activated{
+  background-color: #c23b1a;
+  color:white;
+}
