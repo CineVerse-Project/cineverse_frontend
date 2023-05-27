@@ -1,37 +1,75 @@
 import React, { useState } from 'react'
 import bgImage from '../../../static/assets/img/backgrounds/form_image.jpg'
-import axios from 'axios'
 import { Link } from 'react-router-dom'
 
+import UserService from '../../../services/UserService'
+import { useNavigate } from 'react-router-dom'
+import { ToastContainer} from 'react-toastify'
+import Notification from '../../common/ToastNotification'
+
+/**
+ * @author HuuNQ
+ * 26-05-2023
+ * @method SignIn
+ * @returns none
+ */
 const SignIn = () => {
     const [login, setLogin] = useState({
         'username': '',
         'password': '',
     })
-
-    const loginForm = async (loginForm) => {
-        try{
-            const response = await axios.post('http://localhost:8080/api/v1/user/login',loginForm)
-            console.log(response);
-            localStorage.setItem('token',response.data.token);
-            setTimeout(()=>{
-
-            },2000)
-            return response.data;
-        }catch(error){
-            console.log(error)
-        }
-     
-    }
+    const [errorField,setErrorField] = useState({});
+    const [showPassword,setShowPassword] = useState(false);
+    const navigate = useNavigate();
     const handleSubmit = (e) => {
         e.preventDefault();
         const headers = new Headers();
-        headers.append("Content-type","application/json");
-        loginForm(login);
+        headers.append("Content-type", "application/json");
+     
+        UserService.userSignIn(login).then((data) => {
+            if(localStorage.getItem("access_token")==null){
+                localStorage.setItem('access_token',data.token)
+            }
+            if(localStorage.getItem("username")==null){
+                localStorage.setItem('username',data.username)
+            }
+            if(localStorage.getItem("roles")==null){
+                localStorage.setItem('roles',data.roles)
+            }
+            
+            Notification.toastSuccessNotification("Đăng nhập thành công");
+            
+            setTimeout(()=>{navigate(`/user/${login.username}`)},2000)
+            
+        })
+        .catch(
+            (err)=>{
+               if(err.response.status === 401){
+                Notification.toastWarningNotification("Tài khoản chưa chính xác!");
+               }else{
+                let error = err?.response?.data?.username || err?.response?.data?.password
+                Notification.toastErrorNotification(error);
+               }
+               
+            });
+
     }
 
     return (
-        <div className="container-fluid" style={{ backgroundImage: `url(${bgImage})`,backgroundPosition:'center',backgroundRepeat:'no-repeat' }}>
+        <div>
+        <ToastContainer />
+        <div className="container-fluid" style={{ backgroundImage: `url(${bgImage})`, backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }}>
+           
+            {/* { <div style={{
+                backgroundColor: 'rgba(0,0,0,0.6)',
+                height: 100 + 'vh',
+                position: 'absolute',
+                left: 0, right: 0, top: 0, bottom: 0, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', zIndex: '9000'
+            }}>
+                <p className="spinner-border text-danger" role="status"></p>
+                <p className="text-gray-800 fw-semibold text-danger mt-0" >Đang xử lý...</p>
+            </div>} */}
+
             <div className="row" style={{ height: 100 + 'vh' }}>
                 <div className="col-xl-12 col-md-9 col-sm-6 mx-auto d-flex justify-contentcenter align-items-center">
                     <div className="border mx-auto " style={{ borderRadius: '20% 20% / 8% 8%', width: 600 + 'px', backgroundColor: 'rgb(255, 255, 255, 0.9)', boxShadow: '0px 2px 20px 10px rgb(47, 63, 93)' }}>
@@ -90,7 +128,7 @@ const SignIn = () => {
                 </div>
             </div>
         </div>
-        
+        </div>
     );
 }
 

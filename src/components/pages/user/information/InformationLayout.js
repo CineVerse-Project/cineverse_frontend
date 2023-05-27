@@ -1,5 +1,12 @@
 import { Link, Outlet } from "react-router-dom"
 
+
+/**
+ * @author HuuNQ
+ * 26-05-2023
+ * @method InformationLayout
+ * @returns none
+ */
 const InformationLayout = () => {
     return (
         <div>

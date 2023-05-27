@@ -1,7 +1,14 @@
 import axios from "axios";
 
-const AxiosInterceptor = axios.create();
-
+export const AxiosInterceptor = axios.create(
+    {baseUrl: 'http://localhost:8080/api/v1'}
+);
+/**
+ * @author HuuNQ
+ * 26-05-2023
+ * @method 
+ * @returns none
+ */
 AxiosInterceptor.interceptors.request.use(
     (config)=>{
         const access_token = localStorage.getItem('token');

@@ -1,20 +1,42 @@
 import React,{useState} from "react"
 import bgImage from '../../../static/assets/img/backgrounds/form_image.jpg';
 import { Link } from "react-router-dom";
-import axios from "axios";
-
+import {useFormik } from "formik";
+import * as Yup from "yup"
+import UserService from "../../../services/UserService";
+import Notification from "../../common/ToastNotification";
+import { ToastContainer } from "react-toastify";
+/**
+ * @author HuuNQ
+ * 26-05-2023
+ * @method ForgotPassword
+ * @returns none
+ */
 const ForgotPassword = () => {
-
-    const [username,setUsername] = useState(
-        ''
-    );
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        const response = await axios.post('http://localhost:8080/api/v1/forgot-password',{username:username});
-        console.log(response.data);
-        return response;
-    }
+    const formik = useFormik({
+        initialValues:{
+            email:'',
+        },
+        validationSchema: Yup.object({
+            email: Yup.string().required("Email không được bỏ trống!").email("Email chưa hợp lệ!")
+        }),
+        onSubmit : (e,{resetForm}) => {
+            
+            UserService.forgotPassword(e)
+            .then((data) => {
+                console.log(data);
+                Notification.toastSuccessNotification(data);
+                
+            })
+            .catch(
+                (error) => {
+                    console.log(error);
+                Notification.toastErrorNotification(error?.response?.data);
+                
+            })
+            resetForm();
+        }
+    })
 
     return (
         <div className="container-fluid" style={{ backgroundImage: `url(${bgImage})`,backgroundPosition:'center',backgroundRepeat:'no-repeat' }}>

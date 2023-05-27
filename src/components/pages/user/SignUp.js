@@ -1,6 +1,18 @@
 import React, { useState } from "react";
 import bgImage from '../../../static/assets/img/backgrounds/form_image.jpg';
+import { useFormik } from "formik";
+import * as Yup from 'yup'
+import UserService from "../../../services/UserService";
+import Notification from "../../common/ToastNotification";
+import { ToastContainer } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
+/**
+ * @author HuuNQ
+ * 26-05-2023
+ * @method SignUp
+ * @returns none
+ */
 const SignUp = () => {
     const [signUpRequest, setSignUpRequest] = useState({
         'fullName': '',
@@ -11,12 +23,58 @@ const SignUp = () => {
         'phoneNumber': '',
         'address': ''
     });
-
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        console.log(signUpRequest);
-    }
+    const navigate = useNavigate();
+    const [showPassword,setShowPassword] = useState(false)
+    const formik = useFormik({
+        initialValues: {
+            fullName: '',
+            birthday: '',
+            gender: '',
+            username: '',
+            password: '',
+            phoneNumber: '',
+            address: ''
+        },
+        validationSchema: Yup.object({
+            fullName: Yup.string()
+                .required("Họ tên không được bỏ trống!")
+                .min(3, "Họ tên phải có ít nhất 3 ký tự!")
+                .max(50, "Họ tên quá dài!")
+                // .matches("/[^0-9~!@#$%^&*()_+=-/?><,.`]*$/", "Họ tên chỉ được chứa các ký tự chữ!")
+                ,
+            birthday: Yup.date()
+                .required("Ngày sinh không được bỏ trống")
+                // .matches('/^(?=\d)(?:(?:31(?!.(?:0?[2469]|11))|(?:30|29)(?!.0?2)|29(?=.0?2.(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00)))(?:\x20|$))|(?:2[0-8]|1\d|0?[1-9]))([-./])(?:1[012]|0?[1-9])\1(?:1[6-9]|[2-9]\d)?\d\d(?:(?=\x20\d)\x20|$))?(((0?[1-9]|1[012])(:[0-5]\d){0,2}(\x20[AP]M))|([01]\d|2[0-3])(:[0-5]\d){1,2})?$/', "Ngày này không tồn tại")
+                 //.matches('/^(0?[1-9]|[12][0-9]|3[01])[\/](0?[1-9]|1[012])[\/\-]\d{4}$/', "Không dúng định dạng ngày tháng năm!")
+               ,
+            gender: Yup.string()
+                .oneOf(["true", "false"], "Vui lòng điền đúng thông tin giới tính")
+                .required("Giới tính không được bỏ trống!"),
+            username: Yup.string().email("Email không hợp lệ!")
+                .required("Email không được bỏ trống!"),
+            password: Yup.string()
+                .min(6, "Mật khẩu phải có ít nhất 6 ký tự")
+                .max(50, "Mật khẩu quá dài!")
+                .matches(/^[a-zA-Z0-9!@#$%^&*(),.?:{}|<></>]*$/, 'Mật khẩu không được chứa khoảng trắng!')
+                // .matches("[A-Z]*", 'Mật khẩu phải chứa ít nhất 1 ký tự hoa!')
+                // .matches('[0-9]*', 'Mật khẩu phải chứa ít nhất 1 ký tự số!')
+                // .matches('/[]]*/', 'Mật khẩu phải chứa ít nhất 1 ký tự đặc biệt!')
+                .required('Mật khẩu không được bỏ trống'),
+            phoneNumber: Yup.string()
+                .matches(/^((09)|(07)|(08)|(05)|(03))\d{8}$/, "Số điện thoại không hợp lệ!").required("Số điện thoại không được bỏ trống!"),
+            address: Yup.string(),
+        }),
+        onSubmit: (e) =>{
+            UserService.signUp(e)
+                .then((data) => {
+                    navigate("/sign-in")
+                    Notification.toastSuccessNotification("Dang ky thanh cong!")
+                })
+                .catch((error) => {
+                    Notification.toastErrorNotification(error.response.data);
+                })
+        }
+    })
 
 
     return (
@@ -57,8 +115,8 @@ const SignUp = () => {
                                     <div className="mb-2">
                                         <label htmlFor="password" className="form-label"><strong className="" >Mật khẩu</strong></label>
                                         <div className="icons">
-                                            <input type="password" className="input-red input-with-icon" placeholder="Nhập mật khẩu" id="password" name='password' value={signUpRequest.password} onChange={(e) => setSignUpRequest({ ...signUpRequest, password: e.target.value })} />
-                                            <i className="fas fa-eye-slash icon" id="show_hide_password-icon" style={{ cursor: 'pointer', padding: '12px 12px' }}></i>
+                                            <input type={showPassword ? "text":"password" } className="input-red input-with-icon" placeholder="Nhập mật khẩu" id="password" name='password' value={formik.password} onChange={formik.handleChange} />
+                                            <i className={showPassword ? "fas fa-eye-slash icon":"fas fa-eye icon"} id="show_hide_password-icon" style={{ cursor: 'pointer', padding: '12px 12px' }} onClick={()=>setShowPassword(!showPassword)}></i>
                                         </div>
                                     </div>
                                     <div className="mb-2">

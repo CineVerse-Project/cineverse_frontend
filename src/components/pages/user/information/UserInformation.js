@@ -1,5 +1,47 @@
-const UserInformation = () => {
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import UserService from "../../../../services/UserService";
+import Notification from "../../../common/ToastNotification";
 
+/**
+ * @author HuuNQ
+ * 26-05-2023
+ * @method UserInformation
+ * @returns none
+ */
+const UserInformation = () => {
+    const [updateUser,setUpdateUser] = useState({
+        'customerId':'',
+        'email':'',
+        'fullName':'',
+        'phoneNumber':'',
+        'gender':'',
+        'address':'',
+        'birthday':''
+    })
+    const navigate = useNavigate();
+    const {username} = useParams();
+    const token = localStorage.getItem("access_token") ? localStorage.getItem("access_token") : null
+    const loadUserByUsername = (username,token) => {
+       UserService.findUserByUsername(username,token)
+        .then((data)=>{
+            setUpdateUser(data)
+            Notification.toastSuccessNotification("Thao tác thành công!")
+        })
+        .catch((error)=>{
+            console.log(error);
+            if(error?.response?.status === 403){
+                localStorage.removeItem("access_token")
+                localStorage.removeItem("username")
+                localStorage.removeItem("roles")
+                navigate("/sign-in")
+                Notification.toastWarningNotification("Vui lòng đăng nhập!")
+            }
+        })
+    }
+    useEffect(()=>{
+        loadUserByUsername(username,token);
+    },[])
     return (
         <div>
             <div className="mx-auto mt-4" >
@@ -7,28 +49,28 @@ const UserInformation = () => {
                 <div className="row">
                     <div className="col-6">
                         <div className="form-group">
-                            <label htmlFor="" className="form-label">Họ tên</label>
-                            <input type="text" name="" id="" className="form-control" value="Nguyễn Văn A" disabled />
+                            <label htmlFor="" className="form-label mt-3 mb-1">Họ tên</label>
+                            <input type="text" name="" id="" className="form-control" value={updateUser.fullName} disabled />
                         </div>
                         <div className="form-group">
-                            <label htmlFor="" className="form-label">Giới tính</label>
-                            <input type="text" name="" id="" className="form-control" value="Nam" disabled />
+                            <label htmlFor="" className="form-label mt-3 mb-1">Giới tính</label>
+                            <input type="text" name="" id="" className="form-control" value={updateUser.gender ? 'Nam': 'Nữ'} disabled />
                         </div>
                         <div className="form-group">
-                            <label htmlFor="" className="form-label">Ngày sinh</label>
-                            <input type="text" name="" id="" className="form-control" value="01-01-2000" disabled />
+                            <label htmlFor="" className="form-label mt-3 mb-1">Ngày sinh</label>
+                            <input type="text" name="" id="" className="form-control" value={updateUser.birthday} disabled />
                         </div>
                         <div className="form-group">
-                            <label htmlFor="" className="form-label">Số điện thoại</label>
-                            <input type="text" name="" id="" className="form-control" value="0123456789" disabled />
+                            <label htmlFor="" className="form-label mt-3 mb-1">Số điện thoại</label>
+                            <input type="text" name="" id="" className="form-control" value={updateUser.phoneNumber} disabled />
                         </div>
                         <div className="form-group">
-                            <label htmlFor="" className="form-label">Email</label>
-                            <input type="text" name="" id="" className="form-control" value="nguyenvana@gmail.com" disabled />
+                            <label htmlFor="" className="form-label mt-3 mb-1">Email</label>
+                            <input type="text" name="" id="" className="form-control" value={updateUser.email} disabled />
                         </div>
                         <div className="form-group">
-                            <label htmlFor="" className="form-label">Địa chỉ</label>
-                            <textarea name="" id="" className="form-control" disabled>TP. ĐÀ NẴNG
+                            <label htmlFor="" className="form-label mt-3 mb-1">Địa chỉ</label>
+                            <textarea name="" id="" className="form-control" disabled defaultValue={updateUser.address}>
                             </textarea>
                         </div>
 
