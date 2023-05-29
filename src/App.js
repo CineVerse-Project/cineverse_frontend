@@ -5,8 +5,14 @@ import Dashboard from "./components/pages/admin/Dashboard";
 import LayoutAdmin from "./components/common/LayoutAdmin";
 import LayoutUser from "./components/common/LayoutUser";
 import RevenueReport from "./components/pages/admin/report/RevenueReport";
-import TicketReport from "./components/pages/admin/report/TicketReport";
+
 import ScheduleList from "./components/pages/admin/schedule/ScheduleList";
+
+import ScheduleFormCreate from "./components/pages/admin/schedule/ScheduleFormCreate";
+import ScheduleFormUpdate from "./components/pages/admin/schedule/ScheduleFormUpdate";
+import TicketReport from "./components/pages/admin/report/TicketReport";
+import ScheduleTest from "./components/pages/admin/schedule/ScheduleTest";
+
 import ShowTimeScreen from "./components/pages/user/page/showtime/ShowTimeScreen";
 import ShowSeatScreen from "./components/pages/user/page/showtime/ShowSeatScreen";
 import Payment from "./components/pages/user/page/showtime/Payment";
@@ -38,35 +44,80 @@ function App() {
                     {isAdmin && (
                         <Route path="/" element={<LayoutAdmin />}>
                             <Route index element={<Dashboard />} />
-                            <Route path="revenue" element={<RevenueReport />} />
-                            <Route path="ticket" element={<TicketReport />} />
-                            <Route path="schedule" element={<ScheduleList />} />
+
+                            <Route
+                                path="revenue-report"
+                                element={<RevenueReport />}
+                            />
+                            <Route
+                                path="ticket-report"
+                                element={<TicketReport />}
+                            />
+                            <Route path="schedule">
+                                <Route path="" element={<ScheduleList />} />
+                                <Route
+                                    path="create"
+                                    element={<ScheduleFormCreate />}
+                                />
+                                <Route
+                                    path="update/:scheduleId/:roomId"
+                                    element={<ScheduleFormUpdate />}
+                                />
+                                <Route path="test" element={<ScheduleTest />} />
+                                <Route path="*" element={<ScheduleList />} />
+                            </Route>
                             <Route path="theater" element={<ManageTheater />} />
-                            <Route path="createTheater" element={<CreateTheater />} />
-                            <Route path="editTheater/:theaterId" element={<EditTheater />} />
-                            <Route path="editRoom/:roomId" element={<EditRoom />} />
+                            <Route
+                                path="createTheater"
+                                element={<CreateTheater />}
+                            />
+                            <Route
+                                path="editTheater/:theaterId"
+                                element={<EditTheater />}
+                            />
+                            <Route
+                                path="editRoom/:roomId"
+                                element={<EditRoom />}
+                            />
                             <Route path="movie" element={<ManageMovie />} />
                             <Route path="room" element={<ManageRoom />} />
                             <Route path="createRoom" element={<CreateRoom />} />
-                            <Route path="createMovie" element={<CreateMovie />} />
+                            <Route
+                                path="createMovie"
+                                element={<CreateMovie />}
+                            />
                             <Route path="*" element={<Dashboard />} />
                         </Route>
                     )}
 
                     {/* User Side */}
                     {!isAdmin && (
-
                         <Route path="/" element={<LayoutUser />}>
                             <Route index element={<Home />} />
-                            <Route path="showtime" element={<ShowTimeScreen />} />
-                            <Route path="seat" element={<ShowSeatScreen/>}/>
-                            <Route path="payment" element={<Payment/>}/>
-                            <Route path="checkout" element={<CheckOut/>}/>
-                            
-                            <Route path="movie-is-showing" element={<MovieListIsShowing />} />
-                            <Route path="movie-premiere-soon" element={<MovieListPremiereSoon />} />
-                            <Route path="movie-top-10-is-showing" element={<MovieListTop10IsShowing />} />
-                            <Route path="movie-detail/:movieId" element={<MovieDetail />} />
+                            <Route
+                                path="showtime"
+                                element={<ShowTimeScreen />}
+                            />
+                            <Route path="seat" element={<ShowSeatScreen />} />
+                            <Route path="payment" element={<Payment />} />
+                            <Route path="checkout" element={<CheckOut />} />
+
+                            <Route
+                                path="movie-is-showing"
+                                element={<MovieListIsShowing />}
+                            />
+                            <Route
+                                path="movie-premiere-soon"
+                                element={<MovieListPremiereSoon />}
+                            />
+                            <Route
+                                path="movie-top-10-is-showing"
+                                element={<MovieListTop10IsShowing />}
+                            />
+                            <Route
+                                path="movie-detail/:movieId"
+                                element={<MovieDetail />}
+                            />
                             <Route path="*" element={<Home />} />
                         </Route>
                     )}
