@@ -16,4 +16,4 @@ export const ROUTES = {
 };
 
 
-export const API_SERVER_URL = "http://localhost:8080/api/v1";
+export const API_SERVER_URL = "http://localhost:8080/api/v1/";
