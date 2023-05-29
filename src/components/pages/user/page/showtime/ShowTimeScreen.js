@@ -2,10 +2,15 @@ import React, { useEffect, useState } from "react";
 import { format } from "date-fns";
 import "./css/showTimeScreen.css";
 import ScheduleServices from "../../../../../services/ScheduleServices";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 function ShowTimeScreen() {
   const navigate = useNavigate();
+  const location  = useLocation();
+
+  const queryParam = new URLSearchParams(location.search);
+  const movieId = queryParam.get("movieId");
+  console.log(movieId)
   const currentDate = new Date();
   const [schedules, setSchedules] = useState([]);
   const [provinces, setProvinces] = useState([]);
@@ -57,7 +62,7 @@ function ShowTimeScreen() {
     fetchGetAllProvinceApi();
     const fetchGetScheduleByMovieApi = async () => {
       ScheduleServices.getAllScheduleByMovie(
-        "MV-0004",
+        movieId,
         showDayValue,
         provinceValue
       )

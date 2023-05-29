@@ -170,7 +170,7 @@ function ShowSeatScreen() {
   };
 
   return (
-    <div className="col-main">
+    <div className="col-main ps-3 text__size">
       <div className="booking-progress">
         <div className="page-title">
           <h1>Booking Online</h1>

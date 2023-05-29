@@ -152,7 +152,7 @@ export default function ManageMovie() {
 
     useEffect(() => {
         getAllMovieAPI();
-      })
+      },[])
 
     const [movies, setMovies] = useState([])
     //get all movie

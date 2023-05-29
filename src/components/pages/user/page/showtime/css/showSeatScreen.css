@@ -3,6 +3,10 @@
     padding: 0;
 }
 
+.text__size{
+    font-size: 18px;
+}
+
 .col1-layout .col-main {
     float: none;
     width: auto;

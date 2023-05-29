@@ -67,7 +67,6 @@ function App() {
                             <Route path="movie-premiere-soon" element={<MovieListPremiereSoon />} />
                             <Route path="movie-top-10-is-showing" element={<MovieListTop10IsShowing />} />
                             <Route path="movie-detail/:movieId" element={<MovieDetail />} />
-                       
                             <Route path="*" element={<Home />} />
                         </Route>
                     )}
