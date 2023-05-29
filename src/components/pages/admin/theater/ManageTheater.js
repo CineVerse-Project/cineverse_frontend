@@ -234,7 +234,7 @@ export default function ManageTheater() {
   // goi useeEffect khi table theater thay doi
   useEffect(() => {
     getAllTheaterAPI();
-  })
+  },[])
 
   // lay danh sach tinh thanh call api
   useEffect(() => {

@@ -25,7 +25,7 @@ import EditRoom from "./components/pages/admin/room/EditRoom";
 
 function App() {
     // Nếu muốn Hiển thị User Side thì sửa thành false, Admin Side thì true
-    const isAdmin = false;
+    const isAdmin = true;
 
     return (
         <div className="App">
@@ -38,6 +38,14 @@ function App() {
                             <Route path="revenue" element={<RevenueReport />} />
                             <Route path="ticket" element={<TicketReport />} />
                             <Route path="schedule" element={<ScheduleList />} />
+                            <Route path="theater" element={<ManageTheater />} />
+                            <Route path="createTheater" element={<CreateTheater />} />
+                            <Route path="editTheater/:theaterId" element={<EditTheater />} />
+                            <Route path="editRoom/:roomId" element={<EditRoom />} />
+                            <Route path="movie" element={<ManageMovie />} />
+                            <Route path="room" element={<ManageRoom />} />
+                            <Route path="createRoom" element={<CreateRoom />} />
+                            <Route path="createMovie" element={<CreateMovie />} />
                             <Route path="*" element={<Dashboard />} />
                         </Route>
                     )}
@@ -51,15 +59,8 @@ function App() {
                             <Route path="movie-premiere-soon" element={<MovieListPremiereSoon />} />
                             <Route path="movie-top-10-is-showing" element={<MovieListTop10IsShowing />} />
                             <Route path="movie-detail/:movieId" element={<MovieDetail />} />
-                            //datnh20
-                            <Route path="theater" element={<ManageTheater />} />
-                            <Route path="createTheater" element={<CreateTheater />} />
-                            <Route path="editTheater/:theaterId" element={<EditTheater />} />
-                            <Route path="editRoom/:roomId" element={<EditRoom />} />
-                            <Route path="movie" element={<ManageMovie />} />
-                            <Route path="room" element={<ManageRoom />} />
-                            <Route path="createRoom" element={<CreateRoom />} />
-                            <Route path="createMovie" element={<CreateMovie />} />
+                            {/* //datnh20 */}
+                         
                             <Route path="*" element={<Home />} />
                         </Route>
                     )}
