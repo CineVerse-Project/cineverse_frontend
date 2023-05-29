@@ -7,13 +7,16 @@ import LayoutUser from "./components/common/LayoutUser";
 import RevenueReport from "./components/pages/admin/report/RevenueReport";
 import TicketReport from "./components/pages/admin/report/TicketReport";
 import ScheduleList from "./components/pages/admin/schedule/ScheduleList";
+import ShowTimeScreen from "./components/pages/user/page/showtime/ShowTimeScreen";
+import ShowSeatScreen from "./components/pages/user/page/showtime/ShowSeatScreen";
+import Payment from "./components/pages/user/page/showtime/Payment";
+import CheckOut from "./components/pages/user/page/showtime/CheckOut";
 import MovieDetail from "./components/pages/user/views/MovieDetail";
 import Home from "./components/pages/user/views/Home";
 import MovieListIsShowing from "./components/pages/user/home/MovieListIsShowing";
 import MovieListPremiereSoon from "./components/pages/user/home/MovieListPremiereSoon";
 import MovieListTop10IsShowing from "./components/pages/user/home/MovieListTop10IsShowing";
 import MovieInformation from "./components/pages/user/movieDetail/MovieInformation";
-//datnh20
 import ManageTheater from "./components/pages/admin/theater/ManageTheater";
 import ManageMovie from "./components/pages/admin/movie/ManageMovie";
 import ManageRoom from "./components/pages/admin/room/ManageRoom";
@@ -25,7 +28,7 @@ import EditRoom from "./components/pages/admin/room/EditRoom";
 
 function App() {
     // Nếu muốn Hiển thị User Side thì sửa thành false, Admin Side thì true
-    const isAdmin = true;
+    const isAdmin = false;
 
     return (
         <div className="App">
@@ -52,15 +55,18 @@ function App() {
 
                     {/* User Side */}
                     {!isAdmin && (
+
                         <Route path="/" element={<LayoutUser />}>
                             <Route index element={<Home />} />
-                           
+                            <Route path="showtime" element={<ShowTimeScreen />} />
+                            <Route path="seat" element={<ShowSeatScreen/>}/>
+                            <Route path="payment" element={<Payment/>}/>
+                            <Route path="checkout" element={<CheckOut/>}/>
+                            
                             <Route path="movie-is-showing" element={<MovieListIsShowing />} />
                             <Route path="movie-premiere-soon" element={<MovieListPremiereSoon />} />
                             <Route path="movie-top-10-is-showing" element={<MovieListTop10IsShowing />} />
                             <Route path="movie-detail/:movieId" element={<MovieDetail />} />
-                            {/* //datnh20 */}
-                         
                             <Route path="*" element={<Home />} />
                         </Route>
                     )}

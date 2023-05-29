@@ -1,7 +1,7 @@
 import React from "react";
 import MovieListIsShowing from "../home/MovieListIsShowing";
 import MovieInformation from "../movieDetail/MovieInformation";
-
+import "./css/home.css"
 import Discount from "../home/Discount";
 import MovieaDescription from "../movieDetail/MovieaDescription";
 
