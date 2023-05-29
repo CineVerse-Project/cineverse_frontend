@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Link, Outlet } from "react-router-dom"
 
 
@@ -8,6 +9,11 @@ import { Link, Outlet } from "react-router-dom"
  * @returns none
  */
 const InformationLayout = () => {
+    const currentUser = localStorage.getItem('username') ? localStorage.getItem('username') : null;
+    const [user,setUser] = useState('')
+    useEffect(()=>{
+        setUser(currentUser);
+    },[currentUser])
     return (
         <div>
             <div className="container" >
@@ -19,11 +25,11 @@ const InformationLayout = () => {
 
                                 <ul className="list-group list-group-flush ">
                                     <li className="list-group-item"><h4 className="text-center text-uppercase">Tài khoản</h4></li>
-                                    <li className="list-group-item text-uppercase"><Link to="user-information">Thông tin tài khoản</Link></li>
-                                    <li className="list-group-item text-uppercase"><Link to="update-information">Cập nhật thông tin</Link></li>
-                                    <li className="list-group-item text-uppercase"><Link to="change-password">Thay đổi mật khẩu</Link></li>
-                                    <li className="list-group-item text-uppercase"><Link to="order-history">Lịch sử đặt vé</Link></li>
-                                    <li className="list-group-item text-uppercase"><Link to="earn-points">Lịch sử tích điểm</Link></li>
+                                    <li className="list-group-item text-uppercase"><Link to={user}>Thông tin tài khoản</Link></li>
+                                    <li className="list-group-item text-uppercase"><Link to={`update-information/${user}`}>Cập nhật thông tin</Link></li>
+                                    <li className="list-group-item text-uppercase"><Link to={`change-password/${user}`}>Thay đổi mật khẩu</Link></li>
+                                    <li className="list-group-item text-uppercase"><Link to={`order-history/${user}`}>Lịch sử đặt vé</Link></li>
+                                    <li className="list-group-item text-uppercase"><Link to={`earn-points/${user}`}>Lịch sử tích điểm</Link></li>
                                 </ul>
                             </div>
                         </div>

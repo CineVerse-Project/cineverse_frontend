@@ -1,24 +1,23 @@
 import React from "react";
 import { toast } from "react-toastify";
-
-const ToastNotification = () => {
-    const options = {
-        position: 'top-right',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-    };
-    const toastNotification = () => {
-        return toast("Thanh cong", options);
-    }
-    return (
-        <div className="toastify">
-
-        </div>
-    )
+const options = {
+    position: 'top-right',
+    autoClose: 1500,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+};
+const Notification = {
+toastSuccessNotification(successMessage){
+    return toast.success(successMessage,options);
+},
+toastWarningNotification(warningMessage){
+    return toast.warn(warningMessage,options);
+},
+toastErrorNotification(errorMessage){
+    return toast.error(errorMessage,options);
 }
-
-export default ToastNotification;
+}
+export default Notification;

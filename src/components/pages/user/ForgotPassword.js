@@ -1,4 +1,4 @@
-import React,{useState} from "react"
+import React from "react"
 import bgImage from '../../../static/assets/img/backgrounds/form_image.jpg';
 import { Link } from "react-router-dom";
 import {useFormik } from "formik";
@@ -37,8 +37,9 @@ const ForgotPassword = () => {
             resetForm();
         }
     })
-
     return (
+        <div>
+        <ToastContainer />
         <div className="container-fluid" style={{ backgroundImage: `url(${bgImage})`,backgroundPosition:'center',backgroundRepeat:'no-repeat' }}>
             <div className="row" style={{height:'100vh'}}>
                 <div className="col-xl-12 col-md-9 col-sm-6 mx-auto d-flex justify-contentcenter align-items-center">
@@ -47,13 +48,16 @@ const ForgotPassword = () => {
                             <div>
                                 <div className="h4 text-uppercase text-shadow text-center" >Quên mật khẩu</div>
                             </div>
-                            <form className=" my-4" onSubmit={handleSubmit}>
+                            <form className=" my-4" onSubmit={formik.handleSubmit}>
                                 <div className="form-group">
                                     <label htmlFor="username" className="form-label"><strong className="" >Email</strong></label>
-                                    <input id="username" type="text" placeholder="Nhập Email" className="input-red" value={username} onChange={(e)=>setUsername(e.target.value)} />
+                                    <input id="username" type="text" name="email" placeholder="Nhập Email" className="input-red" 
+                                    value={formik.email} 
+                                    onChange={formik.handleChange}/>
                                 </div>
-                                <div className="text-center">
-                                    <button className="btn-red w-100">Gửi yêu cầu</button>
+                                {(formik.errors.email && formik.touched.email) && <p className="text-danger mt-1">{formik.errors.email}</p>}
+                                <div className="text-center mt-2">
+                                    <button className="btn-red w-100" type="submit">Gửi yêu cầu</button>
                                 </div>
                                 <hr />
                                 <div>
@@ -65,6 +69,7 @@ const ForgotPassword = () => {
 
                 </div>
             </div>
+        </div>
         </div>
     );
 }

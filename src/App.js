@@ -3,7 +3,6 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import "./App.css";
 import Dashboard from "./components/pages/admin/Dashboard";
-import HomeUser from "./components/common/HomeUser";
 import SignUp from '../src/components/pages/user/SignUp'
 import ForgotPassword from '../src/components/pages/user/ForgotPassword'
 import ResetPassWord from '../src/components/pages/user/ResetPassword'
@@ -26,7 +25,7 @@ import UpdateInformation from '../src/components/pages/user/information/UpdateIn
 import ChangePassword from '../src/components/pages/user/information/ChangePassword'
 import OrderHistory from '../src/components/pages/user/information/OrderHistory'
 import EarnPoints from '../src/components/pages/user/information/EarnPoints'
-
+import 'react-toastify/dist/ReactToastify.css';
 function App() {
     // Nếu muốn Hiển thị User Side thì sửa thành false, Admin Side thì true
     const isAdmin = false;
@@ -57,19 +56,19 @@ function App() {
                             {/**
                              * HuuNQ
                              */}
-                            <Route path="/sign-in" element={<SignIn />} />
-                            <Route path="/sign-up" element={<SignUp />} />
-                            <Route path="/reset-password" element={<ResetPassWord />} />
-                            <Route path="/forgot-password" element={<ForgotPassword />} />
+                            <Route path="sign-in" element={<SignIn />} />
+                            <Route path="sign-up" element={<SignUp />} />
+                            <Route path="reset-password" element={<ResetPassWord />} />
+                            <Route path="forgot-password" element={<ForgotPassword />} />
 
-                            <Route path="/admin-sign-in" element={<AdminSignIn />} />
+                            <Route path="admin-sign-in" element={<AdminSignIn />} />
                             
-                            <Route path="/user" element={<InformationLayout />}>
-                                    <Route index path='/user/user-information' element={<UserInformation />}/>
-                                    <Route  path='/user/update-information' element={<UpdateInformation />}/>
-                                    <Route  path='/user/change-password' element={<ChangePassword />}/>
-                                    <Route  path='/user/order-history' element={<OrderHistory />}/>
-                                    <Route  path='/user/earn-points' element={<EarnPoints />}/>
+                            <Route path="user" element={<InformationLayout />}>
+                                    <Route index path=':username' element={<UserInformation />}/>
+                                    <Route  path='update-information/:username' element={<UpdateInformation />}/>
+                                    <Route  path='change-password/:username' element={<ChangePassword />}/>
+                                    <Route  path='order-history/:username' element={<OrderHistory />}/>
+                                    <Route  path='earn-points/:username' element={<EarnPoints />}/>
                             </Route>
 
                             <Route path="*" element={<Home />} />

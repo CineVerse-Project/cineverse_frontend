@@ -10,7 +10,7 @@ import Notification from "../../../common/ToastNotification";
  * @returns none
  */
 const UserInformation = () => {
-    const [updateUser,setUpdateUser] = useState({
+    const [user,setUser] = useState({
         'customerId':'',
         'email':'',
         'fullName':'',
@@ -25,7 +25,7 @@ const UserInformation = () => {
     const loadUserByUsername = (username,token) => {
        UserService.findUserByUsername(username,token)
         .then((data)=>{
-            setUpdateUser(data)
+            setUser({...data});
             Notification.toastSuccessNotification("Thao tác thành công!")
         })
         .catch((error)=>{
@@ -42,6 +42,7 @@ const UserInformation = () => {
     useEffect(()=>{
         loadUserByUsername(username,token);
     },[])
+    
     return (
         <div>
             <div className="mx-auto mt-4" >
@@ -50,27 +51,27 @@ const UserInformation = () => {
                     <div className="col-6">
                         <div className="form-group">
                             <label htmlFor="" className="form-label mt-3 mb-1">Họ tên</label>
-                            <input type="text" name="" id="" className="form-control" value={updateUser.fullName} disabled />
+                            <input type="text" name="fullName" id="" className="form-control" defaultValue={user.fullName} disabled />
                         </div>
                         <div className="form-group">
                             <label htmlFor="" className="form-label mt-3 mb-1">Giới tính</label>
-                            <input type="text" name="" id="" className="form-control" value={updateUser.gender ? 'Nam': 'Nữ'} disabled />
+                            <input type="text" name="gender" id="" className="form-control" defaultValue={user.gender ? 'Nam': 'Nữ'} disabled />
                         </div>
                         <div className="form-group">
                             <label htmlFor="" className="form-label mt-3 mb-1">Ngày sinh</label>
-                            <input type="text" name="" id="" className="form-control" value={updateUser.birthday} disabled />
+                            <input type="text" name="birthday" id="" className="form-control" defaultValue={user.birthday} disabled />
                         </div>
                         <div className="form-group">
                             <label htmlFor="" className="form-label mt-3 mb-1">Số điện thoại</label>
-                            <input type="text" name="" id="" className="form-control" value={updateUser.phoneNumber} disabled />
+                            <input type="text" name="" id="" className="form-control" defaultValue={user.phoneNumber} disabled />
                         </div>
                         <div className="form-group">
                             <label htmlFor="" className="form-label mt-3 mb-1">Email</label>
-                            <input type="text" name="" id="" className="form-control" value={updateUser.email} disabled />
+                            <input type="text" name="" id="" className="form-control" defaultValue={user.email} disabled />
                         </div>
                         <div className="form-group">
                             <label htmlFor="" className="form-label mt-3 mb-1">Địa chỉ</label>
-                            <textarea name="" id="" className="form-control" disabled defaultValue={updateUser.address}>
+                            <textarea name="" id="" className="form-control" disabled defaultValue={user.address}>
                             </textarea>
                         </div>
 

@@ -1,7 +1,23 @@
-import React from "react";
+import React,{useState,useEffect} from "react";
 import { Link } from "react-router-dom";
-
+import { useNavigate } from "react-router-dom";
 function NavBarUser() {
+  const [currentUser,setCurrentUser] = useState();
+  const [token,setToken] = useState();
+  const navigate = useNavigate()
+  const signOut = () => {
+      localStorage.removeItem("access_token");
+      localStorage.removeItem("username");
+      localStorage.removeItem("roles");
+      navigate("/sign-in");
+  }
+  const userLocal = localStorage.getItem('username') ? localStorage.getItem('username') : null ;
+  const tokenLocal = localStorage.getItem('username') ? localStorage.getItem('username') : null ;
+  useEffect(()=>{
+      setCurrentUser(userLocal);
+      setToken(tokenLocal)
+  },[currentUser,token]);
+
   return (
     <>
       <div className="navbar-container">
@@ -11,20 +27,20 @@ function NavBarUser() {
         <div className="menu-container">
           <ul className="menu-list">
             <li className="menu-list-item">
-              <Link to="">
+              <Link to="/">
                 <a>Trang chủ</a>
               </Link>
             </li>
             <li className="menu-list-item">
-              <Link to="movie-detail">
+              <Link to="/movie-detail">
                 <a>Phim</a>
               </Link>
             </li>
             <li className="menu-list-item">
-              <a href="#">Rạp</a>
+              <Link to="/">Rạp</Link>
             </li>
             <li className="menu-list-item">
-              <a href="#">Thông tin</a>
+              <Link to="/">Thông tin</Link>
             </li>
           </ul>
         </div>

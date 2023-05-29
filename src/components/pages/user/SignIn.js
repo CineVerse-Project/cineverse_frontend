@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 import bgImage from '../../../static/assets/img/backgrounds/form_image.jpg'
 import { Link } from 'react-router-dom'
-
 import UserService from '../../../services/UserService'
 import { useNavigate } from 'react-router-dom'
 import { ToastContainer} from 'react-toastify'
 import Notification from '../../common/ToastNotification'
+
 
 /**
  * @author HuuNQ
@@ -71,6 +71,7 @@ const SignIn = () => {
             </div>} */}
 
             <div className="row" style={{ height: 100 + 'vh' }}>
+
                 <div className="col-xl-12 col-md-9 col-sm-6 mx-auto d-flex justify-contentcenter align-items-center">
                     <div className="border mx-auto " style={{ borderRadius: '20% 20% / 8% 8%', width: 600 + 'px', backgroundColor: 'rgb(255, 255, 255, 0.9)', boxShadow: '0px 2px 20px 10px rgb(47, 63, 93)' }}>
                         <div className="mx-auto" style={{ padding: '20px 36px' }}>
@@ -90,13 +91,17 @@ const SignIn = () => {
                                         onChange={(e) => {
                                             setLogin({ ...login, username: e.target.value })
                                         }}
+                                        
                                     />
+                                {errorField && errorField['username'] && <p className="text-danger">{errorField['username']}</p>}
                                 </div>
+                                
+                                
                                 <div className="form-group">
                                     <label htmlFor="password" className="form-label"><strong className="" >Mật khẩu</strong></label>
                                     <div className="icons">
-                                        <input type="password"
-                                            className="input-red input-with-icon"
+                                        <input type={showPassword ? 'text':'password'}
+                                            className="input-red"
                                             placeholder="Nhập mật khẩu"
                                             id="password"
                                             name="password"
@@ -104,9 +109,11 @@ const SignIn = () => {
                                             onChange={(e) => {
                                                 setLogin({ ...login, password: e.target.value })
                                             }}
+                                            
                                         />
-                                        <i className="fas fa-eye-slash icon" id="show_hide_password-icon" style={{ cursor: 'pointer', padding: '12px 12px' }}></i>
+                                        <i className="fas fa-eye-slash icon" id="show_hide_password-icon" style={{ cursor: 'pointer', padding: '12px 12px' }} onClick={()=>{setShowPassword(!showPassword)}}></i>
                                     </div>
+                                    {errorField && errorField['username'] && <p className="text-danger">{errorField['username']}</p>}
                                 </div>
 
                                 <div className="my-2 text-center">
@@ -127,6 +134,7 @@ const SignIn = () => {
                     </div>
                 </div>
             </div>
+
         </div>
         </div>
     );

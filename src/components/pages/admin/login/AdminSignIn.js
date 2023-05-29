@@ -1,13 +1,49 @@
-import React from 'react';
+import React,{useState} from 'react';
+import { useFormik } from 'formik';
+import * as Yup from 'yup'
+import UserService from '../../../../services/UserService';
+import Notification from '../../../common/ToastNotification';
+import { Link, useNavigate } from 'react-router-dom';
 
 const AdminSignIn = () => {
-    
+    const navigate = useNavigate();
+    const [showPassword,setShowPassword] = useState(false);
+    const formik = useFormik({
+        initialValues: {
+            username: '',
+            password: ''
+        },
+        validationSchema: Yup.object({
+            username: Yup.string()
+                .required("Tài khoản không được bỏ trống!")
+                .matches(/^[a-zA-Z0-9]/, "Tài khoản có chứa kí tự đặc biệt!"),
+            password: Yup.string()
+                .required("Mật khẩu không được bỏ trống")
+                .matches(/^[a-zA-Z0-9!@#$%^&*(),.?:{}|<></>]*$/, "Mật khẩu không được chứa khoảng trắng!")
+        }),
+        onSubmit: (e) => {
+            console.log(e);
+            UserService.adminSignIn(e)
+                .then((data) => {
+                    Notification.toastSuccessNotification(data);
+                    localStorage.setItem('access_token',data.token)
+                    localStorage.setItem('username',data.username)
+                    localStorage.setItem('roles',data.roles)
+                    Notification.toastSuccessNotification("Đăng nhập thành công");
+                    navigate("/admin");
+                })
+                .catch((error) => {
+                    console.log(error)
+                    Notification.toastErrorNotification(error.response.data);
+                })
+        }
+    })
     return (
         <div>
             <div>
                 <div className="layout-content-navbar">
-                    <header className="header-layout my-2">
-                        <a href={`index.html`} className="app-brand-link" style={{ textAlign: 'center' }}>
+                    <header className="header-layout my-2 ">
+                        <Link to="/" className="app-brand-link justify-content-center" >
                             <span className="app-brand-logo demo">
                                 <img
                                     src="https://cdn-icons-png.flaticon.com/512/3171/3171927.png"
@@ -19,7 +55,7 @@ const AdminSignIn = () => {
                                 className="app-brand-text demo menu-text fw-bolder ms-2"
                             >Cineverse</span
                             >
-                        </a>
+                        </Link>
                     </header>
                     <section>
                         <div className="container-xl">
@@ -93,35 +129,36 @@ const AdminSignIn = () => {
                                             <h4 className="my-2">Rất vui khi gặp lại bạn! 👋</h4>
                                             <p className="my-2">Chúc bạn một ngày đầy năng lượng!</p>
 
-                                            <form id="formAuthentication" className="mb-3" action="index.html" method="POST">
+                                            <form id="formAuthentication" className="mb-3" onSubmit={formik.handleSubmit}>
                                                 <div className="mb-3">
                                                     <label htmlFor="email" className="form-label">Email / Tài khoản</label>
                                                     <input
                                                         type="text"
                                                         className="form-control"
                                                         id="email"
-                                                        name="email-username"
+                                                        name="username"
                                                         placeholder="Nhập Email / Tài khoản"
                                                         autoFocus
+                                                        value={formik.username}
+                                                        onChange={formik.handleChange}
                                                     />
                                                 </div>
                                                 <div className="mb-3 form-password-toggle">
                                                     <div className="d-flex justify-content-between">
                                                         <label className="form-label" htmlFor="password">Mật khẩu</label>
-                                                        {/* <!-- <a href={auth-forgot-password-basic.html">
-                                                <small>Forgot Password?</small>
-                                              </a> --> */}
                                                     </div>
                                                     <div className="input-group input-group-merge">
                                                         <input
-                                                            type="password"
+                                                            type={showPassword? "text":"password"}
                                                             id="password"
                                                             className="form-control"
                                                             name="password"
                                                             placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
                                                             aria-describedby="password"
+                                                            value={formik.password}
+                                                            onChange={formik.handleChange}
                                                         />
-                                                        <span className="input-group-text cursor-pointer"><i className="bx bx-hide"></i></span>
+                                                        <span className="input-group-text cursor-pointer"><i className={showPassword ? "bx bx-hide" : "bx bx-show" } onClick={()=>{setShowPassword(!showPassword)}}></i></span>
                                                     </div>
                                                 </div>
                                                 <div className="mb-3">
@@ -165,6 +202,7 @@ const AdminSignIn = () => {
             <div className="layout-overlay layout-menu-toggle"></div>
         </div>
     );
-}
+};
+
 
 export default AdminSignIn;

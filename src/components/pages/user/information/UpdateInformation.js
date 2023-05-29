@@ -161,6 +161,7 @@ const UpdateInformation = () => {
                                     {errors.password && <p className="text-danger mb-1">{errors.password}</p> }
                                 </div>
                             </div>
+
                         </div>
                         <div className="col-6">
                             <p className="text-center text-uppercase">Hình ảnh</p>
