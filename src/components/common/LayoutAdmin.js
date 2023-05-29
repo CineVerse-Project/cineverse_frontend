@@ -7,19 +7,19 @@ function LayoutAdmin() {
     return (
         <>
             {/* <!-- Layout wrapper --> */}
-            <div class="layout-wrapper layout-content-navbar">
-                <div class="layout-container">
+            <div className="layout-wrapper layout-content-navbar">
+                <div className="layout-container">
                     <SideBarAdmin />
-                    <div class="layout-page">
+                    <div className="layout-page">
                         <NavBarAdmin />
-                        <div class="content-wrapper">
+                        <div className="content-wrapper">
                             <Outlet />
                         </div>
                     </div>
                 </div>
 
                 {/* <!-- Overlay --> */}
-                <div class="layout-overlay layout-menu-toggle"></div>
+                <div className="layout-overlay layout-menu-toggle"></div>
             </div>
             {/* Layout wrapper  */}
         </>
