@@ -5,8 +5,12 @@ import Dashboard from "./components/pages/admin/Dashboard";
 import HomeUser from "./components/common/HomeUser";
 import LayoutAdmin from "./components/common/LayoutAdmin";
 import RevenueReport from "./components/pages/admin/report/RevenueReport";
-import TicketReport from "./components/pages/admin/report/TicketReport";
+
 import ScheduleList from "./components/pages/admin/schedule/ScheduleList";
+import ScheduleFormCreate from "./components/pages/admin/schedule/ScheduleFormCreate";
+import ScheduleFormUpdate from "./components/pages/admin/schedule/ScheduleFormUpdate";
+import TicketReport from "./components/pages/admin/report/TicketReport";
+import ScheduleTest from "./components/pages/admin/schedule/ScheduleTest";
 
 function App() {
     // Nếu muốn Hiển thị User Side thì sửa thành false, Admin Side thì true
@@ -20,9 +24,27 @@ function App() {
                     {isAdmin && (
                         <Route path="/" element={<LayoutAdmin />}>
                             <Route index element={<Dashboard />} />
-                            <Route path="revenue" element={<RevenueReport />} />
-                            <Route path="ticket" element={<TicketReport />} />
-                            <Route path="schedule" element={<ScheduleList />} />
+                            <Route
+                                path="revenue-report"
+                                element={<RevenueReport />}
+                            />
+                            <Route
+                                path="ticket-report"
+                                element={<TicketReport />}
+                            />
+                            <Route path="schedule">
+                                <Route path="" element={<ScheduleList />} />
+                                <Route
+                                    path="create"
+                                    element={<ScheduleFormCreate />}
+                                />
+                                <Route
+                                    path="update/:scheduleId/:roomId"
+                                    element={<ScheduleFormUpdate />}
+                                />
+                                <Route path="test" element={<ScheduleTest />} />
+                                <Route path="*" element={<ScheduleList />} />
+                            </Route>
                             <Route path="*" element={<Dashboard />} />
                         </Route>
                     )}
