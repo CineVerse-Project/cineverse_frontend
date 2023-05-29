@@ -31,7 +31,18 @@ import CreateTheater from "./components/pages/admin/theater/CreateTheater";
 import EditTheater from "./components/pages/admin/theater/EditTheater";
 import CreateMovie from "./components/pages/admin/movie/CreateMovie";
 import EditRoom from "./components/pages/admin/room/EditRoom";
-
+import SignUp from '../src/components/pages/user/information/SignUp'
+import ForgotPassword from '../src/components/pages/user/information/ForgotPassword'
+import ResetPassWord from '../src/components/pages/user/information/ResetPassword'
+import SignIn from "./components/pages/user/information/SignIn";
+import AdminSignIn from "./components/pages/admin/login/AdminSignIn";
+import InformationLayout from "./components/pages/user/information/InformationLayout"
+import UserInformation from "../src/components/pages/user/information/UserInformation"
+import UpdateInformation from '../src/components/pages/user/information/UpdateInformation'
+import ChangePassword from '../src/components/pages/user/information/ChangePassword'
+import OrderHistory from '../src/components/pages/user/information/OrderHistory'
+import EarnPoints from '../src/components/pages/user/information/EarnPoints'
+import 'react-toastify/dist/ReactToastify.css';
 function App() {
     // Nếu muốn Hiển thị User Side thì sửa thành false, Admin Side thì true
     const isAdmin = false;
@@ -118,6 +129,20 @@ function App() {
                                 path="movie-detail/:movieId"
                                 element={<MovieDetail />}
                             />
+                            <Route path="sign-in" element={<SignIn />} />
+                            <Route path="sign-up" element={<SignUp />} />
+                            <Route path="reset-password" element={<ResetPassWord />} />
+                            <Route path="forgot-password" element={<ForgotPassword />} />
+
+                            <Route path="admin-sign-in" element={<AdminSignIn />} />
+                            
+                            <Route path="user" element={<InformationLayout />}>
+                                    <Route index path=':username' element={<UserInformation />}/>
+                                    <Route  path='update-information/:username' element={<UpdateInformation />}/>
+                                    <Route  path='change-password/:username' element={<ChangePassword />}/>
+                                    <Route  path='order-history/:username' element={<OrderHistory />}/>
+                                    <Route  path='earn-points/:username' element={<EarnPoints />}/>
+                            </Route>
                             <Route path="*" element={<Home />} />
                         </Route>
                     )}
