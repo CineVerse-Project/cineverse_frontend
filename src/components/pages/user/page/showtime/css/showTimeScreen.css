@@ -1,0 +1,53 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+.none__list{
+    list-style-type: none;
+}
+
+.line__big{
+    border-top: 2px solid #000;
+    margin: 0 30px;
+    padding-top: 25px;
+    padding-bottom: 5px;
+}
+
+.line__mini{
+    border-bottom: 1px solid #333;
+    margin: 0 30px;
+    padding-top: 10px;
+}
+
+.day {
+    border-radius: 5px;
+    cursor: pointer;
+    height: 48px;
+    position: relative;
+    width: 77px;
+}
+
+.day>span {
+    font-size: 11px;
+    left: 10px;
+    position: absolute;
+    top: 8px;
+}
+
+.day>em {
+    font-size: 11px;
+    font-style: normal;
+    left: 10px;
+    position: absolute;
+    top: 24px;
+}
+
+.day>strong {
+    font-size: 30px;
+    font-weight: lighter;
+    left: 35px;
+    line-height: 32px;
+    position: absolute;
+    top: 8px;
+}

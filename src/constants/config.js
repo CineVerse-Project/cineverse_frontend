@@ -15,5 +15,4 @@ export const toastConfig = {
     progress: undefined,
     theme: "light",
 };
-
 export default config;

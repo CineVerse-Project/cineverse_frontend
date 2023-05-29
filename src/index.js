@@ -2,11 +2,21 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css"
+import { toastConfig } from "./constants/config";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
+// const toastConfig = {
+//     position: toast.POSITION.TOP_CENTER,
+//     autoClose: 1500,
+// }
 root.render(
     <React.StrictMode>
         <App />
+        <ToastContainer
+        {...toastConfig}
+      />
     </React.StrictMode>
 );
 
