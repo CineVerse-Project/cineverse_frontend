@@ -1,6 +1,12 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 function FooterUser() {
+
+  const handleClick = () => {
+    window.scrollTo(0, 0); // Di chuyển trang web đến đầu trang
+  };
+
   return (
     <>
       <div className="container" style={{paddingLeft:'40px'}}>
@@ -40,7 +46,9 @@ function FooterUser() {
             <div className="col-xl-4 col-lg-4 mb-50">
               <div className="footer-widget">
                 <div className="logo-container">
+                <Link to="/" onClick={handleClick} >
                   <h1 className="logo">CineVerse</h1>
+                </Link>
                 </div>
                 <div className="footer-text-cineverse">
                   <p>
@@ -139,7 +147,9 @@ function FooterUser() {
               <div className="footer-menu">
                 <ul>
                   <li>
+                  <Link to="/" onClick={handleClick} >
                     <a href="#">Trang chủ</a>
+                  </Link>
                   </li>
                   <li>
                     <a href="#">Phim</a>

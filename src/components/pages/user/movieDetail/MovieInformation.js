@@ -1,11 +1,22 @@
 import React, { useEffect, useState } from "react";
 import clientService from "../../../../services/ClientService";
 import { useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 function MovieInformation() {
   const [movieInformation, setMovieInformation] = useState();
-  const { movieId } = useParams();
-  console.log(movieId);
+  const param = useParams();
+  const [movieId,setMovieId] = useState();
+
+  const handleClick = () => {
+    window.scrollTo(0, 0); // Di chuyển trang web đến đầu trang
+  };
+
+  useEffect(() => {
+    const {movieId} = param; 
+    setMovieId(movieId)
+  },[param])
+
   useEffect(() => {
     const getMovieInformation = () => {
       clientService
@@ -19,18 +30,22 @@ function MovieInformation() {
         });
     };
     getMovieInformation();
-  }, []);
+  }, [movieId]);
 
   return (
     <>
       {movieInformation && (
         <>
           <div className="movie-link-display">
-            <a href="#">Trang chủ</a>
+            <Link to="/" onClick={handleClick} >
+              <a >Trang chủ</a>
+            </Link>
             <span>|</span>
             <a href="#">Đặt vé</a>
             <span>|</span>
-            <a href="#">{movieInformation.movieName}</a>
+            <Link to={`/movie-detail/${movieInformation.movieId}`} onClick={handleClick} >
+              <a >{movieInformation.movieName}</a>
+            </Link>
           </div>
           <div className="movie-list-wrapper">
             <div className="movie-list">

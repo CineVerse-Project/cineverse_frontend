@@ -1,8 +1,21 @@
 import React, { useEffect, useState } from "react";
 import clientService from "../../../../services/ClientService";
+import { Link } from "react-router-dom";
 
 function MovieListTop10IsShowing() {
+  const [slideIndex, setSlideIndex] = useState(0);
+  const handleClickPrev = () => {
+    setSlideIndex(slideIndex === 0 ? setMovieListTop10IsShowing.length - 1 : slideIndex - 1);
+  };
+  const handleClickNext = () => {
+    setSlideIndex(slideIndex === setMovieListTop10IsShowing.length - 1 ? 0 : slideIndex + 1);
+  };
+
+  const handleClick = () => {
+    window.scrollTo(0, 0); // Di chuyển trang web đến đầu trang
+  };
   const [movieListTop10IsShowing, setMovieListTop10IsShowing] = useState();
+  
 
   useEffect(() => {
     const getAllMovieListTop10IsShowingAPI = () => {
@@ -36,15 +49,23 @@ function MovieListTop10IsShowing() {
                   <span className="movie-list-item-title">
                     {movieTop10IsShowing.movieName}
                   </span>
-                  <a href className="movie-list-item-button-detail">
-                    Chi tiết
-                  </a>
-                  <button className="movie-list-item-button">ĐẶT VÉ</button>
+
+                  <Link to={`/movie-detail/${movieTop10IsShowing.movieId}`} onClick={handleClick} >
+                    <a href className="movie-list-item-button-detail">
+                      Chi tiết
+                    </a>
+                  </Link>
+
+                  <Link to={`/showtime?movieId=/${movieTop10IsShowing.movieId}`} onClick={handleClick} >
+                    <button className="movie-list-item-button">ĐẶT VÉ</button>
+                  </Link>
+
                 </div>
               );
             })}
           </div>
-          <i className="fas fa-chevron-right arrow" />
+          <i className="fas fa-chevron-right arrow-right" onClick={handleClickNext} />
+          <i className="fas fa-chevron-left arrow-left" onClick={handleClickPrev} />
         </div>
       </div>
     </>

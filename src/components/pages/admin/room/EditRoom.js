@@ -4,18 +4,35 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import TheaterService from "../../../../services/TheaterService";
 import RoomService from "../../../../services/RoomService";
+import { handleValidationRoom } from "../../../../services/handleValidationRoom";
 
 export default function EditRoom() {
-  //nhan gia tri input
-  const [editTenPhong, setEditTenPhong] = useState("");
-  const [editTenRap, setEditTenRap] = useState("");
-  const [editSoHang, setEditSoHang] = useState("");
-  const [editSoCot, setEditSoCot] = useState("");
+
+  const [name, setName] = useState('');
+
+  const [editData, setEditData] = useState({
+    editTenPhong: '',
+    editTenRap: '',
+    editSoCot: '',
+    editSoHang: '',
+  });
+
+  const [errors, setErrors] = useState({
+    editTenPhong: '',
+    editTenRap: '',
+    editSoCot: '',
+    editSoHang: '',
+  })
+
   const { roomId } = useParams();
 
-  const handleChangeSelected = (value) => {
-    setEditTenRap(value.target.value);
-  };
+  //nhan gia tri thay doi trong o input
+  const handleInputChange = (event) => {
+    const field = event.target.name;
+    const value = event.target.value;
+
+    setEditData((preData) => ({...preData, [field]: value}));
+}
 
   const getRoom = () => {
     const url = `localhost:8080/api/v1/room/` + roomId;
@@ -23,10 +40,13 @@ export default function EditRoom() {
     axios
       .get("room/" + roomId)
       .then((result) => {
-        setEditTenPhong(result.data.roomName);
-        setEditTenRap(result.data.theater.theaterName);
-        setEditSoHang(result.data.seatRowNumber);
-        setEditSoCot(result.data.seatColumnNumber);
+        setEditData({
+          editTenPhong: result.data.roomName,
+          editTenRap: result.data.theater.theaterName,
+          editSoCot: result.data.seatRowNumber,
+          editSoHang: result.data.seatColumnNumber, 
+        })
+        setName(result.data.theater.theaterId)
       })
       .catch((error) => {});
   };
@@ -41,7 +61,6 @@ export default function EditRoom() {
     const getAllTheaterAPI = async () => {
       TheaterService.getAllTheater()
         .then((data) => {
-          setTheaters(data);
         })
         .catch((error) => {
           console.log(error);
@@ -51,38 +70,40 @@ export default function EditRoom() {
     getAllTheaterAPI();
   }, []);
 
-  //update call api 
+  //update call api
   const handleEdit = (event) => {
     event.preventDefault();
+    let errors = {};
     const data = {
-        roomId: roomId,
-        seatTotal: Number(editSoCot) * Number(editSoHang),
-        roomName: editTenPhong,
-        theater : {
-            theaterId : editTenRap
-        },    
-        seatRowNumber: editSoHang,
-        seatColumnNumber: editSoCot,
-    }
-
-    console.log(data)
-
-
-    Modal.confirm({
+      roomId: roomId,
+      seatTotal: Number(editData.editSoCot) * Number(editData.editSoHang),
+      roomName: editData.editTenPhong,
+      theater: {
+        theaterId: name,
+      },
+      seatRowNumber: editData.editSoCot,
+      seatColumnNumber: editData.editSoHang,
+    };
+    console.log(data);
+    handleValidationRoom(editData, errors);
+    if(Object.keys(errors).length === 0){
+      Modal.confirm({
         title: "Bạn muốn thay đổi rạp phim?",
         okText: "Thêm",
         onOk: () => {
-
-            RoomService.updateRoom(data,roomId);
-
-            RoomService.getAllRoom();
+          RoomService.updateRoom(data, roomId);
+  
+          RoomService.getAllRoom();
+          setErrors([])
         },
-        cancelText: 'Đóng',
-        onCancel: () => {
-        },
-
-    });
-}
+        cancelText: "Đóng",
+        onCancel: () => {},
+      });
+    } else {
+      setErrors(errors);
+    }
+    
+  };
 
   return (
     <div class="container-xxl flex-grow-1 container-p-y">
@@ -99,6 +120,7 @@ export default function EditRoom() {
         <h5 class="card-header">Chỉnh sửa thông tin phòng</h5>
         <div class="card-body">
           <form onSubmit={handleEdit}>
+          {errors.editTenPhong && <p className="col-md-10 invalid-feedback" style={{ display: "block", color: "red"}}>{errors.editTenPhong}</p>}
             <div class="mb-3 row">
               <label for="html5-email-input" class="col-md-2 col-form-label">
                 Tên phòng:
@@ -109,8 +131,9 @@ export default function EditRoom() {
                   type="text"
                   id="html5-email-input"
                   placeholder="Nhập tên phòng chiếu"
-                  value={editTenPhong}
-                  onChange={(e) => setEditTenPhong(e.target.value)}
+                  value={editData.editTenPhong}
+                  onChange={handleInputChange}
+                  name="editTenPhong"
                 />
               </div>
             </div>
@@ -119,19 +142,19 @@ export default function EditRoom() {
                 Tên rạp:
               </label>
               <div class="col-md-10">
-                <select
+                <input
                   class="form-control"
-                  onChange={handleChangeSelected}
-                  value={editTenRap}
-                >
-                  {theaters.map((theater) => (
-                    <option key={theater.theaterId} value={theater.theaterId}>
-                      {theater.theaterName}
-                    </option>
-                  ))}
-                </select>
+                  type=""
+                  id="html5-email-input"
+                  placeholder="Nhập tên phòng chiếu"
+                  value={editData.editTenRap}
+                  disabled
+                />
               </div>
             </div>
+            {errors.editSoCot && <p className="col-md-10 invalid-feedback" style={{ display: "block", color: "red"}}>{errors.editSoCot}</p>}
+            {errors.editSoHang && <p className="col-md-10 invalid-feedback" style={{ display: "block", color: "red"}}>{errors.editSoHang}</p>}
+
             <div class="mb-3 row d-flex align-items-center">
               <label for="html5-email-input" class="col-md-2 col-form-label">
                 Layout:
@@ -142,8 +165,9 @@ export default function EditRoom() {
                   type="text"
                   id="html5-email-input"
                   placeholder="Nhập số hàng"
-                  value={editSoHang}
-                  onChange={(e) => setEditSoHang(e.target.value)}
+                  value={editData.editSoHang}
+                  onChange={handleInputChange}
+                  name="editSoHang"
                 />
               </div>
               x
@@ -153,8 +177,9 @@ export default function EditRoom() {
                   type="text"
                   id="html5-email-input"
                   placeholder="Nhập số cột"
-                  value={editSoCot}
-                  onChange={(e) => setEditSoCot(e.target.value)}
+                  value={editData.editSoCot}
+                  onChange={handleInputChange}
+                  name="editSoCot"
                 />
               </div>
             </div>
