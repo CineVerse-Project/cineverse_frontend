@@ -4,8 +4,14 @@ import { useParams } from "react-router-dom";
 
 function MovieaDescription() {
   const [movieInformation, setMovieInformation] = useState();
-  const { movieId } = useParams();
-  console.log(movieId);
+  const param = useParams();
+  const [movieId,setMovieId] = useState();
+
+  useEffect(() => {
+    const {movieId} = param; 
+    setMovieId(movieId)
+  },[param])
+  
   useEffect(() => {
     const getMovieInformation = () => {
       clientService
@@ -19,7 +25,7 @@ function MovieaDescription() {
         });
     };
     getMovieInformation();
-  }, []);
+  }, [movieId]);
   
   return (
     <>
