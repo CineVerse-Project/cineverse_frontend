@@ -1,52 +1,99 @@
 import { useState, useEffect } from "react";
 import { Modal, Button } from "antd";
 import axios from "axios";
+import { useParams } from "react-router-dom";
 import TypeMovieService from "../../../../services/TypeMovieService";
 import MovieService from "../../../../services/MovieService";
 import { handleValidationMovie } from "../../../../services/handleValidationMovie";
+export default function EditMovie(props) {
 
-export default function CreateMovie() {
-  const [editData, setEditData] = useState({
-    editTenPhim: "",
-    editPoster: "",
-    editDienVien: "",
-    editDaoDien: "",
-    editPhimTruong: "",
-    editLoaiPhim: "",
-    editMoTa: "",
-    editThoiLuong: "",
-    editNgayChieu: "",
-    editNgayDong: "",
-    editTrailler: "",
-  });
+    //data luu du lieu detail
+    const [editData, setEditData] = useState({
+        editTenPhim: '',
+        editPoster: '',
+        editDienVien: '',
+        editDaoDien: '',
+        editPhimTruong: '',
+        editLoaiPhim: '',
+        editMoTa: '',
+        editThoiLuong: '',
+        editNgayChieu: '',
+        editNgayDong: '',
+        editTrailler: '',
+    })
 
-  //usestate input errror
-  const [errors, setErrors] = useState({
-    editTenPhim: "",
-    editPoster: "",
-    editDienVien: "",
-    editDaoDien: "",
-    editPhimTruong: "",
-    editLoaiPhim: "",
-    editMoTa: "",
-    editThoiLuong: "",
-    editNgayChieu: "",
-    editNgayDong: "",
-    editTrailler: "",
-  });
+    //usestate input errror 
+    const [errors, setErrors] = useState({
+        editTenPhim: '',
+        editPoster: '',
+        editDienVien: '',
+        editDaoDien: '',
+        editPhimTruong: '',
+        editLoaiPhim: '',
+        editMoTa: '',
+        editThoiLuong: '',
+        editNgayChieu: '',
+        editNgayDong: '',
+        editTrailler: '',
+    })
 
-  const handleInputChange = (event) => {
-    const field = event.target.name;
-    const value = event.target.value;
+    //nhan gia tri thay doi trong o input
+    const handleInputChange = (event) => {
+        const field = event.target.name;
+        const value = event.target.value;
 
-    setEditData((preData) => ({ ...preData, [field]: value }));
+        setEditData((preData) => ({...preData, [field]: value}));
+    }
+
+   const { movieId } = useParams();
+
+  const getMovie = () => {
+    const url = `localhost:8080/api/v1/movie/` + movieId;
+    console.log(url);
+    axios
+      .get("movie/" + movieId)
+      .then((result) => {
+        setEditData({
+            editTenPhim: result.data.movieName,
+            editPoster: result.data.imageUrl,
+            editDienVien: result.data.actor,
+            editDienVien: result.data.director,
+            editPhimTruong: result.data.filmStudio,
+            editMoTa: result.data.description,
+            editThoiLuong: result.data.duration,
+            editNgayChieu: result.data.startDate,
+            editNgayDong: result.data.endDate,
+            editTrailler: result.data.trailerUrl,
+        })
+      })
+      .catch((error) => {});
   };
 
-  //create movie
-  const handleCreate = (event) => {
+  useEffect(() => {
+    getMovie();
+  }, []);
+
+  const [type, setType] = useState([]);
+  useEffect(() => {
+    const getAllTypeAPI = async () => {
+      TypeMovieService.getAllType()
+        .then((data) => {
+          setType(data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    };
+
+    getAllTypeAPI();
+  }, []);
+
+  const handleEdit = (event) => {
     event.preventDefault();
-    let errors = [];
+    let errors = {};
+    
     const data = {
+      movieId: movieId,
       movieName: editData.editTenPhim,
       startDate: editData.editNgayChieu,
       endDate: editData.editNgayDong,
@@ -62,12 +109,12 @@ export default function CreateMovie() {
     handleValidationMovie(editData, errors);
     if(Object.keys(errors).length === 0){
         Modal.confirm({
-            title: "Bạn muốn thêm mới phim?",
+            title: "Bạn muốn thay đổi phim?",
             okText: "Thêm",
             onOk: () => {
-              MovieService.createMovie(data);
-              setEditData("");
-              setErrors([]);
+              MovieService.updateMovie(data, movieId);
+              MovieService.getAllMovie();
+              setErrors([])
             },
             cancelText: "Đóng",
             onCancel: () => {},
@@ -75,31 +122,15 @@ export default function CreateMovie() {
     } else {
         setErrors(errors);
     }
-    
   };
 
-  //lay danh sach movie
-  const [typeMovies, setTypeMovies] = useState([]);
-  useEffect(() => {
-    const getAllTypeAPI = async () => {
-      TypeMovieService.getAllType()
-        .then((data) => {
-            setTypeMovies(data)
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    };
-
-    getAllTypeAPI();
-  }, []);
 
   return (
     <>
       <div class="container-xxl flex-grow-1 container-p-y">
         <h4 class="fw-bold py-3 mb-4">
           <span class="text-muted fw-light">Phim /</span>
-          Thêm phim
+          Cập nhật phim
         </h4>
 
         <a href="/movie" class="btn btn btn-outline-primary mb-3">
@@ -107,10 +138,12 @@ export default function CreateMovie() {
         </a>
 
         <div class="card mb-4">
-          <h5 class="card-header">Thêm mới phim</h5>
+          <h5 class="card-header">Chỉnh sửa thông tin phim:</h5>
           <div class="card-body">
-            <form onSubmit={handleCreate}>
-            {errors.editTenPhim && <p className="col-md-10 invalid-feedback" style={{ display: "block", color: "red"}}>{errors.editTenPhim}</p>}
+            <form
+            onSubmit={handleEdit}
+            >
+              {errors.editTenPhim && <p className="col-md-10 invalid-feedback" style={{ display: "block", color: "red"}}>{errors.editTenPhim}</p>}
               <div class="mb-3 row">
                 <label for="html5-text-input" class="col-md-2 col-form-label">
                   Tên phim:
@@ -190,8 +223,6 @@ export default function CreateMovie() {
                   />
                 </div>
               </div>
-              {errors.editLoaiPhim && <p className="col-md-10 invalid-feedback" style={{ display: "block", color: "red"}}>{errors.editLoaiPhim}</p>}
-
               <div class="mb-3 row">
                 <label for="html5-email-input" class="col-md-2 col-form-label">
                   Loại phim:
@@ -203,8 +234,7 @@ export default function CreateMovie() {
                     name="editLoaiPhim"
                     onChange={handleInputChange}
                   >
-                    <option value="">Chọn loại phim</option>
-                    {typeMovies.map((typeItem) => (
+                    {type.map((typeItem) => (
                       <option key={typeItem.movieTypeId} value={typeItem.movieTypeId}>
                         {typeItem.moveTypeName}
                       </option>
@@ -293,7 +323,7 @@ export default function CreateMovie() {
               </div>
               <div class="d-flex justify-content-center">
                 <Button type="primary" htmlType="submit">
-                  Them
+                  Chỉnh sửa
                 </Button>
               </div>
             </form>

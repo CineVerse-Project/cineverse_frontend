@@ -45,7 +45,7 @@ import EarnPoints from '../src/components/pages/user/information/EarnPoints'
 import 'react-toastify/dist/ReactToastify.css';
 function App() {
     // Nếu muốn Hiển thị User Side thì sửa thành false, Admin Side thì true
-    const isAdmin = false;
+    const isAdmin = true;
 
     return (
         <div className="App">

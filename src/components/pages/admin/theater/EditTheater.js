@@ -4,20 +4,31 @@ import axios from "axios";
 import ProvinceService from "../../../../services/ProvinceService";
 import TheaterService from "../../../../services/TheaterService";
 import { useParams } from "react-router-dom";
+import { handleValidationTheater } from "../../../../services/handleValidationTheater";
+
 export default function EditTheater(props) {
 
+    const [editData, setEditData] = useState({
+        editTen: '',
+        editDiaChi: '',
+        editTinhThanh: ''
+    })
 
-    //nhan gia tri input
-    const [editTen, setEditTen] = useState('');
-    const [editDiaChi, setEditDiaChi] = useState('');
-    const [editTinhThanh, setEditTinhThanh] = useState('')
+    const [errors, setErrors] = useState({
+        editTen: '',
+        editDiaChi: '',
+        editTinhThanh: '',
+    })
+
     const {theaterId} = useParams();
 
 
-    //nhan gia tri khi select option
-    const handleChangeSelected = (value) => {
-        //console.log(value.target.value)
-         setEditTinhThanh(value.target.value);
+     //nhan gia tri thay doi trong o input
+     const handleInputChange = (event) => {
+        const field = event.target.name;
+        const value = event.target.value;
+
+        setEditData((preData) => ({...preData, [field]: value}));
     }
 
     // call api get detail
@@ -25,9 +36,11 @@ export default function EditTheater(props) {
         const url = `localhost:8080/api/v1/theater/` + theaterId;
         console.log(url);
         axios.get("theater/" + theaterId).then((result) => {
-            setEditTen(result.data.theaterName);
-            setEditDiaChi(result.data.theaterAddress);
-            setEditTinhThanh(result.data.province.provinceName);
+            setEditData({
+                editTen: result.data.theaterName,
+                editDiaChi: result.data.theaterAddress,
+                editTinhThanh: result.data.province.provinceId,
+            })
         }).catch((error) => {
 
         })
@@ -43,9 +56,8 @@ export default function EditTheater(props) {
     useEffect(() => {
         const getAllProvinceAPI = async () => {
             ProvinceService.getAllProvince()
-                .then((data) => {
+                .then((data) => {   
                     setProvince(data);
-                    setEditTen(data.theaterName);
                 })
                 .catch((error) => {
                     console.log(error);
@@ -55,41 +67,39 @@ export default function EditTheater(props) {
         getAllProvinceAPI();
     }, []);
 
-    // const [inputTen, setInputTen] = useState('');
-    // const [inputTinhThanh, setInputTinhThanh] = useState('');
-    // const [inputDiaChi, setInputDiaChi] = useState('');
-
-
     //update call api 
     const handleEdit = (event) => {
         event.preventDefault();
-        console.log(editTinhThanh)
+        let errors = {};
         const data = {
             theaterId: theaterId,
-            theaterName: editTen,
-            theaterAddress: editDiaChi,
+            theaterName: editData.editTen,
+            theaterAddress: editData.editDiaChi,
             province : {
-                provinceId : editTinhThanh
+                provinceId : editData.editTinhThanh
             },    
         }
-
-        console.log(data)
-
-
-        Modal.confirm({
-            title: "Bạn muốn thay đổi rạp phim?",
-            okText: "Thêm",
-            onOk: () => {
-
-                TheaterService.updateTheater(data,theaterId);
-
-                TheaterService.getAllTheater();
-            },
-            cancelText: 'Đóng',
-            onCancel: () => {
-            },
-
-        });
+        handleValidationTheater(editData, errors);
+        if(Object.keys(errors).length === 0){
+            Modal.confirm({
+                title: "Bạn muốn thay đổi rạp phim?",
+                okText: "Thêm",
+                onOk: () => {
+    
+                    TheaterService.updateTheater(data,theaterId);
+    
+                    TheaterService.getAllTheater();
+                    setErrors([])
+                },
+                cancelText: 'Đóng',
+                onCancel: () => {
+                },
+    
+            });
+        } else {
+            setErrors(errors);
+        }
+        
     }
 
     return (
@@ -110,27 +120,30 @@ export default function EditTheater(props) {
                         <form
                             onSubmit={handleEdit}
                         >
+                            {errors.editTen && <p className="col-md-10 invalid-feedback" style={{ display: "block", color: "red"}}>{errors.editTen}</p>}
                             <div class="mb-3 row">
                                 <label for="html5-text-input" class="col-md-2 col-form-label">Tên</label>
                                 <div class="col-md-10">
-                                    <input class="form-control" type="text" placeholder="Nhập tên rạp" id="html5-text-input"  value={editTen} onChange={(e) => setEditTen(e.target.value)}/>
+                                    <input class="form-control" type="text" placeholder="Nhập tên rạp" id="html5-text-input"  value={editData.editTen} onChange={handleInputChange} name="editTen"/>
                                 </div>
                             </div>
+                            {errors.editTinhThanh && <p className="col-md-10 invalid-feedback" style={{ display: "block", color: "red"}}>{errors.editTinhThanh}</p>}
                             <div class="mb-3 row">
                                 <label for="exampleFormControlSelect1" class="col-md-2 col-form-label">Tỉnh thành</label>
                                 <div class="col-md-10">
-                                    <select placeholder="Chọn tỉnh thành" onChange={handleChangeSelected} className="form-control" value={editTinhThanh}>
+                                    <select placeholder="Chọn tỉnh thành" onChange={handleInputChange} className="form-control" value={editData.editTinhThanh} name="editTinhThanh">
                                         {provinces.map((provinceItem) => (
                                             <option key={provinceItem.provinceId} value={provinceItem.provinceId}>
                                                 {provinceItem.provinceName}
                                             </option>))}
                                     </select>
                                 </div>
-                            </div>
+                           </div>
+                            {errors.editDiaChi && <p className="col-md-10 invalid-feedback" style={{ display: "block", color: "red"}}>{errors.editDiaChi}</p>}
                             <div class="mb-3 row">
                                 <label for="exampleFormControlTextarea1" class="col-md-2 col-form-label">Địa chỉ</label>
                                 <div class="col-md-10">
-                                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="Nhập địa chỉ" value={editDiaChi} onChange={(e) => setEditDiaChi(e.target.value)}/>
+                                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="Nhập địa chỉ" value={editData.editDiaChi} onChange={handleInputChange} name="editDiaChi"/>
                                 </div>
                             </div>
                             
