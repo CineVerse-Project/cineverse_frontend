@@ -151,9 +151,8 @@
     display: none;
 }
 
-.row {
+.rowSeats {
     margin: 2px;
-    font-size: 0;
 }
 
 .group__seat{

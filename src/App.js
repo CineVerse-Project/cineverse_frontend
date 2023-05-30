@@ -34,7 +34,7 @@ import EditRoom from "./components/pages/admin/room/EditRoom";
 
 function App() {
     // Nếu muốn Hiển thị User Side thì sửa thành false, Admin Side thì true
-    const isAdmin = false;
+    const isAdmin = true;
 
     return (
         <div className="App">
