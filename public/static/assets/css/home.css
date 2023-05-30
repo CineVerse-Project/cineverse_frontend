@@ -1046,3 +1046,46 @@
   font-weight: normal;
   font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 } */
+dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  z-index: 1;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.dropdown-content{
+  background-color: rgb(60, 60, 60);;
+  width: 130px;
+  padding: 5px;
+  border-radius: 5px;
+  position: absolute;
+  top: 22px;
+  right: 0px;
+  text-align: center;
+}
+
+.dropdown-content ul li a{
+  color: white;
+  font-size: 16px;
+}
+
+.dropdown-content ul li a:hover{
+  color: #ec3608;
+}
+
+.dropdown-content ul li{
+  list-style: none;
+}
+
+.dropdown-content ul{
+  padding: 0px;
+  margin: 0px;
+}

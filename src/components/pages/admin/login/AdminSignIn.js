@@ -34,7 +34,7 @@ const AdminSignIn = () => {
                 })
                 .catch((error) => {
                     console.log(error)
-                    Notification.toastErrorNotification(error.response.data);
+                    Notification.toastErrorNotification(error?.response?.data);
                 })
         }
     })

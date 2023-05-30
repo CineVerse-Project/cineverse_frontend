@@ -1,7 +1,37 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React,{useState,useEffect} from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 function NavBarUser() {
+  const [user,setUser] = useState('');
+  const [token,setToken] = useState('');
+  const [role,setRole] = useState('');
+  const username = localStorage.getItem('username') ? localStorage.getItem('username') : null;
+  const accessToken = localStorage.getItem('access_token') ? localStorage.getItem('access_token') : null
+  const roles = localStorage.getItem('roles') ? localStorage.getItem('roles') : null;
+  const navigate = useNavigate();
+  useEffect(()=>{
+    if(username){
+      setUser(username);
+    }else{
+      setUser(null);
+    }
+    if(accessToken){
+      setToken(accessToken)
+    }else{
+      setToken(null);
+    }
+    if(roles){
+      setRole(roles);
+    }else{
+      setRole(null);
+    }
+  },[user,token,role,localStorage.getItem('username'),localStorage.getItem('access_token'),localStorage.getItem('roles')])
+  const handleSignOut = () => {
+    localStorage.removeItem("username");
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("roles");
+    navigate("/");
+  }
   return (
     <>
       <div className="navbar-container">
@@ -26,9 +56,19 @@ function NavBarUser() {
             <li className="menu-list-item">
               <a href="#">Thông tin</a>
             </li>
+            <li className="menu-list-item">
+              {
+                !user ? 
+                 <Link to="sign-in">Đăng nhập</Link>
+                 :<div><Link to={`user/${user}`}>Xin chào, {user}!</Link> <button onClick={handleSignOut}>Đăng xuất</button></div>
+              }
+                
+              </li>
+            
           </ul>
         </div>
-        <div className="profile-container">
+
+        {/* <div className="profile-container">
           <img className="profile-picture" src="../pages/user/style/img/18.jpg" alt="" />
           <div className="profile-text-container">
             <span className="profile-text">Tài khoản</span>
@@ -39,7 +79,7 @@ function NavBarUser() {
             <i className="fas fa-sun toggle-icon" />
             <div className="toggle-ball" />
           </div>
-        </div>
+        </div> */}
       </div>
     </>
   );
