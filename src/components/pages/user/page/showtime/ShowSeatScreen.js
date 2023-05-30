@@ -128,7 +128,7 @@ function ShowSeatScreen() {
         );
       }
       rows.push(
-        <div key={row} className="row">
+        <div key={row} className="rowSeats">
           {rowSeats}
         </div>
       );
