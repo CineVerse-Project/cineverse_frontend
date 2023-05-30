@@ -1,8 +1,9 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
-import NavBarUser from "./NavBarUser";
-import FooterUser from "./FooterUser";
-import SideBarUser from "./SidebarUser";
+import NavBarUser from './NavBarUser';
+import FooterUser from './FooterUser';
+import SideBarUser from './SidebarUser';
+import "../pages/user/style/css/home.css";
 
 function LayoutUser() {
     return (
