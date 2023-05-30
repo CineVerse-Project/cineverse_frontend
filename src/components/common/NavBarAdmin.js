@@ -13,9 +13,9 @@ function NavBarAdmin() {
                 }}
             >
                 <div className="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0 d-xl-none">
-                    <a className="nav-item nav-link px-0 me-xl-4" href=" ">
+                    <div className="nav-item nav-link px-0 me-xl-4">
                         <i className="bx bx-menu bx-sm"></i>
-                    </a>
+                    </div>
                 </div>
 
                 <div
@@ -28,7 +28,7 @@ function NavBarAdmin() {
 
                         {/* <!-- User --> */}
                         <li className="nav-item navbar-dropdown dropdown-user dropdown">
-                            <a
+                            <div
                                 className="nav-link dropdown-toggle hide-arrow"
                                 href=" "
                                 data-bs-toggle="dropdown"
@@ -40,10 +40,10 @@ function NavBarAdmin() {
                                         className="w-px-40 h-auto rounded-circle"
                                     />
                                 </div>
-                            </a>
+                            </div>
                             <ul className="dropdown-menu dropdown-menu-end">
                                 <li>
-                                    <a className="dropdown-item" href=" ">
+                                    <button className="dropdown-item">
                                         <div className="d-flex">
                                             <div className="flex-shrink-0 me-3">
                                                 <div className="avatar avatar-online">
@@ -63,32 +63,32 @@ function NavBarAdmin() {
                                                 </small>
                                             </div>
                                         </div>
-                                    </a>
+                                    </button>
                                 </li>
                                 <li>
                                     <div className="dropdown-divider"></div>
                                 </li>
                                 <li>
-                                    <a className="dropdown-item" href=" ">
+                                    <button className="dropdown-item">
                                         <i className="bx bx-user me-2"></i>
                                         <span className="align-middle">
                                             Thông tin của tôi
                                         </span>
-                                    </a>
+                                    </button>
                                 </li>
                                 <li>
-                                    <a className="dropdown-item" href=" ">
+                                    <button className="dropdown-item" href=" ">
                                         <i className="bx bx-cog me-2"></i>
                                         <span className="align-middle">
                                             Cài đặt
                                         </span>
-                                    </a>
+                                    </button>
                                 </li>
                                 <li>
                                     <div className="dropdown-divider"></div>
                                 </li>
                                 <li>
-                                    <a
+                                    <button
                                         className="dropdown-item"
                                         href="auth-login-basic.html"
                                     >
@@ -96,7 +96,7 @@ function NavBarAdmin() {
                                         <span className="align-middle">
                                             Đăng xuất
                                         </span>
-                                    </a>
+                                    </button>
                                 </li>
                             </ul>
                         </li>
