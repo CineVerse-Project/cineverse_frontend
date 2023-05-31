@@ -56,7 +56,7 @@ function App() {
     useEffect(()=>{
         checkLogin();
         checkAdmin();
-    },[token,username,admin])
+    },[token,username,role])
     const checkLogin = () => {
         if(token!=null || username !=null|| role != null){
             setIsLogin(true);
@@ -64,7 +64,7 @@ function App() {
 
     }
     const checkAdmin = () => {
-        if(role.endsWith("ADMIN")){
+        if(role === "ROLE_ADMIN"){
             setAdmin(true);
         }
     }

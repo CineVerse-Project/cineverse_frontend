@@ -1,5 +1,5 @@
 import { useFormik } from "formik";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import * as Yup from 'yup';
@@ -61,6 +61,11 @@ const ChangePassword = () => {
                 )
         }
     })
+    useEffect(()=>{
+        if(role!=="ROLE_USER"){
+            navigate("/");
+        }
+    },[role])
     return (<div>
         <div className="mx-auto mt-4" >
             <ToastContainer />
