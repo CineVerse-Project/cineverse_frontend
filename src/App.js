@@ -1,5 +1,5 @@
-import { BrowserRouter, Routes, Route ,useNavigate} from "react-router-dom";
-import {useState,useEffect} from "react"
+import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import "./App.css";
 import Dashboard from "./components/pages/admin/Dashboard";
 
@@ -38,32 +38,35 @@ import ForgotPassword from '../src/components/pages/user/information/ForgotPassw
 import ResetPassWord from '../src/components/pages/user/information/ResetPassword'
 import SignIn from "./components/pages/user/information/SignIn";
 import AdminSignIn from "./components/pages/admin/login/AdminSignIn";
-import InformationLayout from "./components/pages/user/information/InformationLayout"
-import UserInformation from "../src/components/pages/user/information/UserInformation"
-import UpdateInformation from '../src/components/pages/user/information/UpdateInformation'
-import ChangePassword from '../src/components/pages/user/information/ChangePassword'
-import OrderHistory from '../src/components/pages/user/information/OrderHistory'
-import EarnPoints from '../src/components/pages/user/information/EarnPoints'
-import 'react-toastify/dist/ReactToastify.css';
+import InformationLayout from "./components/pages/user/information/InformationLayout";
+import UserInformation from "../src/components/pages/user/information/UserInformation";
+import UpdateInformation from "../src/components/pages/user/information/UpdateInformation";
+import ChangePassword from "../src/components/pages/user/information/ChangePassword";
+import OrderHistory from "../src/components/pages/user/information/OrderHistory";
+import EarnPoints from "../src/components/pages/user/information/EarnPoints";
+import "react-toastify/dist/ReactToastify.css";
+import Chat from "./components/chat/Chat";
+import ChatUser from "./components/chat/ChatUser";
 
 function App() {
     // Nếu muốn Hiển thị User Side thì sửa thành false, Admin Side thì true
+
     const role = localStorage.getItem("roles") ? localStorage.getItem("roles") : null;
     const token = localStorage.getItem("access_token") ? localStorage.getItem("access_token") : null;
     const username = localStorage.getItem("username") ? localStorage.getItem("roles") : null;
     
     const [isLogin,setIsLogin] = useState(false);
     const [admin,setAdmin] = useState(true);
-    // useEffect(()=>{
-    //     if(role!=null){
-    //         setIsLogin(true);
-    //     }
-    //     if(isLogin){
-    //         if(role=='ROLE_ADMIN'){
-    //             setAdmin(true);
-    //         }
-    //     }
-    // },[admin,token,username,isLogin])
+    useEffect(()=>{
+        if(role!=null){
+            setIsLogin(true);          
+        }
+        if (isLogin) {
+            if (role == "ROLE_ADMIN") {
+                setAdmin(true);
+            }
+        }
+    }, [admin, token, username, isLogin]);
     return (
         <div className="App">
             <BrowserRouter>
@@ -126,6 +129,8 @@ function App() {
                     {!admin && (
                         <Route path="/" element={<LayoutUser />}>
                             <Route index element={<Home />} />
+                            <Route path="/chat" element={<Chat />} />
+                            <Route path="/chatUser" element={<ChatUser />} />
                             <Route
                                 path="showtime"
                                 element={<ShowTimeScreen />}
@@ -152,17 +157,42 @@ function App() {
                             />
                             <Route path="sign-in" element={<SignIn />} />
                             <Route path="sign-up" element={<SignUp />} />
-                            <Route path="reset-password" element={<ResetPassWord />} />
-                            <Route path="forgot-password" element={<ForgotPassword />} />
+                            <Route
+                                path="reset-password"
+                                element={<ResetPassWord />}
+                            />
+                            <Route
+                                path="forgot-password"
+                                element={<ForgotPassword />}
+                            />
 
-                            <Route path="admin-sign-in" element={<AdminSignIn />} />
-                            
+                            <Route
+                                path="admin-sign-in"
+                                element={<AdminSignIn />}
+                            />
+
                             <Route path="user" element={<InformationLayout />}>
-                                    <Route index path=':username' element={<UserInformation />}/>
-                                    <Route  path='update-information/:username' element={<UpdateInformation />}/>
-                                    <Route  path='change-password/:username' element={<ChangePassword />}/>
-                                    <Route  path='order-history/:username' element={<OrderHistory />}/>
-                                    <Route  path='earn-points/:username' element={<EarnPoints />}/>
+                                <Route
+                                    index
+                                    path=":username"
+                                    element={<UserInformation />}
+                                />
+                                <Route
+                                    path="update-information/:username"
+                                    element={<UpdateInformation />}
+                                />
+                                <Route
+                                    path="change-password/:username"
+                                    element={<ChangePassword />}
+                                />
+                                <Route
+                                    path="order-history/:username"
+                                    element={<OrderHistory />}
+                                />
+                                <Route
+                                    path="earn-points/:username"
+                                    element={<EarnPoints />}
+                                />
                             </Route>
                             <Route path="*" element={<Home />} />
                         </Route>
