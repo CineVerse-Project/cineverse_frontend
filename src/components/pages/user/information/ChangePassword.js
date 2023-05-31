@@ -75,7 +75,7 @@ const ChangePassword = () => {
                                     id="password"
                                     value={formik.oldPassword} onChange={formik.handleChange}
                                     name="oldPassword" />
-                                <i className={showOldPassword ? "fas fa-eye icon" : "fas fa-eye-slash icon"} id="show_hide_password-icon" style={{ cursor: 'pointer', padding: '12px 12px' }} onClick={() => setShowOldPassword(!showOldPassword)} ></i>
+                                <i className={showOldPassword ? "fas fa-eye icons" : "fas fa-eye-slash icons"} id="show_hide_password-icon" style={{ cursor: 'pointer', padding: '12px 12px' }} onClick={() => setShowOldPassword(!showOldPassword)} ></i>
                             </div>
                             {formik.errors.oldPassword && <p className="text-danger">{formik.errors.oldPassword}</p>}
                         </div>
@@ -93,7 +93,7 @@ const ChangePassword = () => {
                                     value={formik.newPassword}
                                     onChange={formik.handleChange}
                                     name="newPassword" />
-                                <i className={showNewPassword ? "fas fa-eye icon" : "fas fa-eye-slash icon"} id="show_hide_new-password-icon" style={{ cursor: 'pointer', padding: '12px 12px' }} onClick={() => setShowNewPassword(!showNewPassword)} ></i>
+                                <i className={showNewPassword ? "fas fa-eye icons" : "fas fa-eye-slash icons"} id="show_hide_new-password-icon" style={{ cursor: 'pointer', padding: '12px 12px' }} onClick={() => setShowNewPassword(!showNewPassword)} ></i>
                             </div>
                             {formik.errors.newPassword && <p className="text-danger">{formik.errors.newPassword}</p>}
                         </div>
@@ -106,7 +106,7 @@ const ChangePassword = () => {
                                 <input type={showConfirmPassword ? "text" : "password"} className="input-red input-with-icon" placeholder="Nhập xác nhận mật khẩu mới" id="re-new-password"
                                     value={formik.confirmNewPassword}
                                     onChange={formik.handleChange} name="confirmNewPassword" />
-                                <i className={showConfirmPassword ? "fas fa-eye icon" : "fas fa-eye-slash icon"} id="show_hide_re-new-password-icon" style={{ cursor: 'pointer', padding: '12px 12px' }} onClick={() => setShowConfirmPassword(!showConfirmPassword)}></i>
+                                <i className={showConfirmPassword ? "fas fa-eye icons" : "fas fa-eye-slash icons"} id="show_hide_re-new-password-icon" style={{ cursor: 'pointer', padding: '12px 12px' }} onClick={() => setShowConfirmPassword(!showConfirmPassword)}></i>
                             </div>
                             {formik.errors.confirmNewPassword && <p className="text-danger">{formik.errors.confirmNewPassword}</p>}
                         </div>

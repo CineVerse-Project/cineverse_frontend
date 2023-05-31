@@ -1,4 +1,5 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import "./App.css";
 import Dashboard from "./components/pages/admin/Dashboard";
 
@@ -45,16 +46,38 @@ import EarnPoints from "../src/components/pages/user/information/EarnPoints";
 import "react-toastify/dist/ReactToastify.css";
 import Chat from "./components/chat/Chat";
 import ChatUser from "./components/chat/ChatUser";
+
 function App() {
     // Nếu muốn Hiển thị User Side thì sửa thành false, Admin Side thì true
-    const isAdmin = false;
 
+    const role = localStorage.getItem("roles")
+        ? localStorage.getItem("roles")
+        : null;
+    const token = localStorage.getItem("access_token")
+        ? localStorage.getItem("access_token")
+        : null;
+    const username = localStorage.getItem("username")
+        ? localStorage.getItem("roles")
+        : null;
+
+    const [isLogin, setIsLogin] = useState(false);
+    const [admin, setAdmin] = useState(false);
+    useEffect(() => {
+        if (role != null) {
+            setIsLogin(true);
+        }
+        if (isLogin) {
+            if (role == "ROLE_ADMIN") {
+                setAdmin(true);
+            }
+        }
+    }, [admin, token, username, isLogin]);
     return (
         <div className="App">
             <BrowserRouter>
                 <Routes>
                     {/* Admin Side */}
-                    {isAdmin && (
+                    {admin && (
                         <Route path="/" element={<LayoutAdmin />}>
                             <Route index element={<Dashboard />} />
 
@@ -104,7 +127,7 @@ function App() {
                     )}
 
                     {/* User Side */}
-                    {!isAdmin && (
+                    {!admin && (
                         <Route path="/" element={<LayoutUser />}>
                             <Route index element={<Home />} />
                             <Route path="/chat" element={<Chat />} />

@@ -14,21 +14,26 @@ const OrderHistory = () => {
 
     const { username } = useParams();
     const navigate = useNavigate();
-    const [dataLength, setDataLength] = useState(0);
+    const [dataLength, setDataLength] = useState(9);
     const [currentPage, setCurrentPage] = useState(0);
+    const [itemsPerPage,setItemsPerPage] = useState(2);
+    const [totalPage,setTotalPage] = useState(0);
     const [orderHistory, setOrderHistory] = useState([]);
     // const [loadMore, setLoadMore] = useState(0);
     const token = localStorage.getItem("access_token") ? localStorage.getItem("access_token") : null;
     const loadMoreOnClick = () => {
         setCurrentPage((prev) => prev + 1);
-
     }
     useEffect(() => {
         UserService.orderHistoryByUsername(username, token)
             .then((data) => {
-                console.log(data);
                 setOrderHistory([...data]);
                 setDataLength(data.length);
+                if(dataLength%itemsPerPage!==0){
+                    setTotalPage(Math.round(dataLength/itemsPerPage));
+                }else{
+                    setTotalPage(dataLength/itemsPerPage);
+                }
             })
             .catch((error) => {
                 if (error?.response?.status === 400) {
@@ -38,13 +43,15 @@ const OrderHistory = () => {
                     navigate("/sign-in")
                     Notification.toastErrorNotification("Vui lòng đăng nhập lại!")
                 }
+                if (error?.response?.status===500){
+                    navigate("/sign-in")
+                    Notification.toastErrorNotification("Vui lòng đăng nhập lại!")
+                }
             })
-
     }, []);
+    console.log(orderHistory);
     const orderHistoryMapLoadMore = () => {
-        let loadItem = 2;
-
-        for (let i = 0; i < 2; i++) {
+        for (let i = 0; i < itemsPerPage*(currentPage+1); i++) {
             return <div>
                 <div className="row">
                     <div className="col-9">
@@ -73,14 +80,6 @@ const OrderHistory = () => {
                         </div>
                     </div>
                 </div>
-                <hr />
-                {
-                    (currentPage < dataLength / 2) && <div>
-                        <div className="text-center">
-                            <button className="btn-red" onClick={loadMoreOnClick}>Xem thêm</button>
-                        </div>
-                    </div>
-                }
             </div>
         }
     }
@@ -119,17 +118,30 @@ const OrderHistory = () => {
             <h5 className="text-uppercase text-center p-2 text-white" style={{ backgroundColor: '#c23b1a' }}>Lịch sử đặt vé</h5>
         </div>
         {orderHistory?.length > 0 ?
-            <div> {orderHistoryMap}
-                <div>
-                    <div className="text-center">
-                        <button className="btn-red" >Xem thêm</button>
+            <div> {orderHistoryMapLoadMore}
+                <hr />
+                {
+                    (currentPage < dataLength / 2) && <div>
+                        <div className="text-center">
+                            <button className="btn-red" onClick={loadMoreOnClick}>Xem thêm</button>
+                        </div>
                     </div>
-                </div>
+                }
             </div>
             :
             <div>
                 Không có lịch sử giao dịch
+                { currentPage < totalPage -1  &&
+                        <div>
+                            <div className="text-center">
+                                <button className="btn-red" onClick={loadMoreOnClick}>Xem thêm</button>
+                            </div>
+                        </div>
+                }
+                
+                
             </div>
+            
         }
 
     </div>)

@@ -38,10 +38,14 @@ import { hasUnreliableEmptyValue } from "@testing-library/user-event/dist/utils"
 import axios from "axios";
 //gia huy
 import { Link } from 'react-router-dom';
+
 export default function ManageTheater() {
 
-  const [theaterId, setTheaterId] = useState("");
   
+  const [theaterId, setTheaterId] = useState("");
+  const [provinces, setProvince] = useState([]);
+  const [theater, setTheater] = useState([]);
+  const [deleteId,setDeleteId] = useState(" ");
   //hien thi edit va delete khi click icon action
   const items: MenuProps["items"] = [
     {
@@ -135,7 +139,8 @@ export default function ManageTheater() {
         return <SearchOutlined />;
       },
       onFilter: (value, record) => {
-        return record.location.toLowerCase().includes(value.toLowerCase());
+        // sua lai ten bien
+        return record.province.provinceName.toLowerCase().includes(value.toLowerCase());
       },
     },
     {
@@ -198,27 +203,22 @@ export default function ManageTheater() {
 
   //Confirm delete
   const deleteConfirm = () => {
-
     const id = theaterId;
-    console.log(id)
     Modal.confirm({
       title: "Are you sure to delete?",
       okText: "Delete",
       okType: "danger",
       cancelText: "Cancel",
       onOk: () => {
-        TheaterService.deleteTheater(id);
+        setDeleteId(id);
         console.log(id);
-        setEditData(null);
+        TheaterService.deleteTheater(id);
+        getAllTheaterAPI();
       },
       onCancel: () => {
       }
     });
   };
-
-
-  const [provinces, setProvince] = useState([]);
-  const [theater, setTheater] = useState([]);
 
   // lay danh sach theater call api
   const getAllTheaterAPI = async () => {
@@ -234,22 +234,8 @@ export default function ManageTheater() {
   // goi useeEffect khi table theater thay doi
   useEffect(() => {
     getAllTheaterAPI();
-  },[])
+  },[deleteId])
 
-  // lay danh sach tinh thanh call api
-  useEffect(() => {
-    const getAllProvinceAPI = async () => {
-      ProvinceService.getAllProvince()
-        .then((data) => {
-          setProvince(data);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    };
-
-    getAllProvinceAPI();
-  }, []);
 
   const [inputTinhThanh, setInputTinhThanh] = useState('');
 
