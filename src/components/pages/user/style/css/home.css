@@ -174,7 +174,6 @@
   align-items: center;
   justify-content: space-around;
   position: relative;
-  display: none;
 }
 
 .toggle-icon {
