@@ -68,7 +68,7 @@ export default function ManageMovie() {
                 return <SearchOutlined />
             },
             onFilter: (value, record) => {
-                return record.location.toLowerCase().includes(value.toLowerCase())
+                return record.movieName.toLowerCase().includes(value.toLowerCase())
             },
         },
         {
@@ -99,6 +99,7 @@ export default function ManageMovie() {
                 return <SearchOutlined />
             },
             onFilter: (value, record) => {
+            
                 return record.startDate.toLowerCase().includes(value.toLowerCase())
             },
         },

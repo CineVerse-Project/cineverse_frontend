@@ -59,8 +59,6 @@ export default function CreateTheater() {
         } else {
             setError(errors);
         }
-        console.log(errors);
-       
     }
 
     //get list tinh thanh

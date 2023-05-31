@@ -20,8 +20,8 @@ export default function EditRoom() {
   const [errors, setErrors] = useState({
     editTenPhong: '',
     editTenRap: '',
-    editSoCot: '',
-    editSoHang: '',
+    // editSoCot: '',
+    // editSoHang: '',
   })
 
   const { roomId } = useParams();
@@ -152,8 +152,8 @@ export default function EditRoom() {
                 />
               </div>
             </div>
-            {errors.editSoCot && <p className="col-md-10 invalid-feedback" style={{ display: "block", color: "red"}}>{errors.editSoCot}</p>}
-            {errors.editSoHang && <p className="col-md-10 invalid-feedback" style={{ display: "block", color: "red"}}>{errors.editSoHang}</p>}
+            {/* {errors.editSoCot && <p className="col-md-10 invalid-feedback" style={{ display: "block", color: "red"}}>{errors.editSoCot}</p>}
+            {errors.editSoHang && <p className="col-md-10 invalid-feedback" style={{ display: "block", color: "red"}}>{errors.editSoHang}</p>} */}
 
             <div class="mb-3 row d-flex align-items-center">
               <label for="html5-email-input" class="col-md-2 col-form-label">
@@ -168,6 +168,7 @@ export default function EditRoom() {
                   value={editData.editSoHang}
                   onChange={handleInputChange}
                   name="editSoHang"
+                  disabled
                 />
               </div>
               x
@@ -180,6 +181,7 @@ export default function EditRoom() {
                   value={editData.editSoCot}
                   onChange={handleInputChange}
                   name="editSoCot"
+                  disabled
                 />
               </div>
             </div>

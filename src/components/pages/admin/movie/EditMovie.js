@@ -5,7 +5,14 @@ import { useParams } from "react-router-dom";
 import TypeMovieService from "../../../../services/TypeMovieService";
 import MovieService from "../../../../services/MovieService";
 import { handleValidationMovie } from "../../../../services/handleValidationMovie";
+import { storage } from "../../../../constants/firebase";
+import { ref, uploadBytes, listAll, getDownloadURL } from "firebase/storage";
+import { v4 } from "uuid";
 export default function EditMovie(props) {
+
+    //firebase
+    const [imgUpload, setImgUpload] = useState("");
+
 
     //data luu du lieu detail
     const [editData, setEditData] = useState({
@@ -20,6 +27,7 @@ export default function EditMovie(props) {
         editNgayChieu: '',
         editNgayDong: '',
         editTrailler: '',
+        editStatus: '',
     })
 
     //usestate input errror 
@@ -35,6 +43,7 @@ export default function EditMovie(props) {
         editNgayChieu: '',
         editNgayDong: '',
         editTrailler: '',
+        editStatus:'',
     })
 
     //nhan gia tri thay doi trong o input
@@ -43,6 +52,13 @@ export default function EditMovie(props) {
         const value = event.target.value;
 
         setEditData((preData) => ({...preData, [field]: value}));
+    }
+
+    const handleInputFile = (event) => {
+      const field = event.target.name;
+      const value = event.target.files[0];
+
+      setEditData((preData) => ({...preData, [field]: value}));
     }
 
    const { movieId } = useParams();
@@ -55,15 +71,17 @@ export default function EditMovie(props) {
       .then((result) => {
         setEditData({
             editTenPhim: result.data.movieName,
-            editPoster: result.data.imageUrl,
+            //editPoster: result.data.imageUrl,
             editDienVien: result.data.actor,
             editDienVien: result.data.director,
+            editLoaiPhim: result.data.movieType.movieTypeId,
             editPhimTruong: result.data.filmStudio,
             editMoTa: result.data.description,
             editThoiLuong: result.data.duration,
             editNgayChieu: result.data.startDate,
             editNgayDong: result.data.endDate,
-            editTrailler: result.data.trailerUrl,
+            editStatus: result.data.status,
+            // editTrailler: result.data.trailerUrl,
         })
       })
       .catch((error) => {});
@@ -94,6 +112,8 @@ export default function EditMovie(props) {
     
     const data = {
       movieId: movieId,
+      imageUrl : imgUpload,
+      trailerUrl : editData.editTrailler,
       movieName: editData.editTenPhim,
       startDate: editData.editNgayChieu,
       endDate: editData.editNgayDong,
@@ -105,6 +125,7 @@ export default function EditMovie(props) {
       movieType: {
         movieTypeId: editData.editLoaiPhim,
       },
+      status: editData.editStatus,
     };
     handleValidationMovie(editData, errors);
     if(Object.keys(errors).length === 0){
@@ -124,7 +145,17 @@ export default function EditMovie(props) {
     }
   };
 
-
+ useEffect(() => {
+    if (editData.editPoster == null) {
+      return;
+    }
+    const imgRef = ref(storage, `movie/${editData.editTenPhim + v4()}`);
+    uploadBytes(imgRef, editData.editPoster).then((snapshot) => {
+      getDownloadURL(snapshot.ref).then((url) => {
+        setImgUpload(url);
+      });
+    });
+  }, [editData.editPoster]);
   return (
     <>
       <div class="container-xxl flex-grow-1 container-p-y">
@@ -169,8 +200,7 @@ export default function EditMovie(props) {
                     class="form-control"
                     type="file"
                     id="formFile"
-                    value={editData.editPoster}
-                    onChange={handleInputChange}
+                    onChange={handleInputFile}
                     name="editPoster"
                   />
                 </div>
@@ -229,7 +259,8 @@ export default function EditMovie(props) {
                 </label>
                 <div class="col-md-10">
                   <select
-                    class="form-control"
+                    placeholder="Chọn thể loại"
+                    className="form-control"
                     value={editData.editLoaiPhim}
                     name="editLoaiPhim"
                     onChange={handleInputChange}
@@ -239,6 +270,24 @@ export default function EditMovie(props) {
                         {typeItem.moveTypeName}
                       </option>
                     ))}
+                  </select>
+                </div>
+              </div>
+              <div class="mb-3 row">
+                <label for="html5-email-input" class="col-md-2 col-form-label">
+                  Trạng thái
+                </label>
+                <div class="col-md-10">
+                  <select
+                    class="form-control"
+                    value={editData.editStatus}
+                    name="editStatus"
+                    onChange={handleInputChange}
+                  >
+                    <option value="">Chọn trạng thái</option>
+                    <option value="0" >Đã Chiếu</option>
+                    <option value="1">Đang chiếu</option>
+                    <option value="2">Sắp chiếu</option>
                   </select>
                 </div>
               </div>
@@ -313,8 +362,8 @@ export default function EditMovie(props) {
                 <div class="col-md-10">
                   <input
                     class="form-control"
-                    type="file"
-                    id="formFile"
+                    type="text"
+                    id="html5-text-input"
                     onChange={handleInputChange}
                     value={editData.editTrailler}
                     name="editTrailler"

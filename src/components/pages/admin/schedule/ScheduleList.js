@@ -8,6 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 import adminService from "../../../../services/AdminServices";
 import ScheduleTable from "./ScheduleTable";
 import { toastConfig } from "../../../../constants/config";
+import moment from "moment";
 
 function ScheduleList() {
     const [schedules, setSchedules] = useState();
@@ -33,6 +34,33 @@ function ScheduleList() {
         };
         getAllScheduleAPI();
     }, [currentPage, deletedScheduleId, keyword]);
+
+    useEffect(() => {
+        if (schedules?.length > 0) {
+            const weeks = {};
+            schedules.forEach((line) => {
+                const { sheduleDateTime } = line.scheduleId;
+                console.log(line);
+
+                // Lấy ngày trong tuần từ chuỗi thời gian
+                const date = new Date(sheduleDateTime);
+                console.log(sheduleDateTime);
+                const weekKey =
+                    date.getFullYear() + "-W" + moment(date).isoWeek();
+
+                // Tạo mảng ngày trong tuần nếu chưa tồn tại
+                if (!weeks[weekKey]) {
+                    weeks[weekKey] = [];
+                }
+
+                // Thêm ngày vào mảng ngày trong tuần
+                weeks[weekKey].push({
+                    line,
+                });
+            });
+            console.log(weeks);
+        }
+    }, [schedules]);
 
     const handleDeleteSchedule = (scheduleId) => {
         setDeletedScheduleId(scheduleId);

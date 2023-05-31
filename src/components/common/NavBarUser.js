@@ -62,7 +62,7 @@ function NavBarUser() {
             {/* <li className="menu-list-item">
               {
                 !user ? 
-                 <Link to="sign-in">Đăng nhập</Link>
+                 <Link to="sign-in" style={{color: 'white'}}>Đăng nhập</Link>
                  :<div><Link to={`user/${user}`}>Xin chào, {user}!</Link> <button onClick={handleSignOut}>Đăng xuất</button></div>
               }
                 
@@ -72,15 +72,16 @@ function NavBarUser() {
         </div>
 
         <div className="profile-container">
+
           <img className="profile-picture" src="../pages/user/style/img/18.jpg" alt="" />
           <div className="profile-text-container">
-            {!user ? <span className="profile-text">Tài khoản</span> : <Link to={`/user/${user}`}className="profile-text">{user}</Link>}
-            
+            {!user ? <span className="profile-text">Tài khoản</span> : <Link to={`/user/${user}`}className="profile-text">{user}</Link>}  
             <div className="dropdown">
               <i className="fas fa-caret-down dropbtn" />
               <div class="dropdown-content">
                 {
                   !user ? <ul>
+
                     <li>
                       <Link to="/sign-in">Đăng nhập</Link>
                     </li>
@@ -103,13 +104,10 @@ function NavBarUser() {
                       </li>
                     </ul>
                 }
-
-
-
               </div>
             </div>
           </div>
-          <div className="toggle">
+          <div className="toggle" >
             <i className="fas fa-moon toggle-icon" />
             <i className="fas fa-sun toggle-icon" />
             <div className="toggle-ball" />
