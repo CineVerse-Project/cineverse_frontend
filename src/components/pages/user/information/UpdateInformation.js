@@ -156,7 +156,7 @@ const UpdateInformation = () => {
                                         // onChange={(e) => setUser({ ...user, password: e.target.value })}
                                         onChange={handleChange}
                                     />
-                                    <i className={showPassword ? "fas fa-eye icon" : "fas fa-eye-slash icon"} id="show_hide_password-icon" style={{ cursor: 'pointer', padding: '12px 12px' }} onClick={() => { setShowPassword(!showPassword) }}></i>
+                                    <i className={showPassword ? "fas fa-eye icons" : "fas fa-eye-slash icons"} id="show_hide_password-icon" style={{ cursor: 'pointer', padding: '12px 12px' }} onClick={() => { setShowPassword(!showPassword) }}></i>
                                     </div>
                                     {errors.password && <p className="text-danger mb-1">{errors.password}</p> }
                                 </div>

@@ -36,11 +36,8 @@ const SignIn = () => {
             if(localStorage.getItem("roles")==null){
                 localStorage.setItem('roles',data.roles)
             }
-            
             Notification.toastSuccessNotification("Đăng nhập thành công");
-            
-            setTimeout(()=>{navigate(`/user/${login.username}`)},2000)
-            
+            navigate(`/`)
         })
         .catch(
             (err)=>{

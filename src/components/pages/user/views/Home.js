@@ -6,6 +6,7 @@ import Discount from "../home/Discount";
 import MovieListTop10IsShowing from "../home/MovieListTop10IsShowing";
 import "../style/css/home.css";
 
+
 function Home() {
   return (
       <div className="container-home">

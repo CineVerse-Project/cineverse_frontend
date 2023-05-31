@@ -7,22 +7,20 @@ import MovieService from "../../../../services/MovieService";
 import { Link } from 'react-router-dom';
 
 export default function ManageMovie() {
-
- 
+    const [deleteId,setDeleteId] = useState();
+    const [theaterId, setTheaterId] = useState("");
     const [movieId, setmMovieId] = useState("");
 
     //khai bao edit va delete button
     const items: MenuProps['items'] = [
-        // {
-        //     key: '1',
-        //    label: (
-        //         <Link style={{ width: "100px" }} to={`/editMovie/${movieId}`} 
-        //         // href={`/editTheater/${theaterId}`}
-        // >
-        //           <EditOutlined /> Edit
-        //         </Link>
-        //    ),
-        // },
+        {
+            key: "1",
+            label: (
+              <Link style={{ width: "100px" }} to={`/editMovie/${movieId}`} >
+                <EditOutlined /> Edit
+              </Link>
+            )
+          },
         {
             key: '2',
             label: (
@@ -70,7 +68,7 @@ export default function ManageMovie() {
                 return <SearchOutlined />
             },
             onFilter: (value, record) => {
-                return record.location.toLowerCase().includes(value.toLowerCase())
+                return record.movieName.toLowerCase().includes(value.toLowerCase())
             },
         },
         {
@@ -101,6 +99,7 @@ export default function ManageMovie() {
                 return <SearchOutlined />
             },
             onFilter: (value, record) => {
+            
                 return record.startDate.toLowerCase().includes(value.toLowerCase())
             },
         },
@@ -128,6 +127,7 @@ export default function ManageMovie() {
                 return record.endDate.toLowerCase().includes(value.toLowerCase())
             },
         },
+        
         {
             title: 'Action',
             width: 40,
@@ -152,7 +152,7 @@ export default function ManageMovie() {
 
     useEffect(() => {
         getAllMovieAPI();
-      },[])
+      },[deleteId])
 
     const [movies, setMovies] = useState([])
     //get all movie
@@ -165,7 +165,6 @@ export default function ManageMovie() {
           .catch((error) => {
             console.log(error);
           });
-
       };
 
      
@@ -203,9 +202,9 @@ export default function ManageMovie() {
             okText: 'Delete',
             okType: "danger",
             onOk: () => {
+                setDeleteId(id);
                 MovieService.deleteMovie(id);
                 getAllMovieAPI();
- 
             },
             cancelText: "Cancel",
         })
