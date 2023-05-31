@@ -50,21 +50,15 @@ import ChatUser from "./components/chat/ChatUser";
 function App() {
     // Nếu muốn Hiển thị User Side thì sửa thành false, Admin Side thì true
 
-    const role = localStorage.getItem("roles")
-        ? localStorage.getItem("roles")
-        : null;
-    const token = localStorage.getItem("access_token")
-        ? localStorage.getItem("access_token")
-        : null;
-    const username = localStorage.getItem("username")
-        ? localStorage.getItem("roles")
-        : null;
-
-    const [isLogin, setIsLogin] = useState(false);
-    const [admin, setAdmin] = useState(false);
-    useEffect(() => {
-        if (role != null) {
-            setIsLogin(true);
+    const role = localStorage.getItem("roles") ? localStorage.getItem("roles") : null;
+    const token = localStorage.getItem("access_token") ? localStorage.getItem("access_token") : null;
+    const username = localStorage.getItem("username") ? localStorage.getItem("roles") : null;
+    
+    const [isLogin,setIsLogin] = useState(false);
+    const [admin,setAdmin] = useState(true);
+    useEffect(()=>{
+        if(role!=null){
+            setIsLogin(true);          
         }
         if (isLogin) {
             if (role == "ROLE_ADMIN") {
