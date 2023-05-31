@@ -1,33 +1,34 @@
-import React,{useState,useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "bootstrap";
 
 
 function NavBarUser() {
-  const [user,setUser] = useState('');
-  const [token,setToken] = useState('');
-  const [role,setRole] = useState('');
+  const [user, setUser] = useState('');
+  const [token, setToken] = useState('');
+  const [role, setRole] = useState('');
   const username = localStorage.getItem('username') ? localStorage.getItem('username') : null;
   const accessToken = localStorage.getItem('access_token') ? localStorage.getItem('access_token') : null
   const roles = localStorage.getItem('roles') ? localStorage.getItem('roles') : null;
   const navigate = useNavigate();
-  useEffect(()=>{
-    if(username){
+  useEffect(() => {
+    if (username) {
       setUser(username);
-    }else{
+    } else {
       setUser(null);
     }
-    if(accessToken){
+    if (accessToken) {
       setToken(accessToken)
-    }else{
+    } else {
       setToken(null);
     }
-    if(roles){
+    if (roles) {
       setRole(roles);
-    }else{
+    } else {
       setRole(null);
     }
-  },[user,token,role,localStorage.getItem('username'),localStorage.getItem('access_token'),localStorage.getItem('roles')])
+  }, [user, token, role, username, accessToken, roles])
+  console.log(roles);
   const handleSignOut = () => {
     localStorage.removeItem("username");
     localStorage.removeItem("access_token");
@@ -58,50 +59,53 @@ function NavBarUser() {
             <li className="menu-list-item">
               <a href="#">Thông tin</a>
             </li>
-            <li className="menu-list-item">
+            {/* <li className="menu-list-item">
               {
                 !user ? 
                  <Link to="sign-in" style={{color: 'white'}}>Đăng nhập</Link>
                  :<div><Link to={`user/${user}`}>Xin chào, {user}!</Link> <button onClick={handleSignOut}>Đăng xuất</button></div>
               }
                 
-              </li>
-            
+              </li> */}
+
           </ul>
         </div>
 
         <div className="profile-container">
-          {/* <img className="profile-picture" src="../pages/user/style/img/18.jpg" alt="" /> */}
-          <div className="profile-text-container">
-            <div className="dropdown">
-              <span className="profile-text dropbtn">Tài khoản</span>
-                <i className="fas fa-caret-down dropbtn"/>
-                <div class="dropdown-content">
-                  <ul>
-                    <li>
-                      <a href="#">Đăng nhập</a>
-                    </li>
-                    <li>
-                      <a href="#">Đăng kí</a>
-                    </li>
-                    <li>
-                      <a href="#">Quên mật khẩu</a>
-                    </li>
-                  </ul>
 
-                  <ul style={{display:'none'}}>
+          <img className="profile-picture" src="../pages/user/style/img/18.jpg" alt="" />
+          <div className="profile-text-container">
+            {!user ? <span className="profile-text">Tài khoản</span> : <Link to={`/user/${user}`}className="profile-text">{user}</Link>}  
+            <div className="dropdown">
+              <i className="fas fa-caret-down dropbtn" />
+              <div class="dropdown-content">
+                {
+                  !user ? <ul>
+
                     <li>
-                      <a href="#">Thông tin</a>
+                      <Link to="/sign-in">Đăng nhập</Link>
                     </li>
                     <li>
-                      <a href="#">Đổi mật khẩu</a>
+                      <Link to="/sign-up">Đăng ký</Link>
                     </li>
                     <li>
-                      <a href="#">Đăng xuất</a>
+                      <Link to="/forgot-password">Quên mật khẩu?</Link>
                     </li>
-                  </ul>
-                </div>
-              </div>           
+                  </ul> :
+                    <ul>
+                      <li>
+                        <Link to={`/user/${username}`}>Thông tin</Link>
+                      </li>
+                      <li>
+                        <Link to={`/user/change-password/${username}`}>Đổi mật khẩu</Link>
+                      </li>
+                      <li>
+                        <Link to="" onClick={handleSignOut}>Đăng xuất</Link>
+                      </li>
+                    </ul>
+                }
+              </div>
+            </div>
           </div>
           <div className="toggle" >
             <i className="fas fa-moon toggle-icon" />

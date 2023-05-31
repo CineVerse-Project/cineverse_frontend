@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import UserService from "../../../../services/UserService";
 import Notification from "../../../common/ToastNotification";
+import { ToastContainer } from "react-toastify";
 
 /**
  * @author HuuNQ
@@ -26,16 +27,20 @@ const UserInformation = () => {
        UserService.findUserByUsername(username,token)
         .then((data)=>{
             setUser({...data});
-            Notification.toastSuccessNotification("Thao tác thành công!")
         })
         .catch((error)=>{
             console.log(error);
-            if(error?.response?.status === 403){
+            if(error?.response?.status === 401){
+                navigate("/")
+            }else if(error?.response?.status === 403){
+                navigate("/")
+                Notification.toastWarningNotification("Bạn không thể truy cập vào tài nguyên này!")
+            }else if(error?.response?.status === 500){
                 localStorage.removeItem("access_token")
                 localStorage.removeItem("username")
                 localStorage.removeItem("roles")
                 navigate("/sign-in")
-                Notification.toastWarningNotification("Vui lòng đăng nhập!")
+                Notification.toastWarningNotification("Hết phiên đăng nhập,vui lòng đăng nhập lại!")
             }
         })
     }
@@ -45,6 +50,7 @@ const UserInformation = () => {
     
     return (
         <div>
+            <ToastContainer />
             <div className="mx-auto mt-4" >
                 <h5 className="text-uppercase text-center p-2 text-white" style={{ backgroundColor: '#c23b1a' }}>Thông tin tài khoản</h5>
                 <div className="row">

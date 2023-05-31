@@ -14,6 +14,10 @@ const EarnPoints = () => {
     const token = localStorage.getItem('access_token') ? localStorage.getItem('access_token') : null;
     const { username } = useParams();
     const navigate = useNavigate();
+    let totalEarnPoint = 0;
+    for( let i = 0; i< earnPoints.length;i++){
+        totalEarnPoint += earnPoints[i][8];
+    }
     useEffect(() => {
         if (token != null) {
             UserService.getEarnPointsByUsername(username,token)
@@ -22,7 +26,16 @@ const EarnPoints = () => {
                     setEarnPoints([...data]);
                 })
                 .catch((error) => {
-                    console.log(error);
+                    if (error?.response?.status === 403) {
+                        navigate("/")
+                        Notification.toastErrorNotification("Bạn không thể truy cập vào tài nguyên ngày!")
+                    }else if(error?.response?.status === 500){
+                        localStorage.removeItem("access_token")
+                        localStorage.removeItem("username")
+                        localStorage.removeItem("roles")
+                        navigate("/sign-in")
+                        Notification.toastWarningNotification("Hết phiên đăng nhập,vui lòng đăng nhập lại!")
+                    }
                 })
         } else {
             navigate("/sign-in")
@@ -52,14 +65,14 @@ const EarnPoints = () => {
         <div className="mx-auto mt-4" >
             <h5 className="text-uppercase text-center p-2 text-white" style={{ backgroundColor: '#c23b1a' }}>Lịch sử tích điểm</h5>
             <div>
-                <p style={{ fontWeight: 600, marginBottom: 8 + 'px' }}>Số tích điểm đã nhận: <span style={{ fontWeight: 400 }}>60 cinepoint</span> </p>
-                <p style={{ fontWeight: 600, marginBottom: 8 + 'px' }}>Số tích điểm còn lại: <span style={{ fontWeight: 400 }}>36 cinepoint</span> </p>
+                <p style={{ fontWeight: 600, marginBottom: 8 + 'px' }}>Số tích điểm đã nhận: <span style={{ fontWeight: 400 }}>{totalEarnPoint} cinepoint</span> </p>
+                <p style={{ fontWeight: 600, marginBottom: 8 + 'px' }}>Số tích điểm còn lại: <span style={{ fontWeight: 400 }}>{totalEarnPoint} cinepoint</span> </p>
             </div>
             <hr />
             {earnPoints?.length > 0 ? <div>{mapEarnPoint}
-                <div className="text-center">
+                {/* <div className="text-center">
                     <button className="btn-red">Xem thêm</button>
-                </div>
+                </div> */}
             </div> : <div>Không lịch sử tích điểm</div>
             }
         </div>

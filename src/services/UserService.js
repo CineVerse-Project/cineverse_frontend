@@ -100,10 +100,6 @@ const UserService = {
                     'Authorization':`Bearer ${token}`
                 }
             })
-            if(response.status === 401){
-
-                throw Error;
-            }
             return response.data;
         }catch(error){
             throw error;

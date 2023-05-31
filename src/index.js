@@ -12,12 +12,7 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 //     autoClose: 1500,
 // }
 root.render(
-    <React.StrictMode>
         <App />
-        <ToastContainer
-        {...toastConfig}
-      />
-    </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function
