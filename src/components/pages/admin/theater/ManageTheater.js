@@ -139,7 +139,8 @@ export default function ManageTheater() {
         return <SearchOutlined />;
       },
       onFilter: (value, record) => {
-        return record.location.toLowerCase().includes(value.toLowerCase());
+        // sua lai ten bien
+        return record.province.provinceName.toLowerCase().includes(value.toLowerCase());
       },
     },
     {
