@@ -4,8 +4,14 @@ import axios from "axios";
 import TypeMovieService from "../../../../services/TypeMovieService";
 import MovieService from "../../../../services/MovieService";
 import { handleValidationMovie } from "../../../../services/handleValidationMovie";
+import { storage } from "../../../../constants/firebase";
+import { ref, uploadBytes, listAll, getDownloadURL } from "firebase/storage";
+import { v4 } from "uuid";
 
 export default function CreateMovie() {
+      //firebase
+    const [imgUpload, setImgUpload] = useState("");
+  
   const [editData, setEditData] = useState({
     editTenPhim: "",
     editPoster: "",
@@ -18,6 +24,7 @@ export default function CreateMovie() {
     editNgayChieu: "",
     editNgayDong: "",
     editTrailler: "",
+    editStatus: "",
   });
 
   //usestate input errror
@@ -33,6 +40,7 @@ export default function CreateMovie() {
     editNgayChieu: "",
     editNgayDong: "",
     editTrailler: "",
+    editStatus:"",
   });
 
   const handleInputChange = (event) => {
@@ -42,12 +50,20 @@ export default function CreateMovie() {
     setEditData((preData) => ({ ...preData, [field]: value }));
   };
 
+  const handleInputFile = (event) => {
+      const field = event.target.name;
+      const value = event.target.files[0];
+
+      setEditData((preData) => ({...preData, [field]: value}));
+    }
   //create movie
   const handleCreate = (event) => {
     event.preventDefault();
     let errors = [];
     const data = {
       movieName: editData.editTenPhim,
+      imageUrl : imgUpload,
+      trailerUrl : editData.editTrailler,
       startDate: editData.editNgayChieu,
       endDate: editData.editNgayDong,
       actor: editData.editDienVien,
@@ -58,6 +74,7 @@ export default function CreateMovie() {
       movieType: {
         movieTypeId: editData.editLoaiPhim,
       },
+      status: Number(editData.editStatus)
     };
     handleValidationMovie(editData, errors);
     if(Object.keys(errors).length === 0){
@@ -94,6 +111,17 @@ export default function CreateMovie() {
     getAllTypeAPI();
   }, []);
 
+  useEffect(() => {
+    if (editData.editPoster == null) {
+      return;
+    }
+    const imgRef = ref(storage, `movie/${editData.editTenPhim + v4()}`);
+    uploadBytes(imgRef, editData.editPoster).then((snapshot) => {
+      getDownloadURL(snapshot.ref).then((url) => {
+        setImgUpload(url);
+      });
+    });
+  }, [editData.editPoster]);
   return (
     <>
       <div class="container-xxl flex-grow-1 container-p-y">
@@ -136,8 +164,8 @@ export default function CreateMovie() {
                     class="form-control"
                     type="file"
                     id="formFile"
-                    value={editData.editPoster}
-                    onChange={handleInputChange}
+        
+                    onChange={handleInputFile}
                     name="editPoster"
                   />
                 </div>
@@ -214,6 +242,24 @@ export default function CreateMovie() {
               </div>
               <div class="mb-3 row">
                 <label for="html5-email-input" class="col-md-2 col-form-label">
+                  Trạng thái
+                </label>
+                <div class="col-md-10">
+                  <select
+                    class="form-control"
+                    value={editData.editStatus}
+                    name="editStatus"
+                    onChange={handleInputChange}
+                  >
+                    <option value="">Chọn trạng thái</option>
+                    <option value="0" >Đã Chiếu</option>
+                    <option value="1">Đang chiếu</option>
+                    <option value="2">Sắp chiếu</option>
+                  </select>
+                </div>
+              </div>
+              <div class="mb-3 row">
+                <label for="html5-email-input" class="col-md-2 col-form-label">
                   Mô tả:
                 </label>
                 <div class="col-md-10">
@@ -283,7 +329,7 @@ export default function CreateMovie() {
                 <div class="col-md-10">
                   <input
                     class="form-control"
-                    type="file"
+                    type="text"
                     id="formFile"
                     onChange={handleInputChange}
                     value={editData.editTrailler}

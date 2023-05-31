@@ -32,6 +32,7 @@ import CreateTheater from "./components/pages/admin/theater/CreateTheater";
 import EditTheater from "./components/pages/admin/theater/EditTheater";
 import CreateMovie from "./components/pages/admin/movie/CreateMovie";
 import EditRoom from "./components/pages/admin/room/EditRoom";
+import EditMovie from "./components/pages/admin/movie/EditMovie";
 import SignUp from '../src/components/pages/user/information/SignUp'
 import ForgotPassword from '../src/components/pages/user/information/ForgotPassword'
 import ResetPassWord from '../src/components/pages/user/information/ResetPassword'
@@ -52,17 +53,17 @@ function App() {
     const username = localStorage.getItem("username") ? localStorage.getItem("roles") : null;
     
     const [isLogin,setIsLogin] = useState(false);
-    const [admin,setAdmin] = useState(false);
-    useEffect(()=>{
-        if(role!=null){
-            setIsLogin(true);
-        }
-        if(isLogin){
-            if(role=='ROLE_ADMIN'){
-                setAdmin(true);
-            }
-        }
-    },[admin,token,username,isLogin])
+    const [admin,setAdmin] = useState(true);
+    // useEffect(()=>{
+    //     if(role!=null){
+    //         setIsLogin(true);
+    //     }
+    //     if(isLogin){
+    //         if(role=='ROLE_ADMIN'){
+    //             setAdmin(true);
+    //         }
+    //     }
+    // },[admin,token,username,isLogin])
     return (
         <div className="App">
             <BrowserRouter>
@@ -101,6 +102,10 @@ function App() {
                             <Route
                                 path="editTheater/:theaterId"
                                 element={<EditTheater />}
+                            />
+                            <Route
+                                path="editMovie/:movieId"
+                                element={<EditMovie />}
                             />
                             <Route
                                 path="editRoom/:roomId"
