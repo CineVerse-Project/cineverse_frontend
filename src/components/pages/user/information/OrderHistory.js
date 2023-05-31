@@ -25,7 +25,8 @@ const OrderHistory = () => {
         setCurrentPage((prev) => prev + 1);
     }
     useEffect(() => {
-        UserService.orderHistoryByUsername(username, token)
+        if(token!==null){
+            UserService.orderHistoryByUsername(username, token)
             .then((data) => {
                 setOrderHistory([...data]);
                 setDataLength(data.length);
@@ -36,20 +37,27 @@ const OrderHistory = () => {
                 }
             })
             .catch((error) => {
+                console.log(error);
                 if (error?.response?.status === 400) {
                     Notification.toastErrorNotification(error?.response?.data)
                 }
-                if (error?.response?.status === 403) {
-                    navigate("/sign-in")
-                    Notification.toastErrorNotification("Vui lòng đăng nhập lại!")
+                else if (error?.response?.status === 403) {
+                    navigate("/")
+                    Notification.toastErrorNotification("Bạn không thể truy cập vào tài nguyên ngày!")
                 }
-                if (error?.response?.status===500){
+                else if (error?.response?.status===500){
+                    localStorage.removeItem("access_token")
+                    localStorage.removeItem("username")
+                    localStorage.removeItem("roles")
                     navigate("/sign-in")
-                    Notification.toastErrorNotification("Vui lòng đăng nhập lại!")
+                    Notification.toastErrorNotification("Hết phiên đăng nhập,Vui lòng đăng nhập lại!")
                 }
             })
+        }else{
+            navigate("/sign-in")
+        }
+       
     }, []);
-    console.log(orderHistory);
     const orderHistoryMapLoadMore = () => {
         for (let i = 0; i < itemsPerPage*(currentPage+1); i++) {
             return <div>
@@ -118,15 +126,15 @@ const OrderHistory = () => {
             <h5 className="text-uppercase text-center p-2 text-white" style={{ backgroundColor: '#c23b1a' }}>Lịch sử đặt vé</h5>
         </div>
         {orderHistory?.length > 0 ?
-            <div> {orderHistoryMapLoadMore}
+            <div> {orderHistory}
                 <hr />
-                {
+                {/* {
                     (currentPage < dataLength / 2) && <div>
                         <div className="text-center">
                             <button className="btn-red" onClick={loadMoreOnClick}>Xem thêm</button>
                         </div>
                     </div>
-                }
+                } */}
             </div>
             :
             <div>

@@ -75,6 +75,7 @@ function ShowSeatScreen() {
 
   const seatsPerRow = seats[0]?.seat.room.seatRowNumber;
   const seatsPerColumn = seats[0]?.seat.room.seatColumnNumber;
+  console.log(seatsPerRow)
   const renderSeat = () => {
     const rows = [];
     const seatRows = Array.from(
@@ -91,14 +92,14 @@ function ShowSeatScreen() {
     seatRows.forEach((row) => {
       const rowSeats = [];
       for (let i = 1; i <= seatsPerRow; i++) {
-        const seatName = `${row}${i.toString().padStart(2, "0")}`;
+        const seatName = `${row}${i.toString().padStart(1)}`;
 
         rowSeats.push(
           <button
             key={seatName}
             className={`seat ${
               seats.find((s) => s.seat?.seatName === seatName)?.seat?.seatType
-                ?.seatTypeId === "ST-0001"
+                ?.seatTypeId === "ST-0002"
                 ? "seat-vipprime active"
                 : "seat-standard active"
             }

@@ -108,7 +108,7 @@ function CheckOut() {
   };
 
   return (
-    <div>
+    <div className="ms-5">
       <main role="main">
         <div className="container mt-4">
           <div>

@@ -49,12 +49,14 @@ const ChangePassword = () => {
                         Notification.toastErrorNotification(error?.response?.data?.oldPassword)
                     }else if(error?.response?.status === 403){
                         navigate("/sign-in")
-                        Notification.toastErrorNotification("Vui lòng đăng nhập lại!")
+                        Notification.toastErrorNotification("Bạn không thể truy cập vào tài nguyên này!")
+                    }else if(error?.response?.status === 500){
+                        localStorage.removeItem("access_token")
+                        localStorage.removeItem("username")
+                        localStorage.removeItem("roles")
+                        navigate("/sign-in")
+                        Notification.toastWarningNotification("Hết phiên đăng nhập,vui lòng đăng nhập lại!")
                     }
-                    else{
-                        Notification.toastErrorNotification("Không tồn tại người dùng này!")
-                    }
-                    
                 }
                 )
         }

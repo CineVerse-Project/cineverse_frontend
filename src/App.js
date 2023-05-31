@@ -54,15 +54,22 @@ function App() {
     const [isLogin,setIsLogin] = useState(false);
     const [admin,setAdmin] = useState(false);
     useEffect(()=>{
-        if(role!=null){
+        checkLogin();
+        checkAdmin();
+    },[token,username,admin])
+    const checkLogin = () => {
+        if(token!=null || username !=null|| role != null){
             setIsLogin(true);
         }
-        if(isLogin){
-            if(role=='ROLE_ADMIN'){
-                setAdmin(true);
-            }
+
+    }
+    const checkAdmin = () => {
+        if(role.endsWith("ADMIN")){
+            setAdmin(true);
         }
-    },[admin,token,username,isLogin])
+    }
+    console.log(admin);
+    console.log(isLogin);
     return (
         <div className="App">
             <BrowserRouter>
