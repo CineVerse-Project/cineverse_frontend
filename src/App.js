@@ -47,6 +47,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
     // Nếu muốn Hiển thị User Side thì sửa thành false, Admin Side thì true
+
     const role = localStorage.getItem("roles") ? localStorage.getItem("roles") : null;
     const token = localStorage.getItem("access_token") ? localStorage.getItem("access_token") : null;
     const username = localStorage.getItem("username") ? localStorage.getItem("roles") : null;
