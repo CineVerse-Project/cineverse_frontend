@@ -42,7 +42,19 @@ const reportSchema = Yup.object().shape({
         .nullable()
         .when("timeType", {
             is: "1",
-            then: Yup.string().required("Ngày kết thúc phải được nhập"),
+            then: Yup.string()
+                .required("Ngày kết thúc phải được nhập")
+                .test(
+                    "is-greater-than-start",
+                    "Ngày kết thúc phải lớn hơn ngày bắt đầu",
+                    function (endDate) {
+                        const startDate = this.resolve(Yup.ref("startDate"));
+                        if (startDate && endDate) {
+                            return new Date(endDate) > new Date(startDate);
+                        }
+                        return true;
+                    }
+                ),
             otherwise: Yup.string(),
         }),
 
