@@ -30,11 +30,11 @@ const AdminSignIn = () => {
                     localStorage.setItem('username',data.username)
                     localStorage.setItem('roles',data.roles)
                     Notification.toastSuccessNotification("Đăng nhập thành công");
-                    navigate("/admin");
+                    navigate("/");
                 })
                 .catch((error) => {
                     console.log(error)
-                    Notification.toastErrorNotification(error.response.data);
+                    Notification.toastErrorNotification(error?.response?.data);
                 })
         }
     })
@@ -160,8 +160,10 @@ const AdminSignIn = () => {
                                                             onChange={formik.handleChange}
                                                         />
                                                         <span className="input-group-text cursor-pointer"><i className={showPassword ? "bx bx-hide" : "bx bx-show" } onClick={()=>{setShowPassword(!showPassword)}}></i></span>
+
                                                     </div>                                                    
                                                     <div>{(formik.errors.password && formik.touched.password) && <p className='text-danger mt-2'>{formik.errors.password}</p>}</div>
+
 
                                                 </div>
                                                 <div className="mb-3">

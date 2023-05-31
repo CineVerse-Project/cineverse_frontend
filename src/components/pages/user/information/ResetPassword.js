@@ -60,7 +60,7 @@ const ResetPassword = () => {
                                             <input type={showPassword ? 'text':'password'} name="newPassword" value={formik.newPassword}
                                             onChange={formik.handleChange}
                                              className="input-red input-with-icon" placeholder="Nhập mật khẩu mới" id="new-password"/>
-                                                <i className={showPassword ?  "fas fa-eye-slash icon": "fas fa-eye icon"} id="show_hide_new-password-icon" style={{cursor:'pointer',padding:'12px 12px'}} onClick={()=>setShowPassword(!showPassword)}></i>
+                                                <i className={showPassword ?  "fas fa-eye-slash icons": "fas fa-eye icons"} id="show_hide_new-password-icon" style={{cursor:'pointer',padding:'12px 12px'}} onClick={()=>setShowPassword(!showPassword)}></i>
                                         </div>
                                         {(formik.errors.newPassword) && <p className='text-danger mt-2'>{formik.errors.newPassword}</p>}
                                         
@@ -74,7 +74,7 @@ const ResetPassword = () => {
                                             <input type={showConfirmPassword ? 'text':'password'} name="confirmNewPassword" value={formik.confirmNewPassword}
                                             onChange={formik.handleChange}
                                             className="input-red input-with-icon" placeholder="Xác nhận mật khẩu mới" id="re-new-password"/>
-                                                <i className={showConfirmPassword ?  "fas fa-eye-slash icon": "fas fa-eye icon"} id="show_hide_re-new-password-icon" style={{cursor:'pointer',padding:'12px 12px'}} onClick={()=>setShowConfirmPassword(!showConfirmPassword)}></i>
+                                                <i className={showConfirmPassword ?  "fas fa-eye-slash icons": "fas fa-eye icons"} id="show_hide_re-new-password-icon" style={{cursor:'pointer',padding:'12px 12px'}} onClick={()=>setShowConfirmPassword(!showConfirmPassword)}></i>
                                         </div>
                                     </div>
                                     {(formik.errors.confirmNewPassword) && <p className='text-danger  mt-2'>{formik.errors.confirmNewPassword}</p>}
