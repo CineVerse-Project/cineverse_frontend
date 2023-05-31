@@ -1,3 +1,4 @@
+import { Button } from "bootstrap";
 import React from "react";
 import { Link } from "react-router-dom";
 
@@ -11,12 +12,12 @@ function NavBarUser() {
         <div className="menu-container">
           <ul className="menu-list">
             <li className="menu-list-item">
-              <Link to="">
+              <Link to="/">
                 <a>Trang chủ</a>
               </Link>
             </li>
             <li className="menu-list-item">
-              <Link to="movie-detail">
+              <Link to="/">
                 <a>Phim</a>
               </Link>
             </li>
@@ -32,7 +33,34 @@ function NavBarUser() {
           <img className="profile-picture" src="../pages/user/style/img/18.jpg" alt="" />
           <div className="profile-text-container">
             <span className="profile-text">Tài khoản</span>
-            <i className="fas fa-caret-down" />
+              <div className="dropdown">
+                <i className="fas fa-caret-down dropbtn"/>
+                <div class="dropdown-content">
+                  <ul>
+                    <li>
+                      <a href="#">Đăng nhập</a>
+                    </li>
+                    <li>
+                      <a href="#">Đăng kí</a>
+                    </li>
+                    <li>
+                      <a href="#">Quên mật khẩu</a>
+                    </li>
+                  </ul>
+
+                  <ul style={{display:'none'}}>
+                    <li>
+                      <a href="#">Thông tin</a>
+                    </li>
+                    <li>
+                      <a href="#">Đổi mật khẩu</a>
+                    </li>
+                    <li>
+                      <a href="#">Đăng xuất</a>
+                    </li>
+                  </ul>
+                </div>
+              </div>           
           </div>
           <div className="toggle">
             <i className="fas fa-moon toggle-icon" />

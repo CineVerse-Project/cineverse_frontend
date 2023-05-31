@@ -56,7 +56,6 @@ function ShowSeatScreen() {
     };
     fetchGetSeatByScheduleApi();
   }, []);
-  console.log(selectedSeats);
 
   const handleSelectSeat = (seat) => {
     const index = selectedSeats
@@ -145,17 +144,17 @@ function ShowSeatScreen() {
 
   // Lấy thời gian hiện tại của đối tượng Date
   const currentTime = dateStart.getTime();
-
-  // Tính thời gian mới bằng cách cộng thêm số phút
   const newTime = currentTime + durationInMinutes * 60 * 1000;
 
-  // Tạo đối tượng Date mới từ thời gian mới
-  const newDate = new Date(newTime);
+  const [endDateTime, setEndDayTime] = useState("");
+  useEffect(() => {
+    if (newTime) {
+      const newDate = new Date(newTime);
+      setEndDayTime(format(newDate, "dd/MM/yyyy, HH:mm"));
+    }
+  }, [newTime]);
 
-  // Format lại ngày giờ mới
-  const endDateTime = newDate.toLocaleString();
-  // Format lại ngày giờ mới
-  const startDateTime = format(dateStart, "dd/MM/yyyy, HH:mm:ss");
+  const startDateTime = format(dateStart, "dd/MM/yyyy, HH:mm");
 
   const [totalPrice, setTotalPrice] = useState(0);
 
@@ -165,8 +164,16 @@ function ShowSeatScreen() {
     );
   }, [selectedSeats]);
 
+  const handleGoBack = () => {
+    navigate("/showtime?movieId=" + seats[0]?.schedule.movie.movieId);
+  };
+
   const handelNextCheckOut = () => {
-    navigate("/checkout", { state: { selectedSeats: selectedSeats } });
+    if (selectedSeats.length === 0) {
+      alert("Phải chọn ghế trước khi đi tiếp!!!");
+    } else {
+      navigate("/checkout", { state: { selectedSeats: selectedSeats } });
+    }
   };
 
   return (
@@ -245,9 +252,13 @@ function ShowSeatScreen() {
         <div className="group__ticket">
           <div className="bottom-content">
             <div className="format-bg-top">
-              <a className="btn-left" href="/showtime" title="Previous">
+              <button
+                className="btn-left"
+                onClick={handleGoBack}
+                title="Previous"
+              >
                 Previous
-              </a>
+              </button>
               <div className="minicart-wrapper">
                 <ul>
                   <li className="item first">
