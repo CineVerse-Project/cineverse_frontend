@@ -26,7 +26,7 @@ function ShowTimeScreen() {
 
   useEffect(() => {
     // Ngày hiện tại
-    const numDays = 7; // Số ngày cần lấy
+    const numDays = 14; // Số ngày cần lấy
 
     const renderDateList = () => {
       const tempList = [];
@@ -36,8 +36,8 @@ function ShowTimeScreen() {
         const formattedDate = format(currentDateCopy, "yyyy-MM-dd'T'00:00");
         tempList.push({
           date: formattedDate,
-          day: currentDateCopy.getDate(),
-          month: currentDateCopy.getMonth() + 1,
+          day: currentDateCopy.toLocaleString("en-US", {"day" : "2-digit"}),
+          month: currentDateCopy.toLocaleString("en-US", {"month": "2-digit"}),
           year: currentDateCopy.getFullYear(),
           dayOfWeek: currentDateCopy.toLocaleString("en-US", {
             weekday: "short",
@@ -67,8 +67,6 @@ function ShowTimeScreen() {
         provinceValue
       )
         .then((data) => {
-          console.log("OKKK");
-          // setSchedules(data);
           if (data) {
             const groupedObjects = {};
 
@@ -89,7 +87,6 @@ function ShowTimeScreen() {
           }
         })
         .catch((error) => {
-          console.log("NOTTT");
           console.log(error);
         });
     };
@@ -128,10 +125,10 @@ function ShowTimeScreen() {
       <div>
         <h1 className="text-center">Chọn lịch chiếu</h1>
         <div className="line__big">
-          <ul className="none__list d-flex">
+          <ul className="none__list d-flex view__date">
             {dateList.map((date, index) => {
               return (
-                <div onClick={handleFilterShowday} key={index}>
+                <div className="row-md-2" onClick={handleFilterShowday} key={index}>
                   <li className="me-3">
                     <button
                       className={
