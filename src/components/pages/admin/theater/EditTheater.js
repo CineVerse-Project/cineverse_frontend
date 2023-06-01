@@ -3,11 +3,12 @@ import { Modal, Button, Result } from 'antd';
 import axios from "axios";
 import ProvinceService from "../../../../services/ProvinceService";
 import TheaterService from "../../../../services/TheaterService";
-import { useParams } from "react-router-dom";
+import {useNavigate, useParams } from "react-router-dom";
 import { handleValidationTheater } from "../../../../services/handleValidationTheater";
 
 export default function EditTheater(props) {
 
+    const navigate = useNavigate();
     const [editData, setEditData] = useState({
         editTen: '',
         editDiaChi: '',
@@ -90,6 +91,7 @@ export default function EditTheater(props) {
     
                     TheaterService.getAllTheater();
                     setErrors([])
+                    navigate("/theater");
                 },
                 cancelText: 'Đóng',
                 onCancel: () => {

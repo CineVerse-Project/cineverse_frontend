@@ -51,7 +51,7 @@ export default function ManageRoom() {
           to={`/editRoom/${roomId}`}
           // href={`/editTheater/${theaterId}`}
         >
-          <EditOutlined /> Edit
+          <EditOutlined /> Chỉnh sửa
         </Link>
       ),
     },
@@ -60,7 +60,7 @@ export default function ManageRoom() {
       label: (
         <a style={{ width: "100px" }} onClick={() => deleteConfirm()}>
           {" "}
-          <DeleteOutlined /> Delete
+          <DeleteOutlined /> Xóa
         </a>
       ),
     },
@@ -196,7 +196,7 @@ export default function ManageRoom() {
 
   useEffect(() => {
     getAllRoomAPI();
-  }, [deleteId]);
+  }, [deleteId,room]);
 
   return (
     <>

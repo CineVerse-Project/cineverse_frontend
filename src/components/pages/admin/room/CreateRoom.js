@@ -5,8 +5,10 @@ import RoomService from "../../../../services/RoomService";
 import TheaterService from "../../../../services/TheaterService";
 import { number } from "yup";
 import { handleValidationRoom } from "../../../../services/handleValidationRoom";
+import { useNavigate, useParams } from "react-router-dom";
 
 export default function CreateRoom() {
+  const navigate = useNavigate();
   const [editData, setEditData] = useState({
     editTenPhong: "",
     editTenRap: "",
@@ -51,6 +53,8 @@ export default function CreateRoom() {
           RoomService.createRoom(data);
           setEditData("");
           setError([]);
+          RoomService.getAllRoom();
+          navigate("/room");
         },
         cancelText: "Đóng",
         onCancel: () => {},
