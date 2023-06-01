@@ -1,14 +1,14 @@
 import { useState, useEffect } from "react";
 import { Modal, Button } from "antd";
 import axios from "axios";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import TypeMovieService from "../../../../services/TypeMovieService";
 import MovieService from "../../../../services/MovieService";
 import { handleValidationMovie } from "../../../../services/handleValidationMovie";
 import { storage } from "../../../../constants/firebase";
 import { ref, uploadBytes, listAll, getDownloadURL } from "firebase/storage";
 import { v4 } from "uuid";
-import Link from "antd/es/typography/Link";
+
 export default function EditMovie(props) {
   const navigate = useNavigate();
   //firebase
@@ -167,9 +167,9 @@ export default function EditMovie(props) {
           Cập nhật phim
         </h4>
 
-        <a href="/movie" class="btn btn btn-outline-primary mb-3">
+        <Link to="/movie" class="btn btn btn-outline-primary mb-3">
           Trở về
-        </a>
+        </Link>
 
         <div class="card mb-4">
           <h5 class="card-header">Chỉnh sửa thông tin phim:</h5>

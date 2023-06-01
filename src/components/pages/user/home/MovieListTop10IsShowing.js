@@ -53,12 +53,11 @@ function MovieListTop10IsShowing() {
                   <img
                     className="movie-list-item-img"
                     src={movieTop10IsShowing.imageUrl}
-                    alt
+                    alt=""
                   />
                   <span className="movie-list-item-title">
                     {movieTop10IsShowing.movieName}
                   </span>
-
                   <Link
                     to={`/movie-detail/${movieTop10IsShowing.movieId}`}
                     onClick={handleClick}
@@ -67,6 +66,7 @@ function MovieListTop10IsShowing() {
                       Chi tiết
                     </button>
                   </Link>
+
 
                   <Link
                     to={`/showtime?movieId=${movieTop10IsShowing.movieId}`}

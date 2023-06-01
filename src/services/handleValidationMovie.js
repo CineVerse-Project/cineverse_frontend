@@ -12,9 +12,7 @@ export function handleValidationMovie (editData, errors){
         errors.editNgayDong = 'Ngay dong phai lon hon ngay chieu';
     }
     const currentDate = new Date().toLocaleDateString('en-CA');
-    if(editData.editNgayChieu < currentDate){
-        errors.editNgayChieu = 'Ngay chieu phai lon hon ngay hien tai';
-    }
+    
     if (editData.editLoaiPhim == ""){
         errors.editLoaiPhim = 'Loai phim khong duoc de trong'
     }

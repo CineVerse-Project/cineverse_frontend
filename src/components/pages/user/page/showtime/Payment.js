@@ -47,6 +47,7 @@ const Payment = () => {
           </Link>
         </div>
       )}
+      ;
     </div>
   );
 };
