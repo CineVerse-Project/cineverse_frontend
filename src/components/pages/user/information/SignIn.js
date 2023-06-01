@@ -1,13 +1,13 @@
 import React, { useState } from 'react'
 import bgImage from '../../../../static/assets/img/backgrounds/form_image.jpg'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import UserService from '../../../../services/UserService'
 import { useNavigate } from 'react-router-dom'
 import { ToastContainer} from 'react-toastify'
 import Notification from '../../../common/ToastNotification'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
-
+import useAuth from '../../../../auth/useAuth'
 /**
  * @author HuuNQ
  * 26-05-2023
@@ -15,6 +15,10 @@ import * as Yup from 'yup'
  * @returns none
  */
 const SignIn = () => {
+    const navigate = useNavigate();
+    const location = useLocation();
+    const from = location.state?.from?.pathname || "/";
+    const { setAuth } = useAuth();
     const [loading,setLoading] = useState(false);
     const formik = useFormik({
         initialValues:{
@@ -31,27 +35,31 @@ const SignIn = () => {
         }),
         onSubmit: (e) => {
             setLoading(true)
-            UserService.userSignIn(e).then((data)=> {
-                    localStorage.setItem('access_token',data.token)
-                    localStorage.setItem('username',data.username)
-                    localStorage.setItem('roles',data.roles)
-                    navigate("/");
+            UserService.userSignIn(e)
+                .then ((data)=> {
+                    const username = data?.username;
+                    const token = data?.token;
+                    const roles = data?.roles;
+                    localStorage.setItem('access_token',token)
+                    localStorage.setItem('username',username)
+                    localStorage.setItem('roles',roles)
+                    setAuth({username,token,roles});
                     Notification.toastSuccessNotification("Đăng nhập thành công");
+                    navigate(from, {replace:true});
                 })
-                .catch((err) => {
-                        if(err?.response?.status === 401){
-                         Notification.toastWarningNotification("Tài khoản hoặc mật khẩu không chính xác!");
-                        }else{
+                .catch ((err) => {
+                        if(err?.response?.status === 400){
+                            Notification.toastWarningNotification("Có lỗi xảy ra!");
+                        }else if(err?.response?.status ===401){
+                            Notification.toastWarningNotification("Tài khoản hoặc mật khẩu không chính xác!");}
+                        else{
                          Notification.toastErrorNotification(err?.response?.data);
                         }
                      })
-                     setLoading(false)
+                setLoading(false)
                 }
-                
-        
     })
     const [showPassword,setShowPassword] = useState(false);
-    const navigate = useNavigate();
 
     return (
         <div>
