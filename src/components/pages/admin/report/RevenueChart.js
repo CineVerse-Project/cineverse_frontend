@@ -396,7 +396,6 @@ function RevenueChart(props) {
                                                 style: "currency",
                                                 currency: "VND",
                                             }).format(minRevenue)}
-                                            đ
                                         </div>
                                     ) : (
                                         <div>

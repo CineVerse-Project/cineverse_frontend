@@ -46,10 +46,12 @@ import EarnPoints from "../src/components/pages/user/information/EarnPoints";
 import "react-toastify/dist/ReactToastify.css";
 import Chat from "./components/chat/Chat";
 import ChatUser from "./components/chat/ChatUser";
+import AdminChat from "./components/chat/AdminChat";
 
 function App() {
     // Nếu muốn Hiển thị User Side thì sửa thành false, Admin Side thì true
-
+    const [isLogin, setIsLogin] = useState(false);
+    const [admin, setAdmin] = useState(true);
     const role = localStorage.getItem("roles")
         ? localStorage.getItem("roles")
         : null;
@@ -60,22 +62,19 @@ function App() {
         ? localStorage.getItem("roles")
         : null;
 
-    const [isLogin, setIsLogin] = useState(false);
-    const [admin, setAdmin] = useState(false);
     useEffect(() => {
         if (role != null) {
             setIsLogin(true);
         }
-        if (isLogin) {
-            if (role == "ROLE_ADMIN") {
-                setAdmin(true);
-            }
+        if (role === "ROLE_ADMIN") {
+            setAdmin(true);
         }
-    }, [admin, token, username, isLogin]);
+    }, [admin, token, username, isLogin, role]);
     return (
         <div className="App">
             <BrowserRouter>
                 <Routes>
+                    <Route path="admin-sign-in" element={<AdminSignIn />} />
                     {/* Admin Side */}
                     {admin && (
                         <Route path="/" element={<LayoutAdmin />}>
@@ -122,6 +121,7 @@ function App() {
                                 path="createMovie"
                                 element={<CreateMovie />}
                             />
+                            <Route path="admin-chat" element={<AdminChat />} />
                             <Route path="*" element={<Dashboard />} />
                         </Route>
                     )}
@@ -165,11 +165,6 @@ function App() {
                             <Route
                                 path="forgot-password"
                                 element={<ForgotPassword />}
-                            />
-
-                            <Route
-                                path="admin-sign-in"
-                                element={<AdminSignIn />}
                             />
 
                             <Route path="user" element={<InformationLayout />}>

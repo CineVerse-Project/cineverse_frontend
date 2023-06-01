@@ -150,6 +150,23 @@ function SideBarAdmin() {
                             </div>
                         </Link>
                     </li>
+                    <li className="menu-header small text-uppercase">
+                        <span className="menu-header-text">Hỗ trợ</span>
+                    </li>
+                    <li
+                        className={
+                            pathname === "/admin-chat"
+                                ? "menu-item active"
+                                : "menu-item"
+                        }
+                    >
+                        <Link to="/admin-chat">
+                            <div className="menu-link">
+                                <i className="menu-icon tf-icons bx bx-message"></i>
+                                <div>Chat hỗ trợ</div>
+                            </div>
+                        </Link>
+                    </li>
                 </ul>
             </aside>
             {/* <!-- / Menu --> */}
