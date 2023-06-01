@@ -1,68 +1,66 @@
 import { useState, useEffect } from "react";
 import { Modal, Button } from "antd";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import TypeMovieService from "../../../../services/TypeMovieService";
 import MovieService from "../../../../services/MovieService";
 import { handleValidationMovie } from "../../../../services/handleValidationMovie";
 import { storage } from "../../../../constants/firebase";
 import { ref, uploadBytes, listAll, getDownloadURL } from "firebase/storage";
 import { v4 } from "uuid";
+import Link from "antd/es/typography/Link";
 export default function EditMovie(props) {
+  const navigate = useNavigate();
+  //firebase
+  const [imgUpload, setImgUpload] = useState("");
 
-    //firebase
-    const [imgUpload, setImgUpload] = useState("");
+  //data luu du lieu detail
+  const [editData, setEditData] = useState({
+    editTenPhim: "",
+    editPoster: "",
+    editDienVien: "",
+    editDaoDien: "",
+    editPhimTruong: "",
+    editLoaiPhim: "",
+    editMoTa: "",
+    editThoiLuong: "",
+    editNgayChieu: "",
+    editNgayDong: "",
+    editTrailler: "",
+    editStatus: "",
+    editOriginPoster: "",
+  });
 
+  //usestate input errror
+  const [errors, setErrors] = useState({
+    editTenPhim: "",
+    editPoster: "",
+    editDienVien: "",
+    editDaoDien: "",
+    editPhimTruong: "",
+    editLoaiPhim: "",
+    editMoTa: "",
+    editThoiLuong: "",
+    editNgayChieu: "",
+    editNgayDong: "",
+    editTrailler: "",
+    editStatus: "",
+  });
 
-    //data luu du lieu detail
-    const [editData, setEditData] = useState({
-        editTenPhim: '',
-        editPoster: '',
-        editDienVien: '',
-        editDaoDien: '',
-        editPhimTruong: '',
-        editLoaiPhim: '',
-        editMoTa: '',
-        editThoiLuong: '',
-        editNgayChieu: '',
-        editNgayDong: '',
-        editTrailler: '',
-        editStatus: '',
-    })
+  //nhan gia tri thay doi trong o input
+  const handleInputChange = (event) => {
+    const field = event.target.name;
+    const value = event.target.value;
+    setEditData((preData) => ({ ...preData, [field]: value }));
+  };
 
-    //usestate input errror 
-    const [errors, setErrors] = useState({
-        editTenPhim: '',
-        editPoster: '',
-        editDienVien: '',
-        editDaoDien: '',
-        editPhimTruong: '',
-        editLoaiPhim: '',
-        editMoTa: '',
-        editThoiLuong: '',
-        editNgayChieu: '',
-        editNgayDong: '',
-        editTrailler: '',
-        editStatus:'',
-    })
+  const handleInputFile = (event) => {
+    const field = event.target.name;
+    const value = event.target.files[0];
+    setEditData((preData) => ({ ...preData, [field]: value }));
+  };
 
-    //nhan gia tri thay doi trong o input
-    const handleInputChange = (event) => {
-        const field = event.target.name;
-        const value = event.target.value;
-
-        setEditData((preData) => ({...preData, [field]: value}));
-    }
-
-    const handleInputFile = (event) => {
-      const field = event.target.name;
-      const value = event.target.files[0];
-
-      setEditData((preData) => ({...preData, [field]: value}));
-    }
-
-   const { movieId } = useParams();
-
+  const { movieId } = useParams();
   const getMovie = () => {
     const url = `localhost:8080/api/v1/movie/` + movieId;
     console.log(url);
@@ -70,19 +68,19 @@ export default function EditMovie(props) {
       .get("movie/" + movieId)
       .then((result) => {
         setEditData({
-            editTenPhim: result.data.movieName,
-            //editPoster: result.data.imageUrl,
-            editDienVien: result.data.actor,
-            editDienVien: result.data.director,
-            editLoaiPhim: result.data.movieType.movieTypeId,
-            editPhimTruong: result.data.filmStudio,
-            editMoTa: result.data.description,
-            editThoiLuong: result.data.duration,
-            editNgayChieu: result.data.startDate,
-            editNgayDong: result.data.endDate,
-            editStatus: result.data.status,
-            // editTrailler: result.data.trailerUrl,
-        })
+          editTenPhim: result.data.movieName,
+          editDienVien: result.data.actor,
+          editDienVien: result.data.director,
+          editLoaiPhim: result.data.movieType.movieTypeId,
+          editPhimTruong: result.data.filmStudio,
+          editMoTa: result.data.description,
+          editThoiLuong: result.data.duration,
+          editNgayChieu: result.data.startDate,
+          editNgayDong: result.data.endDate,
+          editStatus: result.data.status,
+          editTrailler: result.data.trailerUrl,
+          editOriginPoster: result.data.imageUrl,
+        });
       })
       .catch((error) => {});
   };
@@ -102,18 +100,22 @@ export default function EditMovie(props) {
           console.log(error);
         });
     };
-
     getAllTypeAPI();
   }, []);
 
   const handleEdit = (event) => {
     event.preventDefault();
     let errors = {};
-    
+    let tmp;
+    if (editData?.editPoster !== undefined) {
+      tmp = imgUpload;
+    } else {
+      tmp = editData?.editOriginPoster;
+    }
     const data = {
       movieId: movieId,
-      imageUrl : imgUpload,
-      trailerUrl : editData.editTrailler,
+      imageUrl: tmp,
+      trailerUrl: editData.editTrailler,
       movieName: editData.editTenPhim,
       startDate: editData.editNgayChieu,
       endDate: editData.editNgayDong,
@@ -128,24 +130,25 @@ export default function EditMovie(props) {
       status: editData.editStatus,
     };
     handleValidationMovie(editData, errors);
-    if(Object.keys(errors).length === 0){
-        Modal.confirm({
-            title: "Bạn muốn thay đổi phim?",
-            okText: "Thêm",
-            onOk: () => {
-              MovieService.updateMovie(data, movieId);
-              MovieService.getAllMovie();
-              setErrors([])
-            },
-            cancelText: "Đóng",
-            onCancel: () => {},
-          });
+    if (Object.keys(errors).length === 0) {
+      Modal.confirm({
+        title: "Bạn muốn thay đổi phim?",
+        okText: "Thêm",
+        onOk: () => {
+          MovieService.updateMovie(data, movieId);
+          MovieService.getAllMovie();
+          setErrors([]);
+          navigate("/movie");
+        },
+        cancelText: "Đóng",
+        onCancel: () => {},
+      });
     } else {
-        setErrors(errors);
+      setErrors(errors);
     }
   };
 
- useEffect(() => {
+  useEffect(() => {
     if (editData.editPoster == null) {
       return;
     }
@@ -171,10 +174,15 @@ export default function EditMovie(props) {
         <div class="card mb-4">
           <h5 class="card-header">Chỉnh sửa thông tin phim:</h5>
           <div class="card-body">
-            <form
-            onSubmit={handleEdit}
-            >
-              {errors.editTenPhim && <p className="col-md-10 invalid-feedback" style={{ display: "block", color: "red"}}>{errors.editTenPhim}</p>}
+            <form onSubmit={handleEdit}>
+              {errors.editTenPhim && (
+                <p
+                  className="col-md-10 invalid-feedback"
+                  style={{ display: "block", color: "red" }}
+                >
+                  {errors.editTenPhim}
+                </p>
+              )}
               <div class="mb-3 row">
                 <label for="html5-text-input" class="col-md-2 col-form-label">
                   Tên phim:
@@ -266,7 +274,10 @@ export default function EditMovie(props) {
                     onChange={handleInputChange}
                   >
                     {type.map((typeItem) => (
-                      <option key={typeItem.movieTypeId} value={typeItem.movieTypeId}>
+                      <option
+                        key={typeItem.movieTypeId}
+                        value={typeItem.movieTypeId}
+                      >
                         {typeItem.moveTypeName}
                       </option>
                     ))}
@@ -285,7 +296,7 @@ export default function EditMovie(props) {
                     onChange={handleInputChange}
                   >
                     <option value="">Chọn trạng thái</option>
-                    <option value="0" >Đã Chiếu</option>
+                    <option value="0">Đã Chiếu</option>
                     <option value="1">Đang chiếu</option>
                     <option value="2">Sắp chiếu</option>
                   </select>
@@ -323,7 +334,14 @@ export default function EditMovie(props) {
                   />
                 </div>
               </div>
-              {errors.editNgayChieu && <p className="col-md-10 invalid-feedback" style={{ display: "block", color: "red"}}>{errors.editNgayChieu}</p>}
+              {errors.editNgayChieu && (
+                <p
+                  className="col-md-10 invalid-feedback"
+                  style={{ display: "block", color: "red" }}
+                >
+                  {errors.editNgayChieu}
+                </p>
+              )}
               <div class="mb-3 row">
                 <label for="html5-date-input" class="col-md-2 col-form-label">
                   Ngày chiếu:
@@ -339,7 +357,14 @@ export default function EditMovie(props) {
                   />
                 </div>
               </div>
-              {errors.editNgayDong && <p className="col-md-10 invalid-feedback" style={{ display: "block", color: "red"}}>{errors.editNgayDong}</p>}
+              {errors.editNgayDong && (
+                <p
+                  className="col-md-10 invalid-feedback"
+                  style={{ display: "block", color: "red" }}
+                >
+                  {errors.editNgayDong}
+                </p>
+              )}
               <div class="mb-3 row">
                 <label for="html5-date-input" class="col-md-2 col-form-label">
                   Ngày đóng:
