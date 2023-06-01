@@ -55,7 +55,7 @@ function App() {
     const username = localStorage.getItem("username") ? localStorage.getItem("roles") : null;
     
     const [isLogin,setIsLogin] = useState(false);
-    const [admin,setAdmin] = useState(true);
+    const [admin,setAdmin] = useState(false);
     useEffect(()=>{
         if(role!=null){
             setIsLogin(true);          
