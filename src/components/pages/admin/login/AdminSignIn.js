@@ -4,8 +4,9 @@ import * as Yup from 'yup'
 import UserService from '../../../../services/UserService';
 import Notification from '../../../common/ToastNotification';
 import { Link, useNavigate } from 'react-router-dom';
-
+import useAuth from '../../../../auth/useAuth';
 const AdminSignIn = () => {
+    const {setAuth} = useAuth();
     const navigate = useNavigate();
     const [showPassword,setShowPassword] = useState(false);
     const formik = useFormik({
@@ -22,18 +23,22 @@ const AdminSignIn = () => {
                 .matches(/^[a-zA-Z0-9!@#$%^&*(),.?:{}|<></>]*$/, "Mật khẩu không được chứa khoảng trắng!")
         }),
         onSubmit: (e) => {
-            console.log(e);
             UserService.adminSignIn(e)
                 .then((data) => {
-                    Notification.toastSuccessNotification(data);
-                    localStorage.setItem('access_token',data.token)
-                    localStorage.setItem('username',data.username)
-                    localStorage.setItem('roles',data.roles)
+                    const username = data?.username;
+                    const token = data?.token
+                    const roles = data?.roles;
+                    localStorage.setItem('access_token',token)
+                    localStorage.setItem('username',username)
+                    localStorage.setItem('roles',roles)
                     Notification.toastSuccessNotification("Đăng nhập thành công");
-                    navigate("/dashboard");
+                    setAuth({username,token,roles})
+                    navigate("/");
                 })
                 .catch((error) => {
-                    console.log(error)
+                    if(error?.response?.status === 401){
+                        Notification.toastErrorNotification("Tài khoản hoặc mật khẩu chưa đúng!");
+                    }
                     Notification.toastErrorNotification(error?.response?.data);
                 })
         }

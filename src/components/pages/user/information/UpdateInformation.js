@@ -5,6 +5,7 @@ import { useFormik } from "formik";
 import  * as Yup from 'yup'
 import Notification from "../../../common/ToastNotification";
 import { ToastContainer } from "react-toastify";
+import useAuth from "../../../../auth/useAuth";
 /**
  * @author HuuNQ
  * 26-05-2023
@@ -12,6 +13,7 @@ import { ToastContainer } from "react-toastify";
  * @returns none
  */
 const UpdateInformation = () => {
+    const {auth} = useAuth();
     const navigate = useNavigate();
     const token = localStorage.getItem('access_token') ? localStorage.getItem('access_token') : null;
     const { username } = useParams();
@@ -66,7 +68,9 @@ const UpdateInformation = () => {
             UserService.editUserByUsername(e,token)
             .then((data)=>{Notification.toastSuccessNotification(data)})
             .catch((error) => {
-                if(error?.reponse?.status === 401){
+                if(error?.response?.status === 400){
+                    Notification.toastErrorNotification("Sai mật khẩu, vui lòng kiểm tra lại!")
+                }else if(error?.response?.status === 401){
                 Notification.toastSuccessNotification(error)
                 }else if (error?.response?.status === 403) {
                     navigate("/")
@@ -89,7 +93,10 @@ const UpdateInformation = () => {
             const response = await UserService.findUserByUsername(username, token)
             setUser({...response});
         }catch(error){
-            console.log(error);
+            console.log(error?.response?.data);
+            if(error?.response?.status === 400){
+                Notification.toastErrorNotification(error?.response?.data);
+            }
             Notification.toastErrorNotification(error?.response?.data);
         }
     }

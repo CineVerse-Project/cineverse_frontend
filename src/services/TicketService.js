@@ -1,5 +1,5 @@
 import axios from "axios";
-import { API_SERVER_URL } from "../constants/constant-url.ts";
+import { API_SERVER_URL } from "../constants/constant-url.js";
 
 const ticketService = {
   async getSeatBySchedule(roomId, sheduleDateTime) {

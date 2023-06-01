@@ -15,15 +15,15 @@ const EarnPoints = () => {
     const { username } = useParams();
     const navigate = useNavigate();
     let totalEarnPoint = 0;
-    for( let i = 0; i< earnPoints.length;i++){
-        totalEarnPoint += earnPoints[i][8];
-    }
+
     useEffect(() => {
         if (token != null) {
             UserService.getEarnPointsByUsername(username,token)
                 .then((data) => {
-                    console.log(data);
                     setEarnPoints([...data]);
+                    for( let i = 0; i< earnPoints.length;i++){
+                        totalEarnPoint += earnPoints[i][8];
+                    }
                 })
                 .catch((error) => {
                     if (error?.response?.status === 403) {
@@ -37,8 +37,6 @@ const EarnPoints = () => {
                         Notification.toastWarningNotification("Hết phiên đăng nhập,vui lòng đăng nhập lại!")
                     }
                 })
-        } else {
-            navigate("/sign-in")
         }
     }, []);
     const mapEarnPoint = () => {
@@ -47,7 +45,6 @@ const EarnPoints = () => {
             <div>
                 < div className="row" >
                     <div className="col-12">
-
                         <p style={{ fontWeight: 600, marginBottom: 8 + 'px' }}>Mã đặt vé: <span style={{ fontWeight: 400 }}>{earnPoints[i][0]}</span></p>
                         <p style={{ fontWeight: 600, marginBottom: 8 + 'px' }}>Trạng thái: <span style={{ fontWeight: 400 }}>{earnPoints[i][7] > 0 ? 'Thành công' : 'Thất bại'}</span></p>
                         <p style={{ fontWeight: 600, marginBottom: 8 + 'px' }}>Mô tả đặt vé: <span style={{ fontWeight: 400 }}>Phim: {earnPoints[i][2]}(c16, Suat chieu: {earnPoints[i][3].split('T')[1]}, Ngay:  {earnPoints[i][3].split('T')[0]}, Ghe: {earnPoints[i][6]}, Rap: {earnPoints[i][5]}.)</span></p>
@@ -69,11 +66,11 @@ const EarnPoints = () => {
                 <p style={{ fontWeight: 600, marginBottom: 8 + 'px' }}>Số tích điểm còn lại: <span style={{ fontWeight: 400 }}>{totalEarnPoint} cinepoint</span> </p>
             </div>
             <hr />
-            {earnPoints?.length > 0 ? <div>{mapEarnPoint}
-                {/* <div className="text-center">
-                    <button className="btn-red">Xem thêm</button>
-                </div> */}
-            </div> : <div>Không lịch sử tích điểm</div>
+            {earnPoints?.length > 0 
+            ?   <div>{mapEarnPoint}
+                </div> 
+            :
+                <div>Không lịch sử tích điểm</div>
             }
         </div>
 
