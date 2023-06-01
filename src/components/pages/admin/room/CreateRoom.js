@@ -8,6 +8,7 @@ import { handleValidationRoom } from "../../../../services/handleValidationRoom"
 import { useNavigate, useParams } from "react-router-dom";
 
 export default function CreateRoom() {
+  const [roomTmp, setRoomTmp] = useState([]);
   const navigate = useNavigate();
   const [editData, setEditData] = useState({
     editTenPhong: "",
@@ -43,7 +44,15 @@ export default function CreateRoom() {
         theaterId: editData.editTenRap,
       },
     };
-    console.log(data);
+    for (let index = 0; index < roomTmp.length; index++) {
+      if (roomTmp[index].theater.theaterId === editData.editTenRap) {
+        if (roomTmp[index].roomName === editData.editTenPhong) {
+          errors.editTenPhong='Rạp đã có phòng này';
+          console.log(errors.editTenPhong);
+        }
+      }
+      
+    }
     handleValidationRoom(editData, errors);
     if (Object.keys(errors).length === 0) {
       Modal.confirm({
@@ -71,14 +80,25 @@ export default function CreateRoom() {
       TheaterService.getAllTheater()
         .then((data) => {
           setTheater(data);
-          console.log("123" + data);
         })
         .catch((error) => {
           console.log(error);
         });
     };
-
     getAllTheaterAPI();
+  }, []);
+
+  useEffect(() => {
+    const getAllRoomAPI = async () => {
+      RoomService.getAllRoom()
+        .then((data) => {
+          setRoomTmp(data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    };
+    getAllRoomAPI();
   }, []);
 
   return (
@@ -96,7 +116,14 @@ export default function CreateRoom() {
           <form onSubmit={handleCreate}>
             <h5 class="card-header">Thêm mới phòng</h5>
             <div class="card-body">
-            {errors.editTenPhong && <p className="col-md-10 invalid-feedback" style={{ display: "block", color: "red"}}>{errors.editTenPhong}</p>}
+              {errors.editTenPhong && (
+                <p
+                  className="col-md-10 invalid-feedback"
+                  style={{ display: "block", color: "red" }}
+                >
+                  {errors.editTenPhong}
+                </p>
+              )}
 
               <div class="mb-3 row">
                 <label for="html5-email-input" class="col-md-2 col-form-label">
@@ -114,7 +141,14 @@ export default function CreateRoom() {
                   />
                 </div>
               </div>
-              {errors.editTenRap && <p className="col-md-10 invalid-feedback" style={{ display: "block", color: "red"}}>{errors.editTenRap}</p>}
+              {errors.editTenRap && (
+                <p
+                  className="col-md-10 invalid-feedback"
+                  style={{ display: "block", color: "red" }}
+                >
+                  {errors.editTenRap}
+                </p>
+              )}
               <div class="mb-3 row">
                 <label for="html5-email-input" class="col-md-2 col-form-label">
                   Tên rạp:
@@ -146,8 +180,22 @@ export default function CreateRoom() {
                   </select>
                 </div>
               </div>
-              {errors.editSoCot && <p className="col-md-10 invalid-feedback" style={{ display: "block", color: "red"}}>{errors.editSoCot}</p>}
-            {errors.editSoHang && <p className="col-md-10 invalid-feedback" style={{ display: "block", color: "red"}}>{errors.editSoHang}</p>}
+              {errors.editSoCot && (
+                <p
+                  className="col-md-10 invalid-feedback"
+                  style={{ display: "block", color: "red" }}
+                >
+                  {errors.editSoCot}
+                </p>
+              )}
+              {errors.editSoHang && (
+                <p
+                  className="col-md-10 invalid-feedback"
+                  style={{ display: "block", color: "red" }}
+                >
+                  {errors.editSoHang}
+                </p>
+              )}
               <div class="mb-3 row d-flex align-items-center">
                 <label for="html5-email-input" class="col-md-2 col-form-label">
                   Layout:
