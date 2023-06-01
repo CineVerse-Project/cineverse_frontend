@@ -4,6 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import  * as Yup from 'yup'
 import Notification from "../../../common/ToastNotification";
+import { ToastContainer } from "react-toastify";
 /**
  * @author HuuNQ
  * 26-05-2023
@@ -41,12 +42,9 @@ const UpdateInformation = () => {
                 .required("Họ tên không được bỏ trống!")
                 .min(3, "Họ tên phải có ít nhất 3 ký tự!")
                 .max(50, "Họ tên quá dài!")
-                // .matches("/[^0-9~!@#$%^&*()_+=-/?><,.`]*$/", "Họ tên chỉ được chứa các ký tự chữ!")
                 ,
             birthday: Yup.date()
                 .required("Ngày sinh không được bỏ trống")
-                // .matches('/^(?=\d)(?:(?:31(?!.(?:0?[2469]|11))|(?:30|29)(?!.0?2)|29(?=.0?2.(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00)))(?:\x20|$))|(?:2[0-8]|1\d|0?[1-9]))([-./])(?:1[012]|0?[1-9])\1(?:1[6-9]|[2-9]\d)?\d\d(?:(?=\x20\d)\x20|$))?(((0?[1-9]|1[012])(:[0-5]\d){0,2}(\x20[AP]M))|([01]\d|2[0-3])(:[0-5]\d){1,2})?$/', "Ngày này không tồn tại")
-                 //.matches('/^(0?[1-9]|[12][0-9]|3[01])[\/](0?[1-9]|1[012])[\/\-]\d{4}$/', "Không dúng định dạng ngày tháng năm!")
                ,
             gender: Yup.string()
                 .oneOf(["true", "false"], "Vui lòng điền đúng thông tin giới tính")
@@ -57,24 +55,31 @@ const UpdateInformation = () => {
                 .min(6, "Mật khẩu phải có ít nhất 6 ký tự")
                 .max(50, "Mật khẩu quá dài!")
                 .matches(/^[a-zA-Z0-9!@#$%^&*(),.?:{}|<></>]*$/, 'Mật khẩu không được chứa khoảng trắng!')
-                // .matches("[A-Z]*", 'Mật khẩu phải chứa ít nhất 1 ký tự hoa!')
-                // .matches('[0-9]*', 'Mật khẩu phải chứa ít nhất 1 ký tự số!')
-                // .matches('/[]]*/', 'Mật khẩu phải chứa ít nhất 1 ký tự đặc biệt!')
                 .required('Vui lòng nhập mật khẩu để xác nhận các thay đổi!'),
             phoneNumber: Yup.string()
                 .matches(/^((09)|(07)|(08)|(05)|(03))\d{8}$/, "Số điện thoại không hợp lệ!").required("Số điện thoại không được bỏ trống!"),
             address: Yup.string(),
-            // imageUrl: Yup.mixed().
         }),
         
         enableReinitialize:true,
         onSubmit: (e)=>{
-            
             UserService.editUserByUsername(e,token)
             .then((data)=>{Notification.toastSuccessNotification(data)})
             .catch((error) => {
-                if(error?.reponse?.status === 401)
-                Notification.toastSuccessNotification(error)}
+                if(error?.reponse?.status === 401){
+                Notification.toastSuccessNotification(error)
+                }else if (error?.response?.status === 403) {
+                    navigate("/")
+                    Notification.toastErrorNotification("Bạn không thể truy cập vào tài nguyên ngày!")
+                }
+                else if (error?.response?.status===500){
+                    localStorage.removeItem("access_token")
+                    localStorage.removeItem("username")
+                    localStorage.removeItem("roles")
+                    navigate("/sign-in")
+                    Notification.toastErrorNotification("Hết phiên đăng nhập,Vui lòng đăng nhập lại!")
+                }
+            }
                 )
         }
     })
@@ -85,6 +90,7 @@ const UpdateInformation = () => {
             setUser({...response});
         }catch(error){
             console.log(error);
+            Notification.toastErrorNotification(error?.response?.data);
         }
     }
     useEffect(() => {
@@ -93,6 +99,7 @@ const UpdateInformation = () => {
 
     return (
         <div>
+            <ToastContainer />
             <div className="mx-auto mt-4" >
                 <h5 className="text-uppercase text-center p-2 text-white" style={{ backgroundColor: '#c23b1a' }}>Cập nhật thông tin</h5>
                 <form onSubmit={handleSubmit}>
@@ -101,7 +108,6 @@ const UpdateInformation = () => {
                             <div className="form-group">
                                 <label htmlFor="fullName" className="form-label mt-3 mb-1">Họ tên</label>
                                 <input type="text" name="fullName" id="fullName" className="input-red" value={values.fullName}
-                                    //  onChange={(e)=>setUser({...user,fullName:e.target.value})}
                                     onChange={handleChange}
                                 />
                                 {(errors.fullName && touched.fullName) && <p className="text-danger mb-1">{errors.fullName}</p> }
@@ -109,7 +115,6 @@ const UpdateInformation = () => {
                             <div className="form-group">
                                 <label htmlFor="gender" className="form-label mt-3 mb-1" >Giới tính</label>
                                 <select name="gender" value={values.gender} 
-                                // onChange={(e) => setUser({ ...user, gender: e.target.value })} 
                                 onChange={handleChange}
                                 className="input-red">
                                     <option id="gender" value="true" >Nam</option>
@@ -120,7 +125,6 @@ const UpdateInformation = () => {
                             <div className="form-group">
                                 <label htmlFor="birthday" className="form-label mt-3 mb-1">Ngày sinh</label>
                                 <input type="date" name="birthday" id="birthday" className="input-red" value={values.birthday}
-                                    // onChange={(e)=>setUser({...user,birthday:e.target.value})} 
                                     onChange={handleChange}
                                 />
                                 {(errors.birthday && touched.birthday) && <p className="text-danger mb-1">{errors.birthday}</p> }
@@ -128,7 +132,6 @@ const UpdateInformation = () => {
                             <div className="form-group">
                                 <label htmlFor="phoneNumber" className="form-label mt-3 mb-1">Số điện thoại</label>
                                 <input type="text" name="phoneNumber" id="phoneNumber" className="input-red" value={values.phoneNumber}
-                                    // onChange={(e)=>setUser({...user,phoneNumber:e.target.value})} 
                                     onChange={handleChange}
                                 />
                                 {(errors.phoneNumber && touched.phoneNumber) && <p className="text-danger mb-1">{errors.phoneNumber}</p> }
@@ -136,7 +139,6 @@ const UpdateInformation = () => {
                             <div className="form-group">
                                 <label htmlFor="address" className="form-label mt-3 mb-1" >Địa chỉ</label>
                                 <input name="address" id="address" className="input-red" value={values.address}
-                                    // onChange={(e)=>setUser({...user,address:e.target.value})} 
                                     onChange={handleChange}
                                 />
                                 {(errors.address && touched.address) && <p className="text-danger mb-1">{errors.address}</p> }
@@ -153,7 +155,6 @@ const UpdateInformation = () => {
                                     <div>
                                     <input type={showPassword ? 'text' : 'password'} className="input-red input-with-icon" 
                                     placeholder="Nhập mật khẩu" id="password" name="password" value={formik.values.password}
-                                        // onChange={(e) => setUser({ ...user, password: e.target.value })}
                                         onChange={handleChange}
                                     />
                                     <i className={showPassword ? "fas fa-eye icons" : "fas fa-eye-slash icons"} id="show_hide_password-icon" style={{ cursor: 'pointer', padding: '12px 12px' }} onClick={() => { setShowPassword(!showPassword) }}></i>
@@ -171,7 +172,6 @@ const UpdateInformation = () => {
                             </div>
                             <label htmlFor="image_input" className="btn-red mt-4 d-block w-50 mx-auto text-center">Thay đổi ảnh</label>
                             <input type="file" name="imageUrl" id="image_input" value={formik.values.imageUrl} accept="image/*" hidden 
-                            // onChange={(e) => setUser({ ...user, imageUrl: e.target.value })}
                             onChange={handleChange}
                             />
                         </div>

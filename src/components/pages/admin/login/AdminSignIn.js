@@ -30,7 +30,7 @@ const AdminSignIn = () => {
                     localStorage.setItem('username',data.username)
                     localStorage.setItem('roles',data.roles)
                     Notification.toastSuccessNotification("Đăng nhập thành công");
-                    navigate("/");
+                    navigate("/dashboard");
                 })
                 .catch((error) => {
                     console.log(error)

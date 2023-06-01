@@ -1,4 +1,4 @@
-import React from "react"
+import React,{useEffect, useState} from "react"
 import bgImage from '../../../../static/assets/img/backgrounds/form_image.jpg';
 import { Link } from "react-router-dom";
 import {useFormik } from "formik";
@@ -13,6 +13,7 @@ import { ToastContainer } from "react-toastify";
  * @returns none
  */
 const ForgotPassword = () => {
+    const [loading,setLoading] = useState(false);
     const formik = useFormik({
         initialValues:{
             email:'',
@@ -20,26 +21,37 @@ const ForgotPassword = () => {
         validationSchema: Yup.object({
             email: Yup.string().required("Email không được bỏ trống!").email("Email chưa hợp lệ!")
         }),
-        onSubmit : (e,{resetForm}) => {
-            
-            UserService.forgotPassword(e)
-            .then((data) => {
-                console.log(data);
-                Notification.toastSuccessNotification(data);
-                
-            })
-            .catch(
-                (error) => {
-                    console.log(error);
-                Notification.toastErrorNotification(error?.response?.data);
-                
-            })
-            resetForm();
+        onSubmit : (e) => {
+            submitForm(e)
         }
     })
+
+    const submitForm = (e) => {
+        setLoading(true);
+        UserService.forgotPassword(e)
+        .then((data) => {
+            
+            Notification.toastSuccessNotification(data);
+            
+        })
+        .catch(
+            (error) => {
+            Notification.toastErrorNotification(error?.response?.data);
+        })
+        setLoading(()=>false);
+    }
     return (
         <div>
         <ToastContainer />
+            { loading && <div style={{
+                backgroundColor: 'rgba(0,0,0,0.6)',
+                height: 100 + '%',
+                position: 'absolute',
+                left: 0, right: 0, top: 0, bottom: 0, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', zIndex: '9000'
+            }}>
+                <p className="spinner-border text-danger" role="status"></p>
+                <p className="text-gray-800 fw-semibold text-danger mt-0" >Đang xử lý...</p>
+            </div>}
         <div className="container-fluid" style={{ backgroundImage: `url(${bgImage})`,backgroundPosition:'center',backgroundRepeat:'no-repeat' }}>
             <div className="row" style={{height:'100vh'}}>
                 <div className="col-xl-12 col-md-9 col-sm-6 mx-auto d-flex justify-contentcenter align-items-center">

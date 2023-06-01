@@ -72,7 +72,6 @@ function ShowSeatScreen() {
       toast.warning("Chỉ được chọn tối đa 8 ghế!!!");
     }
   };
-
   const seatsPerColumn = seats[0]?.seat.room.seatRowNumber;
   const seatsPerRow = seats[0]?.seat.room.seatColumnNumber;
   console.log(seatsPerColumn)
@@ -100,7 +99,7 @@ function ShowSeatScreen() {
             key={seatName}
             className={`seat ${
               seats.find((s) => s.seat?.seatName === seatName)?.seat?.seatType
-                ?.seatTypeId === "ST-0001"
+                ?.seatTypeId === "ST-0002"
                 ? "seat-vipprime active"
                 : "seat-standard active"
             }

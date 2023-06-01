@@ -8,7 +8,6 @@ const RoomService = {
     const url = API_SERVER_URL + "room" ;
     try {
       const response = await axios.get(url);
-      console.log(response.data)
       return response.data;
     } catch (error) {
       throw error;
