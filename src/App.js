@@ -32,6 +32,7 @@ import CreateTheater from "./components/pages/admin/theater/CreateTheater";
 import EditTheater from "./components/pages/admin/theater/EditTheater";
 import CreateMovie from "./components/pages/admin/movie/CreateMovie";
 import EditRoom from "./components/pages/admin/room/EditRoom";
+import EditMovie from "./components/pages/admin/movie/EditMovie";
 import SignUp from "../src/components/pages/user/information/SignUp";
 import ForgotPassword from "../src/components/pages/user/information/ForgotPassword";
 import ResetPassWord from "../src/components/pages/user/information/ResetPassword";
@@ -47,29 +48,23 @@ import "react-toastify/dist/ReactToastify.css";
 import Chat from "./components/chat/Chat";
 import ChatUser from "./components/chat/ChatUser";
 import AdminChat from "./components/chat/AdminChat";
-
+import RequireAuth from "./components/common/RequiredAuth";
+import useAuth from "./auth/useAuth";
 function App() {
     // Nếu muốn Hiển thị User Side thì sửa thành false, Admin Side thì true
-    const [isLogin, setIsLogin] = useState(false);
-    const [admin, setAdmin] = useState(true);
-    const role = localStorage.getItem("roles")
-        ? localStorage.getItem("roles")
-        : null;
-    const token = localStorage.getItem("access_token")
-        ? localStorage.getItem("access_token")
-        : null;
-    const username = localStorage.getItem("username")
-        ? localStorage.getItem("roles")
-        : null;
-
+    const { auth } = useAuth();
+    const [admin, setAdmin] = useState(false);
+    const role = auth?.roles ? auth?.roles : null;
     useEffect(() => {
-        if (role != null) {
-            setIsLogin(true);
+        if (role !== null) {
+            if (role?.indexOf("ROLE_ADMIN") !== -1) {
+                setAdmin(true);
+            } else {
+                setAdmin(false);
+            }
         }
-        if (role === "ROLE_ADMIN") {
-            setAdmin(true);
-        }
-    }, [admin, token, username, isLogin, role]);
+    }, [role]);
+
     return (
         <div className="App">
             <BrowserRouter>
@@ -77,55 +72,80 @@ function App() {
                     <Route path="admin-sign-in" element={<AdminSignIn />} />
                     {/* Admin Side */}
                     {admin && (
-                        <Route path="/" element={<LayoutAdmin />}>
-                            <Route index element={<Dashboard />} />
+                        <Route
+                            element={
+                                <RequireAuth allowedRoles={"ROLE_ADMIN"} />
+                            }
+                        >
+                            <Route path="/" element={<LayoutAdmin />}>
+                                <Route index element={<Dashboard />} />
 
-                            <Route
-                                path="revenue-report"
-                                element={<RevenueReport />}
-                            />
-                            <Route
-                                path="ticket-report"
-                                element={<TicketReport />}
-                            />
-                            <Route path="schedule">
-                                <Route path="" element={<ScheduleList />} />
                                 <Route
-                                    path="create"
-                                    element={<ScheduleFormCreate />}
+                                    path="revenue-report"
+                                    element={<RevenueReport />}
                                 />
                                 <Route
-                                    path="update/:scheduleId/:roomId"
-                                    element={<ScheduleFormUpdate />}
+                                    path="ticket-report"
+                                    element={<TicketReport />}
                                 />
-                                <Route path="test" element={<ScheduleTest />} />
-                                <Route path="*" element={<ScheduleList />} />
+                                <Route path="schedule">
+                                    <Route path="" element={<ScheduleList />} />
+                                    <Route
+                                        path="create"
+                                        element={<ScheduleFormCreate />}
+                                    />
+                                    <Route
+                                        path="update/:scheduleId/:roomId"
+                                        element={<ScheduleFormUpdate />}
+                                    />
+                                    <Route
+                                        path="test"
+                                        element={<ScheduleTest />}
+                                    />
+                                    <Route
+                                        path="*"
+                                        element={<ScheduleList />}
+                                    />
+                                </Route>
+                                <Route
+                                    path="theater"
+                                    element={<ManageTheater />}
+                                />
+                                <Route
+                                    path="createTheater"
+                                    element={<CreateTheater />}
+                                />
+                                <Route
+                                    path="editTheater/:theaterId"
+                                    element={<EditTheater />}
+                                />
+                                <Route
+                                    path="editMovie/:movieId"
+                                    element={<EditMovie />}
+                                />
+                                <Route
+                                    path="editRoom/:roomId"
+                                    element={<EditRoom />}
+                                />
+                                <Route path="movie" element={<ManageMovie />} />
+                                <Route path="room" element={<ManageRoom />} />
+                                <Route
+                                    path="createRoom"
+                                    element={<CreateRoom />}
+                                />
+                                <Route
+                                    path="createMovie"
+                                    element={<CreateMovie />}
+                                />
+                                <Route
+                                    path="admin-chat"
+                                    element={<AdminChat />}
+                                />
+                                <Route path="*" element={<Dashboard />} />
                             </Route>
-                            <Route path="theater" element={<ManageTheater />} />
-                            <Route
-                                path="createTheater"
-                                element={<CreateTheater />}
-                            />
-                            <Route
-                                path="editTheater/:theaterId"
-                                element={<EditTheater />}
-                            />
-                            <Route
-                                path="editRoom/:roomId"
-                                element={<EditRoom />}
-                            />
-                            <Route path="movie" element={<ManageMovie />} />
-                            <Route path="room" element={<ManageRoom />} />
-                            <Route path="createRoom" element={<CreateRoom />} />
-                            <Route
-                                path="createMovie"
-                                element={<CreateMovie />}
-                            />
-                            <Route path="admin-chat" element={<AdminChat />} />
-                            <Route path="*" element={<Dashboard />} />
                         </Route>
                     )}
-
+                    <Route path="admin-sign-in" element={<AdminSignIn />} />
                     {/* User Side */}
                     {!admin && (
                         <Route path="/" element={<LayoutUser />}>
@@ -156,8 +176,10 @@ function App() {
                                 path="movie-detail/:movieId"
                                 element={<MovieDetail />}
                             />
+
                             <Route path="sign-in" element={<SignIn />} />
                             <Route path="sign-up" element={<SignUp />} />
+
                             <Route
                                 path="reset-password"
                                 element={<ResetPassWord />}
@@ -167,30 +189,39 @@ function App() {
                                 element={<ForgotPassword />}
                             />
 
-                            <Route path="user" element={<InformationLayout />}>
+                            <Route
+                                element={
+                                    <RequireAuth allowedRoles={"ROLE_USER"} />
+                                }
+                            >
                                 <Route
-                                    index
-                                    path=":username"
-                                    element={<UserInformation />}
-                                />
-                                <Route
-                                    path="update-information/:username"
-                                    element={<UpdateInformation />}
-                                />
-                                <Route
-                                    path="change-password/:username"
-                                    element={<ChangePassword />}
-                                />
-                                <Route
-                                    path="order-history/:username"
-                                    element={<OrderHistory />}
-                                />
-                                <Route
-                                    path="earn-points/:username"
-                                    element={<EarnPoints />}
-                                />
+                                    path="user"
+                                    element={<InformationLayout />}
+                                >
+                                    <Route
+                                        index
+                                        path=":username"
+                                        element={<UserInformation />}
+                                    />
+                                    <Route
+                                        path="update-information/:username"
+                                        element={<UpdateInformation />}
+                                    />
+                                    <Route
+                                        path="change-password/:username"
+                                        element={<ChangePassword />}
+                                    />
+                                    <Route
+                                        path="order-history/:username"
+                                        element={<OrderHistory />}
+                                    />
+                                    <Route
+                                        path="earn-points/:username"
+                                        element={<EarnPoints />}
+                                    />
+                                </Route>
+                                <Route path="*" element={<Home />} />
                             </Route>
-                            <Route path="*" element={<Home />} />
                         </Route>
                     )}
                 </Routes>

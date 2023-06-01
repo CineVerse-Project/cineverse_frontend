@@ -1,12 +1,13 @@
 import React, { useState } from 'react'
 import bgImage from '../../../../static/assets/img/backgrounds/form_image.jpg'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import UserService from '../../../../services/UserService'
 import { useNavigate } from 'react-router-dom'
 import { ToastContainer} from 'react-toastify'
 import Notification from '../../../common/ToastNotification'
-
-
+import { useFormik } from 'formik'
+import * as Yup from 'yup'
+import useAuth from '../../../../auth/useAuth'
 /**
  * @author HuuNQ
  * 26-05-2023
@@ -14,50 +15,58 @@ import Notification from '../../../common/ToastNotification'
  * @returns none
  */
 const SignIn = () => {
-    const [login, setLogin] = useState({
-        'username': '',
-        'password': '',
-    })
-    const [errorField,setErrorField] = useState({});
-    const [showPassword,setShowPassword] = useState(false);
     const navigate = useNavigate();
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        const headers = new Headers();
-        headers.append("Content-type", "application/json");
-     
-        UserService.userSignIn(login).then((data) => {
-            if(localStorage.getItem("access_token")==null){
-                localStorage.setItem('access_token',data.token)
-            }
-            if(localStorage.getItem("username")==null){
-                localStorage.setItem('username',data.username)
-            }
-            if(localStorage.getItem("roles")==null){
-                localStorage.setItem('roles',data.roles)
-            }
-            Notification.toastSuccessNotification("Đăng nhập thành công");
-            navigate(`/`)
-        })
-        .catch(
-            (err)=>{
-               if(err?.response?.status === 401){
-                Notification.toastWarningNotification("Tài khoản chưa chính xác!");
-               }else{
-                let error = err?.response?.data?.username || err?.response?.data?.password
-                Notification.toastErrorNotification(error);
-               }
-               
-            });
-
-    }
+    const location = useLocation();
+    const from = location.state?.from?.pathname || "/";
+    const { setAuth } = useAuth();
+    const [loading,setLoading] = useState(false);
+    const formik = useFormik({
+        initialValues:{
+            'username':'',
+            'password':'',
+        },
+        validationSchema: Yup.object({
+            username: Yup.string()
+                .required("Tài khoản không được bỏ trống!")
+                .matches(/^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])+$/, "Email không đúng định dạng!"),
+            password: Yup.string()
+                .required("Mật khẩu không được bỏ trống")
+                .matches(/^[a-zA-Z0-9!@#$%^&*(),.?:{}|<></>]*$/, "Mật khẩu không được chứa khoảng trắng!")
+        }),
+        onSubmit: (e) => {
+            setLoading(true)
+            UserService.userSignIn(e)
+                .then ((data)=> {
+                    const username = data?.username;
+                    const token = data?.token;
+                    const roles = data?.roles;
+                    localStorage.setItem('access_token',token)
+                    localStorage.setItem('username',username)
+                    localStorage.setItem('roles',roles)
+                    setAuth({username,token,roles});
+                    Notification.toastSuccessNotification("Đăng nhập thành công");
+                    navigate(from, {replace:true});
+                })
+                .catch ((err) => {
+                        if(err?.response?.status === 400){
+                            Notification.toastWarningNotification("Có lỗi xảy ra!");
+                        }else if(err?.response?.status ===401){
+                            Notification.toastWarningNotification("Tài khoản hoặc mật khẩu không chính xác!");}
+                        else{
+                         Notification.toastErrorNotification(err?.response?.data);
+                        }
+                     })
+                setLoading(false)
+                }
+    })
+    const [showPassword,setShowPassword] = useState(false);
 
     return (
         <div>
         <ToastContainer />
         <div className="container-fluid" style={{ backgroundImage: `url(${bgImage})`, backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }}>
            
-            {/* { <div style={{
+            { loading && <div style={{
                 backgroundColor: 'rgba(0,0,0,0.6)',
                 height: 100 + 'vh',
                 position: 'absolute',
@@ -65,7 +74,7 @@ const SignIn = () => {
             }}>
                 <p className="spinner-border text-danger" role="status"></p>
                 <p className="text-gray-800 fw-semibold text-danger mt-0" >Đang xử lý...</p>
-            </div>} */}
+            </div>}
 
             <div className="row" style={{ height: 100 + 'vh' ,zIndex:1000}}>
 
@@ -76,7 +85,7 @@ const SignIn = () => {
                                 <div className="h4 text-uppercase text-shadow text-center" >Đăng nhập</div>
                                 <p>Chúc bạn có những trải nghiệm thú vị tại <strong className="h5 text-shadow">CINEVERSE</strong></p>
                             </div>
-                            <form className="my-4" onSubmit={handleSubmit}>
+                            <form className="my-4" onSubmit={formik.handleSubmit}>
                                 <div className="form-group">
                                     <label htmlFor="username" className="form-label"><strong className="" >Email</strong></label>
                                     <input id="username"
@@ -84,13 +93,11 @@ const SignIn = () => {
                                         placeholder="Nhập Email"
                                         className="input-red"
                                         name="username"
-                                        value={login.username}
-                                        onChange={(e) => {
-                                            setLogin({ ...login, username: e.target.value })
-                                        }}
-                                    
+                                        value={formik.values.username}
+                                        onChange={formik.handleChange
+                                        }
                                     />
-                                {errorField && errorField['username'] && <p className="text-danger">{errorField['username']}</p>}
+                                {(formik.errors.username && formik.touched.username) && <p className="text-danger">{formik.errors.username}</p>}
                                 </div>
                                 
                                 
@@ -102,19 +109,17 @@ const SignIn = () => {
                                             placeholder="Nhập mật khẩu"
                                             id="password"
                                             name="password"
-                                            value={login.password}
-                                            onChange={(e) => {
-                                                setLogin({ ...login, password: e.target.value })
-                                            }}
+                                            value={formik.values.password}
+                                            onChange={formik.handleChange}
                                             
                                         />
                                         <i className={showPassword ? "fas fa-eye-slash icons" :"fas fa-eye icons"} id="show_hide_password-icon" style={{ cursor: 'pointer', padding: '12px' }} onClick={()=>{setShowPassword(!showPassword)}}></i>
                                     </div>
-                                    {errorField && errorField['username'] && <p className="text-danger">{errorField['username']}</p>}
+                                    {(formik.errors.password && formik.touched.password) && <p className="text-danger">{formik.errors.password}</p>}
                                 </div>
 
                                 <div className="my-2 text-center">
-                                    <button className="btn-red w-100 my-2">Đăng nhập</button>
+                                    <button className="btn-red w-100 my-2"  type="submit">Đăng nhập</button>
                                 </div>
                             </form>
                             <hr />

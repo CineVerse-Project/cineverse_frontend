@@ -1,9 +1,6 @@
 export function handleValidationRoom (editData, errors){
-    if(editData.editTenPhong == "" || editData.editTenPhong == " "){
+    if(editData.editTenPhong === "" || editData.editTenPhong == null){
         errors.editTenPhong = 'Ten phong khong duoc de trong';
-    }
-    if(!/^[\p{L}\p{N},\s]+$/u.test(editData.editTenPhong)){
-        errors.editTenPhong = 'Ten khong chua ki tu dat biet';
     }
     if(!/^\d+$/.test(editData.editSoCot)){
         errors.editSoCot = 'So cot phai la so';

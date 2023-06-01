@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import UserService from "../../../../services/UserService";
-import { useParams, useNavigate, Link } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import Notification from "../../../common/ToastNotification";
 import { ToastContainer } from "react-toastify";
 
@@ -11,50 +11,43 @@ import { ToastContainer } from "react-toastify";
  * @returns none
  */
 const OrderHistory = () => {
-    const { username } = useParams();
     const navigate = useNavigate();
-    const [dataLength, setDataLength] = useState(9);
-    const [currentPage, setCurrentPage] = useState(0);
-    const [itemsPerPage, setItemsPerPage] = useState(2);
-    const [totalPage, setTotalPage] = useState(0);
+    const { username } = useParams();
     const [orderHistory, setOrderHistory] = useState([]);
-    // const [loadMore, setLoadMore] = useState(0);
     const token = localStorage.getItem("access_token")
         ? localStorage.getItem("access_token")
         : null;
-    const loadMoreOnClick = () => {
-        setCurrentPage((prev) => prev + 1);
-    };
     useEffect(() => {
-        UserService.orderHistoryByUsername(username, token)
-            .then((data) => {
-                setOrderHistory([...data]);
-                setDataLength(data.length);
-                if (dataLength % itemsPerPage !== 0) {
-                    setTotalPage(Math.round(dataLength / itemsPerPage));
-                } else {
-                    setTotalPage(dataLength / itemsPerPage);
-                }
-            })
-            .catch((error) => {
-                if (error?.response?.status === 400) {
-                    Notification.toastErrorNotification(error?.response?.data);
-                }
-                if (error?.response?.status === 403) {
-                    navigate("/sign-in");
-                    Notification.toastErrorNotification(
-                        "Vui lòng đăng nhập lại!"
-                    );
-                }
-                if (error?.response?.status === 500) {
-                    navigate("/sign-in");
-                    Notification.toastErrorNotification(
-                        "Vui lòng đăng nhập lại!"
-                    );
-                }
-            });
+        if (token !== null) {
+            UserService.orderHistoryByUsername(username, token)
+                .then((data) => {
+                    setOrderHistory([...data]);
+                })
+                .catch((error) => {
+                    console.log(error);
+                    if (error?.response?.status === 400) {
+                        Notification.toastErrorNotification(
+                            error?.response?.data
+                        );
+                    } else if (error?.response?.status === 403) {
+                        navigate("/");
+                        Notification.toastErrorNotification(
+                            "Bạn không thể truy cập vào tài nguyên ngày!"
+                        );
+                    } else if (error?.response?.status === 500) {
+                        localStorage.removeItem("access_token");
+                        localStorage.removeItem("username");
+                        localStorage.removeItem("roles");
+                        navigate("/sign-in");
+                        Notification.toastErrorNotification(
+                            "Hết phiên đăng nhập,Vui lòng đăng nhập lại!"
+                        );
+                    }
+                });
+        } else {
+            navigate("/sign-in");
+        }
     }, []);
-    console.log(orderHistory);
 
     const orderHistoryMap = orderHistory.map((orderItem) => {
         return (
@@ -109,9 +102,11 @@ const OrderHistory = () => {
                 </h5>
             </div>
             {orderHistory?.length > 0 ? (
-                <div>{orderHistoryMap}</div>
+                <div> {orderHistoryMap}</div>
             ) : (
-                <div>Không có lịch sử giao dịch</div>
+                <div>
+                    <div>Không có lịch sử giao dịch</div>
+                </div>
             )}
         </div>
     );
