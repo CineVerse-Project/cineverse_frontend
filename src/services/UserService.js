@@ -1,13 +1,14 @@
 import axios from "axios";
 import { useEffect } from "react";
 import {useNavigate} from "react-router-dom"
+import { API_SERVER_URL } from "../constants/constant-url.js";
 /**
  * @author HuuNQ
  * 26-05-2023
  * @method create default url
  * @returns none
  */
-axios.defaults.baseURL = "http://localhost:8080/api/v1"
+axios.defaults.baseURL = API_SERVER_URL;
 
 const CLIENT_API = {
     SIGN_IN : "/sign-in",
@@ -77,12 +78,12 @@ const UserService = {
             throw error;
         }
     },
-    async resetPassword({newPassword,confirmNewPassword},username,token){
+    async resetPassword({newPassword,confirmNewPassword},token,username){
         try{
             const response = await axios.post(`${CLIENT_API.RESET_PASSWORD}`,{newPassword,confirmNewPassword},{
                 params : {
-                    token :token,
-                    username: username
+                    'reset-password-token' :token,
+                    'username': username
                 }
             })
             if(response.status === 401){
@@ -100,10 +101,6 @@ const UserService = {
                     'Authorization':`Bearer ${token}`
                 }
             })
-            if(response.status === 401){
-
-                throw Error;
-            }
             return response.data;
         }catch(error){
             throw error;

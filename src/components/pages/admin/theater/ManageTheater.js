@@ -54,7 +54,7 @@ export default function ManageTheater() {
         <Link style={{ width: "100px" }} to={`/editTheater/${theaterId}`} 
         // href={`/editTheater/${theaterId}`}
 >
-          <EditOutlined /> Edit
+          <EditOutlined /> Chỉnh sửa
         </Link>
       )
     },
@@ -63,7 +63,7 @@ export default function ManageTheater() {
       label: (
         <a style={{ width: "100px" }} onClick={() => deleteConfirm()}>
           {" "}
-          <DeleteOutlined /> Delete
+          <DeleteOutlined /> Xóa
         </a>
       ),
     },
@@ -214,6 +214,7 @@ export default function ManageTheater() {
         console.log(id);
         TheaterService.deleteTheater(id);
         getAllTheaterAPI();
+        
       },
       onCancel: () => {
       }
@@ -234,7 +235,7 @@ export default function ManageTheater() {
   // goi useeEffect khi table theater thay doi
   useEffect(() => {
     getAllTheaterAPI();
-  },[deleteId])
+  },[deleteId,theater])
 
 
   const [inputTinhThanh, setInputTinhThanh] = useState('');

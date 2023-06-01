@@ -50,11 +50,17 @@ function MovieInformation() {
           <div className="movie-list-wrapper">
             <div className="movie-list">
               <div className="movie-list-item">
-                <img
-                  className="movie-list-item-img-detailfirm"
-                  src={movieInformation.imageUrl}
-                  alt
-                />
+                <div className="box-poster">
+                  <img
+                    className="movie-list-item-img-detailfirm"
+                    src={movieInformation.imageUrl}
+                    alt
+                  />
+                  <Link to={`/showtime?movieId=${movieInformation.movieId}`}>
+                  <button className="btn-booking">Đặt vé</button>
+                  </Link>
+                </div>
+                
               </div>
               <div className="movie-list-item-detail">
                 <div className="movie-list-item-detail-title">

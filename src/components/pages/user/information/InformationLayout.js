@@ -29,7 +29,6 @@ const InformationLayout = () => {
                                     <li className="list-group-item text-uppercase"><Link to={`update-information/${user}`}>Cập nhật thông tin</Link></li>
                                     <li className="list-group-item text-uppercase"><Link to={`change-password/${user}`}>Thay đổi mật khẩu</Link></li>
                                     <li className="list-group-item text-uppercase"><Link to={`order-history/${user}`}>Lịch sử đặt vé</Link></li>
-                                    <li className="list-group-item text-uppercase"><Link to={`earn-points/${user}`}>Lịch sử tích điểm</Link></li>
                                 </ul>
                             </div>
                         </div>

@@ -1,5 +1,5 @@
 import { useFormik } from "formik";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import * as Yup from 'yup';
@@ -19,9 +19,7 @@ const ChangePassword = () => {
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const token = localStorage.getItem("access_token") ? localStorage.getItem("access_token") : null
     const { username } = useParams()
-    const [changePassword, setChangePassword] = useState({})
     const navigate = useNavigate();
-    const role = localStorage.getItem('roles') ? localStorage.getItem('roles') : null
     const formik = useFormik({
         initialValues: {
             oldPassword: '',
@@ -41,20 +39,27 @@ const ChangePassword = () => {
             confirmNewPassword: Yup.string().required("Xác nhận mật khẩu không được bỏ trống").oneOf([Yup.ref('newPassword'), null], "Xác nhận mật khẩu mới chưa chính xác")
         }),
         onSubmit: (values) => {
-            console.log(username);
             UserService.changePassword(values, username,token)
-                .then((data) => Notification.toastSuccessNotification(data))
+                .then((data) => {
+                    Notification.toastSuccessNotification(data+",vui lòng đăng nhập lại!");
+                    localStorage.removeItem("access_token")
+                    localStorage.removeItem("username")
+                    localStorage.removeItem("roles")
+                    navigate("/sign-in")
+                })
                 .catch((error) => {
                     if(error?.response?.status  === 400){
-                        Notification.toastErrorNotification(error?.response?.data?.oldPassword)
+                        Notification.toastErrorNotification("Sai mật khẩu, vui lòng kiểm tra lại!")
                     }else if(error?.response?.status === 403){
                         navigate("/sign-in")
-                        Notification.toastErrorNotification("Vui lòng đăng nhập lại!")
+                        Notification.toastErrorNotification("Bạn không thể truy cập vào tài nguyên này!")
+                    }else if(error?.response?.status === 500){
+                        localStorage.removeItem("access_token")
+                        localStorage.removeItem("username")
+                        localStorage.removeItem("roles")
+                        navigate("/sign-in")
+                        Notification.toastWarningNotification("Hết phiên đăng nhập,vui lòng đăng nhập lại!")
                     }
-                    else{
-                        Notification.toastErrorNotification("Không tồn tại người dùng này!")
-                    }
-                    
                 }
                 )
         }

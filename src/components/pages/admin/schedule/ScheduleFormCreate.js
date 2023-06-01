@@ -38,7 +38,7 @@ function ScheduleFormCreate() {
                 .getAllMovie()
                 .then((data) => {
                     const movieAvailable = data.filter(
-                        (movie) => movie.status !== 0
+                        (movie) => movie.status === 1
                     );
                     setMovies(movieAvailable);
                 })

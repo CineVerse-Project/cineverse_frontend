@@ -3,7 +3,8 @@ import { format } from "date-fns";
 import "./css/showTimeScreen.css";
 import ScheduleServices from "../../../../../services/ScheduleServices";
 import { useLocation, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function ShowTimeScreen() {
   const navigate = useNavigate();
@@ -27,7 +28,7 @@ function ShowTimeScreen() {
 
   useEffect(() => {
     // Ngày hiện tại
-    const numDays = 14; // Số ngày cần lấy
+    const numDays = 7; // Số ngày cần lấy
 
     const renderDateList = () => {
       const tempList = [];
@@ -124,6 +125,7 @@ function ShowTimeScreen() {
 
   return (
     <div>
+      <ToastContainer></ToastContainer>
       <div>
         <h1 className="text-center">Chọn lịch chiếu</h1>
         <div className="line__big">

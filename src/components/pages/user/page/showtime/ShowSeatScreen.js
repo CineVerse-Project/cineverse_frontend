@@ -3,9 +3,10 @@ import { useLocation } from "react-router-dom";
 import ticketService from "../../../../../services/TicketService";
 import "./css/showSeatScreen.css";
 import { format } from "date-fns";
-import { toast } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import VND from "./FormatMoney";
 import { useNavigate } from "react-router-dom";
+import "react-toastify/dist/ReactToastify.css";
 function ShowSeatScreen() {
   const location = useLocation();
   const queryParam = new URLSearchParams(location.search);
@@ -71,7 +72,6 @@ function ShowSeatScreen() {
       toast.warning("Chỉ được chọn tối đa 8 ghế!!!");
     }
   };
-
   const seatsPerColumn = seats[0]?.seat.room.seatRowNumber;
   const seatsPerRow = seats[0]?.seat.room.seatColumnNumber;
   console.log(seats);
@@ -188,6 +188,7 @@ function ShowSeatScreen() {
 
   return (
     <div className="col-main ps-3 text__size">
+      <ToastContainer ></ToastContainer>
       <div className="booking-progress">
         <div className="page-title">
           <h1>Booking Online</h1>
