@@ -63,12 +63,9 @@ function MovieListTop10IsShowing() {
                                         to={`/movie-detail/${movieTop10IsShowing.movieId}`}
                                         onClick={handleClick}
                                     >
-                                        <a
-                                            href
-                                            className="movie-list-item-button-detail"
-                                        >
+                                        <button className="movie-list-item-button-detail">
                                             Chi tiết
-                                        </a>
+                                        </button>
                                     </Link>
 
                                     <Link

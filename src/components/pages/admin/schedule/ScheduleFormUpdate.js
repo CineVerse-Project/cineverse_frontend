@@ -166,10 +166,7 @@ function ScheduleFormUpdate() {
                     </h4>
 
                     <Link to="/schedule">
-                        <div
-                            href="list-schedule.html"
-                            className="btn btn btn-outline-primary mb-3"
-                        >
+                        <div className="btn btn btn-outline-primary mb-3">
                             Trở về
                         </div>
                     </Link>
