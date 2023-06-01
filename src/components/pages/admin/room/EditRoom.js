@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import { Modal, Button } from "antd";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import {useNavigate, useParams } from "react-router-dom";
 import TheaterService from "../../../../services/TheaterService";
 import RoomService from "../../../../services/RoomService";
 import { handleValidationRoom } from "../../../../services/handleValidationRoom";
 
 export default function EditRoom() {
-
+  const navigate = useNavigate();
   const [name, setName] = useState('');
 
   const [editData, setEditData] = useState({
@@ -91,10 +91,10 @@ export default function EditRoom() {
         title: "Bạn muốn thay đổi rạp phim?",
         okText: "Thêm",
         onOk: () => {
-          RoomService.updateRoom(data, roomId);
-  
+          RoomService.updateRoom(data, roomId);     
           RoomService.getAllRoom();
           setErrors([])
+          navigate("/room");
         },
         cancelText: "Đóng",
         onCancel: () => {},

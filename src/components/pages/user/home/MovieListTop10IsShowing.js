@@ -72,7 +72,7 @@ function MovieListTop10IsShowing() {
                                     </Link>
 
                                     <Link
-                                        to={`/showtime?movieId=/${movieTop10IsShowing.movieId}`}
+                                        to={`/showtime?movieId=${movieTop10IsShowing.movieId}`}
                                         onClick={handleClick}
                                     >
                                         <button className="movie-list-item-button">

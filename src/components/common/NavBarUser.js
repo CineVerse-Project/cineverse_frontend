@@ -70,8 +70,8 @@ function NavBarUser() {
 
           {user ? <img className="profile-picture" src="../pages/user/style/img/18.jpg" alt="" /> : ''}
           <div className="profile-text-container">
-            {!user ? <span className="profile-text">Tài khoản</span> : <Link to={`/user/${user}`} className="profile-text">{user}</Link>}
-            <div className="dropdown">
+           <div className="dropdown">
+            {!user ? <span className="profile-text dropbtn">Tài khoản</span> : <Link to={`/user/${user}`}className="profile-text">{user}</Link>}  
               <i className="fas fa-caret-down dropbtn" />
               <div className="dropdown-content">
                 {
@@ -102,11 +102,6 @@ function NavBarUser() {
                 }
               </div>
             </div>
-          </div>
-          <div className="toggle" >
-            <i className="fas fa-moon toggle-icon" />
-            <i className="fas fa-sun toggle-icon" />
-            <div className="toggle-ball" />
           </div>
         </div>
       </div>

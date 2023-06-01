@@ -5,8 +5,10 @@ import TheaterService from "../../../../services/TheaterService";
 import ProvinceService from "../../../../services/ProvinceService";
 import { date } from "yup";
 import { handleValidationTheater } from "../../../../services/handleValidationTheater";
+import { useNavigate, useParams } from "react-router-dom";
 
 export default function CreateTheater() {
+  const navigate = useNavigate();
 
     //UseState nhan gia tri input
     const [editData, setEditData] = useState({
@@ -49,7 +51,8 @@ export default function CreateTheater() {
                     TheaterService.createTheater(data);
                     TheaterService.getAllTheater();
                     setEditData([]);
-                    setError([])
+                    setError([]);
+                    navigate("/theater");
                 },
                 cancelText: 'Đóng',
                 onCancel: () => {

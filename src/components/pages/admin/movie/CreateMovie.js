@@ -7,8 +7,10 @@ import { handleValidationMovie } from "../../../../services/handleValidationMovi
 import { storage } from "../../../../constants/firebase";
 import { ref, uploadBytes, listAll, getDownloadURL } from "firebase/storage";
 import { v4 } from "uuid";
+import { useNavigate, useParams } from "react-router-dom";
 
 export default function CreateMovie() {
+  const navigate = useNavigate();
       //firebase
     const [imgUpload, setImgUpload] = useState("");
   
@@ -85,6 +87,7 @@ export default function CreateMovie() {
               MovieService.createMovie(data);
               setEditData("");
               setErrors([]);
+              navigate("/movie");
             },
             cancelText: "Đóng",
             onCancel: () => {},
