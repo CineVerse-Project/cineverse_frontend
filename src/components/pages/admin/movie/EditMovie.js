@@ -167,9 +167,9 @@ export default function EditMovie(props) {
           Cập nhật phim
         </h4>
 
-        <a href="/movie" class="btn btn btn-outline-primary mb-3">
+        <Link to="/movie" class="btn btn btn-outline-primary mb-3">
           Trở về
-        </a>
+        </Link>
 
         <div class="card mb-4">
           <h5 class="card-header">Chỉnh sửa thông tin phim:</h5>

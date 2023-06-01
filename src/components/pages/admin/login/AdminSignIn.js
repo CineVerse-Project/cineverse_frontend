@@ -71,7 +71,7 @@ const AdminSignIn = () => {
                                         <div className="card-body">
 
                                             <div className="app-brand">
-                                                <a href={`index.html`} className="app-brand-link gap-2">
+                                                <Link to="" className="app-brand-link gap-2">
                                                     <span className="app-brand-logo demo">
                                                         <svg
                                                             width="25"
@@ -128,7 +128,7 @@ const AdminSignIn = () => {
                                                         </svg>
                                                     </span>
                                                     <span className="app-brand-text normal text-body fw-bolder">Đăng nhập</span>
-                                                </a>
+                                                </Link>
                                             </div>
 
                                             <h4 className="my-2">Rất vui khi gặp lại bạn! 👋</h4>
