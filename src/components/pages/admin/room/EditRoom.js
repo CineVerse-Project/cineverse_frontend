@@ -7,7 +7,6 @@ import RoomService from "../../../../services/RoomService";
 import { handleValidationRoom } from "../../../../services/handleValidationRoom";
 
 export default function EditRoom() {
-
   const navigate = useNavigate();
   const [name, setName] = useState('');
 
