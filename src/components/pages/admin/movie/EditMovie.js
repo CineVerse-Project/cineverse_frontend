@@ -1,14 +1,14 @@
 import { useState, useEffect } from "react";
 import { Modal, Button } from "antd";
 import axios from "axios";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import TypeMovieService from "../../../../services/TypeMovieService";
 import MovieService from "../../../../services/MovieService";
 import { handleValidationMovie } from "../../../../services/handleValidationMovie";
 import { storage } from "../../../../constants/firebase";
 import { ref, uploadBytes, listAll, getDownloadURL } from "firebase/storage";
 import { v4 } from "uuid";
-import Link from "antd/es/typography/Link";
+
 export default function EditMovie(props) {
   const navigate = useNavigate();
   //firebase

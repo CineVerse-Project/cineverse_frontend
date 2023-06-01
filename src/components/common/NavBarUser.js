@@ -36,8 +36,9 @@ function NavBarUser() {
     localStorage.removeItem("username");
     localStorage.removeItem("access_token");
     localStorage.removeItem("roles");
-    window.location.reload();
     navigate("/");
+    window.location.reload();
+
   }
   return (
     <>
@@ -67,11 +68,9 @@ function NavBarUser() {
         </div>
 
         <div className="profile-container">
-
-          {user ? <img className="profile-picture" src="../pages/user/style/img/18.jpg" alt="" /> : ''}
           <div className="profile-text-container">
            <div className="dropdown">
-            {!user ? <span className="profile-text dropbtn">Tài khoản</span> : <Link to={`/user/${user}`}className="profile-text">{user}</Link>}  
+            {!user ? <span className="profile-text dropbtn">Tài khoản</span> : <Link to={`/user/${user}`} className="profile-text">{user}</Link>}  
               <i className="fas fa-caret-down dropbtn" />
               <div className="dropdown-content">
                 {

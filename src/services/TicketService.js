@@ -13,10 +13,12 @@ const ticketService = {
       throw error;
     }
   },
-  async booking() {
+  async createBooking(token) {
     const url = API_SERVER_URL + "booking";
     try {
-      const response = await axios.post(url);
+      const response = await axios.post(url, null ,{headers: {
+        'Authorization' : `Bearer ${token}`
+      }});
       return response.data;
     } catch (error) {
       throw error;
@@ -117,10 +119,12 @@ const ticketService = {
       throw error;
     }
   },
-  async findCustomerByUser() {
+  async findCustomerByUser(token) {
     const url = API_SERVER_URL + "booking/customer";
     try {
-      const response = await axios.get(url);
+      const response = await axios.get(url, {headers: {
+        'Authorization' : `Bearer ${token}`
+      }});
       return response.data;
     } catch (error) {
       throw error;

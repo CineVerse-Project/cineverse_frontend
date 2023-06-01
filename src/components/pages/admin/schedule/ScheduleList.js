@@ -215,13 +215,13 @@ function ScheduleList() {
                             variant="secondary"
                             onClick={() => setModalOpen(false)}
                         >
-                            Close
+                            Đóng
                         </Button>
                         <Button
                             variant="primary"
                             onClick={() => handleRemove(deletedScheduleId)}
                         >
-                            Save Changes
+                            Xoá
                         </Button>
                     </Modal.Footer>
                 </Modal>

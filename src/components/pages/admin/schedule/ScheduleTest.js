@@ -22,16 +22,16 @@ const scheduleSchema = Yup.object().shape({
             /^(19|20)\d{2}-W([1-9]|[1-4][0-9]|5[0-3])$/,
             "Tuần phải có định dạng hợp lệ: YYYY-WW"
         )
-        .test(
-            "isFutureWeek",
-            "Tuần phải lớn hơn ngày hiện tại ít nhất 1 tuần.",
-            function (value) {
-                const currentWeek = moment().format("YYYY-[W]WW");
-                const inputWeek = moment(value, "YYYY-[W]WW");
+        // .test(
+        //     "isFutureWeek",
+        //     "Tuần phải lớn hơn ngày hiện tại ít nhất 1 tuần.",
+        //     function (value) {
+        //         const currentWeek = moment().format("YYYY-[W]WW");
+        //         const inputWeek = moment(value, "YYYY-[W]WW");
 
-                return inputWeek.isAfter(moment(currentWeek).add(1, "week"));
-            }
-        ),
+        //         return inputWeek.isAfter(moment(currentWeek).add(1, "week"));
+        //     }
+        // ),
 });
 
 function ScheduleTest() {

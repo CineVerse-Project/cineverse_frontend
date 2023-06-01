@@ -3,11 +3,13 @@ import bgImage from '../../../../static/assets/img/backgrounds/form_image.jpg'
 import { Link, useLocation } from 'react-router-dom'
 import UserService from '../../../../services/UserService'
 import { useNavigate } from 'react-router-dom'
-import { ToastContainer} from 'react-toastify'
+import { ToastContainer, toast} from 'react-toastify'
 import Notification from '../../../common/ToastNotification'
-import { useFormik } from 'formik'
+import { replace, useFormik } from 'formik'
 import * as Yup from 'yup'
 import useAuth from '../../../../auth/useAuth'
+import "react-toastify/dist/ReactToastify.css";
+
 /**
  * @author HuuNQ
  * 26-05-2023
@@ -44,16 +46,17 @@ const SignIn = () => {
                     localStorage.setItem('username',username)
                     localStorage.setItem('roles',roles)
                     setAuth({username,token,roles});
-                    Notification.toastSuccessNotification("Đăng nhập thành công");
-                    navigate(from, {replace:true});
+                    toast.success("Đăng nhập thành công");
+                    navigate(from,{replace:true});
                 })
                 .catch ((err) => {
                         if(err?.response?.status === 400){
-                            Notification.toastWarningNotification("Có lỗi xảy ra!");
+                            toast.warning("Có lỗi xảy ra!");
                         }else if(err?.response?.status ===401){
-                            Notification.toastWarningNotification("Tài khoản hoặc mật khẩu không chính xác!");}
+                            toast.warning("Tài khoản hoặc mật khẩu không chính xác!");
+                        }
                         else{
-                         Notification.toastErrorNotification(err?.response?.data);
+                            toast.warning(err?.response?.data);
                         }
                      })
                 setLoading(false)
