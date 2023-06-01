@@ -33,9 +33,9 @@ import EditTheater from "./components/pages/admin/theater/EditTheater";
 import CreateMovie from "./components/pages/admin/movie/CreateMovie";
 import EditRoom from "./components/pages/admin/room/EditRoom";
 import EditMovie from "./components/pages/admin/movie/EditMovie";
-import SignUp from '../src/components/pages/user/information/SignUp'
-import ForgotPassword from '../src/components/pages/user/information/ForgotPassword'
-import ResetPassWord from '../src/components/pages/user/information/ResetPassword'
+import SignUp from "../src/components/pages/user/information/SignUp";
+import ForgotPassword from "../src/components/pages/user/information/ForgotPassword";
+import ResetPassWord from "../src/components/pages/user/information/ResetPassword";
 import SignIn from "./components/pages/user/information/SignIn";
 import AdminSignIn from "./components/pages/admin/login/AdminSignIn";
 import InformationLayout from "./components/pages/user/information/InformationLayout";
@@ -47,6 +47,7 @@ import EarnPoints from "../src/components/pages/user/information/EarnPoints";
 import "react-toastify/dist/ReactToastify.css";
 import Chat from "./components/chat/Chat";
 import ChatUser from "./components/chat/ChatUser";
+import AdminChat from "./components/chat/AdminChat";
 import RequireAuth from "./components/common/RequiredAuth";
 import useAuth from "./auth/useAuth";
 function App() {
@@ -56,20 +57,26 @@ function App() {
     const role = auth?.roles ? auth?.roles : null;
     useEffect(() => {
         if (role !== null) {
-            if (role?.indexOf('ROLE_ADMIN') !== -1) {
-                setAdmin(true)
+            if (role?.indexOf("ROLE_ADMIN") !== -1) {
+                setAdmin(true);
             } else {
                 setAdmin(false);
             }
         }
-    }, [role])
+    }, [role]);
+
     return (
         <div className="App">
             <BrowserRouter>
                 <Routes>
+                    <Route path="admin-sign-in" element={<AdminSignIn />} />
                     {/* Admin Side */}
                     {admin && (
-                        <Route element={<RequireAuth allowedRoles={"ROLE_ADMIN"} />}>
+                        <Route
+                            element={
+                                <RequireAuth allowedRoles={"ROLE_ADMIN"} />
+                            }
+                        >
                             <Route path="/" element={<LayoutAdmin />}>
                                 <Route index element={<Dashboard />} />
 
@@ -91,10 +98,19 @@ function App() {
                                         path="update/:scheduleId/:roomId"
                                         element={<ScheduleFormUpdate />}
                                     />
-                                    <Route path="test" element={<ScheduleTest />} />
-                                    <Route path="*" element={<ScheduleList />} />
+                                    <Route
+                                        path="test"
+                                        element={<ScheduleTest />}
+                                    />
+                                    <Route
+                                        path="*"
+                                        element={<ScheduleList />}
+                                    />
                                 </Route>
-                                <Route path="theater" element={<ManageTheater />} />
+                                <Route
+                                    path="theater"
+                                    element={<ManageTheater />}
+                                />
                                 <Route
                                     path="createTheater"
                                     element={<CreateTheater />}
@@ -113,22 +129,25 @@ function App() {
                                 />
                                 <Route path="movie" element={<ManageMovie />} />
                                 <Route path="room" element={<ManageRoom />} />
-                                <Route path="createRoom" element={<CreateRoom />} />
+                                <Route
+                                    path="createRoom"
+                                    element={<CreateRoom />}
+                                />
                                 <Route
                                     path="createMovie"
                                     element={<CreateMovie />}
+                                />
+                                <Route
+                                    path="admin-chat"
+                                    element={<AdminChat />}
                                 />
                                 <Route path="*" element={<Dashboard />} />
                             </Route>
                         </Route>
                     )}
-                    <Route
-                        path="admin-sign-in"
-                        element={<AdminSignIn />}
-                    />
+                    <Route path="admin-sign-in" element={<AdminSignIn />} />
                     {/* User Side */}
                     {!admin && (
-
                         <Route path="/" element={<LayoutUser />}>
                             <Route index element={<Home />} />
                             <Route path="/chat" element={<Chat />} />
@@ -170,9 +189,15 @@ function App() {
                                 element={<ForgotPassword />}
                             />
 
-
-                            <Route element={<RequireAuth allowedRoles={"ROLE_USER"} />}>
-                                <Route path="user" element={<InformationLayout />}>
+                            <Route
+                                element={
+                                    <RequireAuth allowedRoles={"ROLE_USER"} />
+                                }
+                            >
+                                <Route
+                                    path="user"
+                                    element={<InformationLayout />}
+                                >
                                     <Route
                                         index
                                         path=":username"
