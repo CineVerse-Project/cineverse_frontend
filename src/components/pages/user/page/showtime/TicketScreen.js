@@ -14,7 +14,7 @@ function TicketScreen({ bookingId }) {
         })
         .catch((error) => console.log(error));
     };
-
+    
     fetchTicketDetailApi();
   }, [bookingId]);
   console.log(tickets);
@@ -32,7 +32,7 @@ function TicketScreen({ bookingId }) {
 
   return (
     <>
-      {tickets && (
+      {tickets?.length > 0 && (
         <div className="box">
           <ul className="left">
             <li />

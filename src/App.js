@@ -23,7 +23,6 @@ import Home from "./components/pages/user/views/Home";
 import MovieListIsShowing from "./components/pages/user/home/MovieListIsShowing";
 import MovieListPremiereSoon from "./components/pages/user/home/MovieListPremiereSoon";
 import MovieListTop10IsShowing from "./components/pages/user/home/MovieListTop10IsShowing";
-import MovieInformation from "./components/pages/user/movieDetail/MovieInformation";
 import ManageTheater from "./components/pages/admin/theater/ManageTheater";
 import ManageMovie from "./components/pages/admin/movie/ManageMovie";
 import ManageRoom from "./components/pages/admin/room/ManageRoom";
@@ -53,17 +52,17 @@ function App() {
     const username = localStorage.getItem("username") ? localStorage.getItem("roles") : null;
     
     const [isLogin,setIsLogin] = useState(false);
-    const [admin,setAdmin] = useState(false);
-    useEffect(()=>{
-        if(role!=null){
-            setIsLogin(true);
-        }
-        if(isLogin){
-            if(role=='ROLE_ADMIN'){
-                setAdmin(true);
-            }
-        }
-    },[admin,token,username,isLogin])
+    const [admin,setAdmin] = useState(true);
+    // useEffect(()=>{
+    //     if(role!=null){
+    //         setIsLogin(true);
+    //     }
+    //     if(isLogin){
+    //         if(role=='ROLE_ADMIN'){
+    //             setAdmin(true);
+    //         }
+    //     }
+    // },[admin,token,username,isLogin])
     return (
         <div className="App">
             <BrowserRouter>

@@ -6,6 +6,7 @@ import { format } from "date-fns";
 import VND from "./FormatMoney";
 
 function CheckOut() {
+  const token = localStorage.getItem("access_token") ? localStorage.getItem("access_token") : null;
   const location = useLocation();
   const navigate = useNavigate();
   const [customer, setCustomer] = useState();
@@ -23,7 +24,7 @@ function CheckOut() {
   useEffect(() => {
     const fetchGetAllProvinceApi = async () => {
       ticketService
-        .findCustomerByUser()
+        .findCustomerByUser(token)
         .then((data) => {
           setCustomer(data);
         })
@@ -72,7 +73,7 @@ function CheckOut() {
           Cookies.set("ticketItem", JSON.stringify(ticketValue), {
             expires: 15 / (24 * 60),
           });
-          const responeBooking = await ticketService.booking();
+          const responeBooking = await ticketService.createBooking(token);
           ticketService
             .payment(responeBooking.bookingId, totalPrice)
             .then((data) => {
@@ -108,7 +109,7 @@ function CheckOut() {
   };
 
   return (
-    <div>
+    <div className="ms-5">
       <main role="main">
         <div className="container mt-4">
           <div>

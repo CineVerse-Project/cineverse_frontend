@@ -10,10 +10,10 @@ const scheduleSchema = Yup.object().shape({
     room: Yup.object().nullable().required("Phòng chiếu phải được nhập"),
     movie: Yup.object().nullable().required("Phim phải được nhập"),
     scheduleDate: Yup.date()
-        .min(
-            moment().add(1, "weeks"),
-            "Ngày chiếu phải lớn hơn ngày hiện tại 1 tuần"
-        )
+        // .min(
+        //     moment().add(1, "weeks"),
+        //     "Ngày chiếu phải lớn hơn ngày hiện tại 1 tuần"
+        // )
         .required("Ngày chiếu phải được nhập"),
     scheduleTime: Yup.string().required("Giờ chiếu phải được nhập"),
 });

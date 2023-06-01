@@ -6,7 +6,6 @@ import { format } from "date-fns";
 import { toast } from "react-toastify";
 import VND from "./FormatMoney";
 import { useNavigate } from "react-router-dom";
-
 function ShowSeatScreen() {
   const location = useLocation();
   const queryParam = new URLSearchParams(location.search);
@@ -75,8 +74,17 @@ function ShowSeatScreen() {
 
   const seatsPerColumn = seats[0]?.seat.room.seatRowNumber;
   const seatsPerRow = seats[0]?.seat.room.seatColumnNumber;
-  console.log(seatsPerColumn)
-  console.log(seatsPerRow)
+  console.log(seats);
+  let countBookedSeat = 0;
+  seats.forEach((seat) => {
+    if (seat.booked) {
+      countBookedSeat++;
+    }
+  });
+
+  const seatTotal = seats[0]?.seat?.room?.seatTotal;
+  const activeSeat = seatTotal - countBookedSeat;
+
   const renderSeat = () => {
     const rows = [];
     const seatRows = Array.from(
@@ -100,7 +108,7 @@ function ShowSeatScreen() {
             key={seatName}
             className={`seat ${
               seats.find((s) => s.seat?.seatName === seatName)?.seat?.seatType
-                ?.seatTypeId === "ST-0001"
+                ?.seatTypeId === "ST-0002"
                 ? "seat-vipprime active"
                 : "seat-standard active"
             }
@@ -193,7 +201,7 @@ function ShowSeatScreen() {
                     <p>
                       <span>{seats[0]?.seat.room.theater.theaterName}</span> |
                       <span>{seats[0]?.seat.room.roomName}</span>| Số ghế (
-                      <em>{seats?.length} </em>/ <span>{seats?.length}</span>)
+                      <em> {activeSeat}</em>/ <span>{seats?.length}</span>)
                     </p>
                     <p>
                       <span>{startDateTime}</span> ~ {endDateTime}

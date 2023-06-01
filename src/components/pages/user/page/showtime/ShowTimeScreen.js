@@ -3,14 +3,15 @@ import { format } from "date-fns";
 import "./css/showTimeScreen.css";
 import ScheduleServices from "../../../../../services/ScheduleServices";
 import { useLocation, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function ShowTimeScreen() {
   const navigate = useNavigate();
-  const location  = useLocation();
+  const location = useLocation();
 
   const queryParam = new URLSearchParams(location.search);
   const movieId = queryParam.get("movieId");
-  console.log(movieId)
+  console.log(movieId);
   const currentDate = new Date();
   const [schedules, setSchedules] = useState([]);
   const [provinces, setProvinces] = useState([]);
@@ -36,8 +37,8 @@ function ShowTimeScreen() {
         const formattedDate = format(currentDateCopy, "yyyy-MM-dd'T'00:00");
         tempList.push({
           date: formattedDate,
-          day: currentDateCopy.toLocaleString("en-US", {"day" : "2-digit"}),
-          month: currentDateCopy.toLocaleString("en-US", {"month": "2-digit"}),
+          day: currentDateCopy.toLocaleString("en-US", { day: "2-digit" }),
+          month: currentDateCopy.toLocaleString("en-US", { month: "2-digit" }),
           year: currentDateCopy.getFullYear(),
           dayOfWeek: currentDateCopy.toLocaleString("en-US", {
             weekday: "short",
@@ -79,8 +80,6 @@ function ShowTimeScreen() {
                 groupedObjects[theaterName].push(object);
               }
             });
-            console.log(data);
-            console.log(Object.values(groupedObjects));
             setSchedules(Object.values(groupedObjects));
           } else {
             setSchedules([]);
@@ -111,13 +110,16 @@ function ShowTimeScreen() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(dateTime);
-    navigate(
-      "/seat?sheduleDateTime=" +
-        format(dateTime, "yyyy-MM-dd'T'HH:mm") +
-        "&roomId=" +
-        showTimeValue.roomId
-    );
+    if (showTimeValue.scheduleDateTime !== "") {
+      navigate(
+        "/seat?sheduleDateTime=" +
+          format(dateTime, "yyyy-MM-dd'T'HH:mm") +
+          "&roomId=" +
+          showTimeValue.roomId
+      );
+    } else {
+      toast.warn("Vui lòng chọn giờ chiếu");
+    }
   };
 
   return (
@@ -128,7 +130,11 @@ function ShowTimeScreen() {
           <ul className="none__list d-flex view__date">
             {dateList.map((date, index) => {
               return (
-                <div className="row-md-2" onClick={handleFilterShowday} key={index}>
+                <div
+                  className="row-md-2"
+                  onClick={handleFilterShowday}
+                  key={index}
+                >
                   <li className="me-3">
                     <button
                       className={
@@ -201,9 +207,16 @@ function ShowTimeScreen() {
                             }
                             value={time.scheduleId}
                           >
-                            <span>
-                              {hour}:{minute}
-                            </span>
+                            {minute === 0 && (
+                              <span>
+                                {hour}:{minute}0
+                              </span>
+                            )}
+                            {minute !== 0 && (
+                              <span>
+                                {hour}:{minute}
+                              </span>
+                            )}
                             <br></br>
                             <span>{time.room.roomName}</span>
                           </button>
