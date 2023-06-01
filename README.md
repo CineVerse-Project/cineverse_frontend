@@ -1,4 +1,4 @@
-# HƯỚNG DẪN CHẠY DỤ ÁN
+# HƯỚNG DẪN CHẠY DỰ ÁN
     - Yêu cầu: cài đặt môi trường Nodejs, IDE soạn thảo code Visual Studio Code, 
     API của dự án ở repository https://github.com/CineVerse-Project/cineverse_backend.git
     - Cách RUN PROJECT
