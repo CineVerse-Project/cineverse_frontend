@@ -69,7 +69,7 @@ function MovieListIsShowing() {
                                         </a>
                                     </Link>
                                     <Link
-                                        to={`/showtime?movieId=/${movieIsShowing.movieId}`}
+                                        to={`/showtime?movieId=${movieIsShowing.movieId}`}
                                         onClick={handleClick}
                                     >
                                         <button className="movie-list-item-button">
