@@ -1,0 +1,133 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+.none__list{
+    list-style-type: none;
+}
+
+.line__big{
+    border-top: 2px solid #000;
+    margin: 0 30px;
+    padding-top: 25px;
+    padding-bottom: 5px;
+}
+
+.line__mini{
+    border-bottom: 1px solid #333;
+    margin: 0 30px;
+    padding-top: 10px;
+}
+
+.day {
+    border-radius: 5px;
+    cursor: pointer;
+    height: 48px;
+    position: relative;
+    width: 77px;
+}
+
+.day>span {
+    font-size: 11px;
+    left: 10px;
+    position: absolute;
+    top: 8px;
+}
+
+.day>em {
+    font-size: 11px;
+    font-style: normal;
+    left: 10px;
+    position: absolute;
+    top: 24px;
+}
+
+.day>strong {
+    font-size: 30px;
+    font-weight: lighter;
+    left: 35px;
+    line-height: 32px;
+    position: absolute;
+    top: 8px;
+}
+
+.view__date{
+    display: grid;
+    grid-template-rows: auto auto;
+    grid-template-columns: repeat(7, 1fr);
+    grid-gap: 10px; /* Thay đổi khoảng cách giữa các phần tử */
+}
+
+/* Phần tử đầu tiên nằm ở hàng đầu tiên cột đầu tiên */
+.grid-item-1 {
+    grid-row: 1;
+    grid-column: 1;
+  }
+  
+  /* Phần tử thứ hai nằm ở hàng đầu tiên cột thứ hai */
+  .grid-item-2 {
+    grid-row: 1;
+    grid-column: 2;
+  }
+  
+  /* Tiếp tục cho các phần tử tiếp theo */
+  .grid-item-3 {
+    grid-row: 1;
+    grid-column: 3;
+  }
+  
+  .grid-item-4 {
+    grid-row: 1;
+    grid-column: 4;
+  }
+  
+  .grid-item-5 {
+    grid-row: 1;
+    grid-column: 5;
+  }
+  
+  .grid-item-6 {
+    grid-row: 1;
+    grid-column: 6;
+  }
+  
+  .grid-item-7 {
+    grid-row: 1;
+    grid-column: 7;
+  }
+  
+  .grid-item-8 {
+    grid-row: 2;
+    grid-column: 1;
+  }
+  
+  .grid-item-9 {
+    grid-row: 2;
+    grid-column: 2;
+  }
+  
+  .grid-item-10 {
+    grid-row: 2;
+    grid-column: 3;
+  }
+  
+  .grid-item-11 {
+    grid-row: 2;
+    grid-column: 4;
+  }
+  
+  .grid-item-12 {
+    grid-row: 2;
+    grid-column: 5;
+  }
+  
+  .grid-item-13 {
+    grid-row: 2;
+    grid-column: 6;
+  }
+  
+  .grid-item-14 {
+    grid-row: 2;
+    grid-column: 7;
+  }

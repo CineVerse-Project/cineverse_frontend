@@ -1,9 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { PaginationControl } from "react-bootstrap-pagination-control";
 import { Button, Modal } from "react-bootstrap";
+import { Link } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import adminService from "../../../../services/AdminServices";
 import ScheduleTable from "./ScheduleTable";
+import { toastConfig } from "../../../../constants/config";
+import moment from "moment";
 
 function ScheduleList() {
     const [schedules, setSchedules] = useState();
@@ -11,11 +16,13 @@ function ScheduleList() {
     const [currentPage, setCurrentPage] = useState(1);
     const [deletedScheduleId, setDeletedScheduleId] = useState(null);
     const [isModalOpen, setModalOpen] = useState(false);
+    const [searchInput, setSearchInput] = useState();
+    const [keyword, setKeyword] = useState();
 
     useEffect(() => {
         const getAllScheduleAPI = () => {
             adminService
-                .getAllSchedule(currentPage - 1)
+                .getAllSchedule(currentPage - 1, keyword)
                 .then((data) => {
                     setSchedules(data.content);
                     let { content, ...pagination } = data;
@@ -26,7 +33,34 @@ function ScheduleList() {
                 });
         };
         getAllScheduleAPI();
-    }, [currentPage, deletedScheduleId]);
+    }, [currentPage, deletedScheduleId, keyword]);
+
+    useEffect(() => {
+        if (schedules?.length > 0) {
+            const weeks = {};
+            schedules.forEach((line) => {
+                const { sheduleDateTime } = line.scheduleId;
+                console.log(line);
+
+                // Lấy ngày trong tuần từ chuỗi thời gian
+                const date = new Date(sheduleDateTime);
+                console.log(sheduleDateTime);
+                const weekKey =
+                    date.getFullYear() + "-W" + moment(date).isoWeek();
+
+                // Tạo mảng ngày trong tuần nếu chưa tồn tại
+                if (!weeks[weekKey]) {
+                    weeks[weekKey] = [];
+                }
+
+                // Thêm ngày vào mảng ngày trong tuần
+                weeks[weekKey].push({
+                    line,
+                });
+            });
+            console.log(weeks);
+        }
+    }, [schedules]);
 
     const handleDeleteSchedule = (scheduleId) => {
         setDeletedScheduleId(scheduleId);
@@ -38,6 +72,7 @@ function ScheduleList() {
             .deleteScheduleById(scheduleId)
             .then((data) => {
                 setModalOpen(false);
+                toast.warn(`Bạn đã xóa lịch chiếu thành công!`, toastConfig);
                 setDeletedScheduleId(null);
             })
             .catch((error) => {
@@ -45,34 +80,47 @@ function ScheduleList() {
             });
     };
 
+    const handleChangeSearchInput = (event) => {
+        setSearchInput(event.target.value);
+    };
+    const handleSearchSubmit = (event) => {
+        event.preventDefault();
+        setKeyword(searchInput);
+        setCurrentPage(1);
+    };
+
     return (
         <>
             <div className="content-wrapper">
                 <div className="container-xxl flex-grow-1 container-p-y">
+                    <ToastContainer />
                     <h4 className="fw-bold py-3 mb-4">
                         <span className="text-muted fw-light">
                             Lịch chiếu /
                         </span>
                         Danh sách
                     </h4>
-                    <a
-                        href="create-schedule.html"
-                        className="btn btn btn-primary mb-3"
-                    >
-                        Thêm lịch chiếu
-                    </a>
+                    <Link to="create">
+                        <div className="btn btn btn-primary mb-3">
+                            Thêm lịch chiếu
+                        </div>
+                    </Link>
 
                     <div className="card">
                         <h5 className="card-header">
                             Lịch chiếu
                             <div style={{ float: "right", width: "50%" }}>
                                 <div>
-                                    <input
-                                        className="form-control"
-                                        type="search"
-                                        placeholder="Tìm kiếm ..."
-                                        id="html5-search-input"
-                                    />
+                                    <form onSubmit={handleSearchSubmit}>
+                                        <input
+                                            className="form-control"
+                                            type="search"
+                                            placeholder="Tìm kiếm ..."
+                                            value={searchInput}
+                                            onChange={handleChangeSearchInput}
+                                            id="html5-search-input"
+                                        />
+                                    </form>
                                 </div>
                             </div>
                         </h5>
@@ -80,9 +128,7 @@ function ScheduleList() {
                             <table className="table">
                                 <thead>
                                     <tr>
-                                        <th className="text-center col-1">
-                                            #id
-                                        </th>
+                                        <th className="text-center col-1">#</th>
                                         <th className="text-center col-2">
                                             Ảnh
                                         </th>
@@ -169,13 +215,13 @@ function ScheduleList() {
                             variant="secondary"
                             onClick={() => setModalOpen(false)}
                         >
-                            Close
+                            Đóng
                         </Button>
                         <Button
                             variant="primary"
                             onClick={() => handleRemove(deletedScheduleId)}
                         >
-                            Save Changes
+                            Xoá
                         </Button>
                     </Modal.Footer>
                 </Modal>

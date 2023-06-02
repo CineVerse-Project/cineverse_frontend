@@ -4,6 +4,8 @@ import MovieListIsShowing from "../home/MovieListIsShowing";
 import MovieListPremiereSoon from "../home/MovieListPremiereSoon";
 import Discount from "../home/Discount";
 import MovieListTop10IsShowing from "../home/MovieListTop10IsShowing";
+import "../style/css/home.css";
+
 
 function Home() {
   return (

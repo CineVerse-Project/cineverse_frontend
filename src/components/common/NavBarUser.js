@@ -1,7 +1,45 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Button } from "bootstrap";
+import useAuth from "../../auth/useAuth";
 
 function NavBarUser() {
+  const {auth} = useAuth();
+  const [user, setUser] = useState('');
+  const [token, setToken] = useState('');
+  const [role, setRole] = useState('');
+  // const username = localStorage.getItem('username') ? localStorage.getItem('username') : null;
+  // const accessToken = localStorage.getItem('access_token') ? localStorage.getItem('access_token') : null
+  // const roles = localStorage.getItem('roles') ? localStorage.getItem('roles') : null;
+  const usernameAuth = auth?.username ? auth?.username : null;
+  const roles = auth?.roles ? auth?.roles : null;
+  const tokens = auth?.token ? auth?.token : null;
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (usernameAuth) {
+      setUser(usernameAuth);
+    } else {
+      setUser(null);
+    }
+    if (tokens) {
+      setToken(tokens)
+    } else {
+      setToken(null);
+    }
+    if (roles) {
+      setRole(roles);
+    } else {
+      setRole(null);
+    }
+  }, [usernameAuth,roles,tokens])
+  const handleSignOut = () => {
+    localStorage.removeItem("username");
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("roles");
+    navigate("/");
+    window.location.reload();
+
+  }
   return (
     <>
       <div className="navbar-container">
@@ -11,12 +49,12 @@ function NavBarUser() {
         <div className="menu-container">
           <ul className="menu-list">
             <li className="menu-list-item">
-              <Link to="">
+              <Link to="/">
                 <a>Trang chủ</a>
               </Link>
             </li>
             <li className="menu-list-item">
-              <Link to="movie-detail">
+              <Link to="/">
                 <a>Phim</a>
               </Link>
             </li>
@@ -28,16 +66,41 @@ function NavBarUser() {
             </li>
           </ul>
         </div>
+
         <div className="profile-container">
-          <img className="profile-picture" src="../pages/user/style/img/18.jpg" alt="" />
           <div className="profile-text-container">
-            <span className="profile-text">Tài khoản</span>
-            <i className="fas fa-caret-down" />
-          </div>
-          <div className="toggle">
-            <i className="fas fa-moon toggle-icon" />
-            <i className="fas fa-sun toggle-icon" />
-            <div className="toggle-ball" />
+           <div className="dropdown">
+            {!user ? <span className="profile-text dropbtn">Tài khoản</span> : <Link to={`/user/${user}`} className="profile-text">{user}</Link>}  
+              <i className="fas fa-caret-down dropbtn" />
+              <div className="dropdown-content">
+                {
+                  !user ? <ul>
+
+                    <li>
+                      <Link to="/sign-in">Đăng nhập</Link>
+                    </li>
+                    <li>
+                      <Link to="/sign-up">Đăng ký</Link>
+                    </li>
+                    <li>
+                      <Link to="/forgot-password">Quên mật khẩu?</Link>
+                    </li>
+                  </ul> :
+
+                    <ul>
+                      <li>
+                        <Link to={`/user/${user}`}>Thông tin</Link>
+                      </li>
+                      <li>
+                        <Link to={`/user/change-password/${user}`}>Đổi mật khẩu</Link>
+                      </li>
+                      <li>
+                        <Link to="" onClick={handleSignOut}>Đăng xuất</Link>
+                      </li>
+                    </ul>
+                }
+              </div>
+            </div>
           </div>
         </div>
       </div>

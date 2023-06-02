@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 function Banner() {
   return (
@@ -12,7 +13,9 @@ function Banner() {
           vai sẽ đưa chúng ta trở về vùng đất hứa để tiêu diệt hang ổ của kè thù
           và bảo vệ được quê hương.
         </p>
-        <button className="featured-button">Xem ngay</button>
+        <Link to={"/showtime?movieId=MV-0009"}>
+          <button className="featured-button">Đặt ngay</button>
+        </Link>
       </div>
       <video
         id="comp-jd8sqvtk_video"

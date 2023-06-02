@@ -1,6 +1,52 @@
-import React from "react";
-
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import useAuth from "../../auth/useAuth";
 function NavBarAdmin() {
+    const { auth } = useAuth();
+    const [user, setUser] = useState("");
+    const [token, setToken] = useState("");
+    const [role, setRole] = useState("");
+    // const username = localStorage.getItem('username') ? localStorage.getItem('username') : null;
+    // const accessToken = localStorage.getItem('access_token') ? localStorage.getItem('access_token') : null
+    // const roles = localStorage.getItem('roles') ? localStorage.getItem('roles') : null;
+    const usernameAuth = auth?.username ? auth?.username : null;
+    const roles = auth?.roles ? auth?.roles : null;
+    const tokens = auth?.token ? auth?.token : null;
+    const navigate = useNavigate();
+    useEffect(() => {
+        if (usernameAuth !== null) {
+            setUser(usernameAuth);
+        }
+        if (roles !== null) {
+            setRole(roles);
+        }
+        if (tokens !== null) {
+            setToken(tokens);
+        }
+        // if (username) {
+        // setUser(username);
+        // } else {
+        // setUser(null);
+        // }
+        // if (accessToken) {
+        // setToken(accessToken)
+        // } else {
+        // setToken(null);
+        // }
+        // if (roles) {
+        // setRole(roles);
+        // } else {
+        // setRole(null);
+        // }
+        // }, [user, token, role, username, accessToken, roles])
+    }, [usernameAuth, roles, tokens]);
+    const handleSignOut = () => {
+        localStorage.removeItem("username");
+        localStorage.removeItem("access_token");
+        localStorage.removeItem("roles");
+        window.location.reload();
+        navigate("/admin-sign-in");
+    };
     return (
         <>
             {/* <!-- Navbar --> */}
@@ -13,9 +59,9 @@ function NavBarAdmin() {
                 }}
             >
                 <div className="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0 d-xl-none">
-                    <a className="nav-item nav-link px-0 me-xl-4" href=" ">
+                    <div className="nav-item nav-link px-0 me-xl-4">
                         <i className="bx bx-menu bx-sm"></i>
-                    </a>
+                    </div>
                 </div>
 
                 <div
@@ -24,13 +70,12 @@ function NavBarAdmin() {
                 >
                     <ul className="navbar-nav flex-row align-items-center ms-auto">
                         {/* <!-- Place this tag where you want the button to render. --> */}
-                        <li className="nav-item lh-1 me-3">Phan An</li>
+                        <li className="nav-item lh-1 me-3">{user}</li>
 
                         {/* <!-- User --> */}
                         <li className="nav-item navbar-dropdown dropdown-user dropdown">
-                            <a
+                            <div
                                 className="nav-link dropdown-toggle hide-arrow"
-                                href=" "
                                 data-bs-toggle="dropdown"
                             >
                                 <div className="avatar avatar-online">
@@ -40,10 +85,10 @@ function NavBarAdmin() {
                                         className="w-px-40 h-auto rounded-circle"
                                     />
                                 </div>
-                            </a>
+                            </div>
                             <ul className="dropdown-menu dropdown-menu-end">
                                 <li>
-                                    <a className="dropdown-item" href=" ">
+                                    <button className="dropdown-item">
                                         <div className="d-flex">
                                             <div className="flex-shrink-0 me-3">
                                                 <div className="avatar avatar-online">
@@ -56,47 +101,47 @@ function NavBarAdmin() {
                                             </div>
                                             <div className="flex-grow-1">
                                                 <span className="fw-semibold d-block">
-                                                    Phan An
+                                                    {user}
                                                 </span>
                                                 <small className="text-muted">
-                                                    Admin
+                                                    {role}
                                                 </small>
                                             </div>
                                         </div>
-                                    </a>
+                                    </button>
                                 </li>
                                 <li>
                                     <div className="dropdown-divider"></div>
                                 </li>
                                 <li>
-                                    <a className="dropdown-item" href=" ">
+                                    <button className="dropdown-item">
                                         <i className="bx bx-user me-2"></i>
                                         <span className="align-middle">
                                             Thông tin của tôi
                                         </span>
-                                    </a>
+                                    </button>
                                 </li>
                                 <li>
-                                    <a className="dropdown-item" href=" ">
+                                    <button className="dropdown-item">
                                         <i className="bx bx-cog me-2"></i>
                                         <span className="align-middle">
                                             Cài đặt
                                         </span>
-                                    </a>
+                                    </button>
                                 </li>
                                 <li>
                                     <div className="dropdown-divider"></div>
                                 </li>
                                 <li>
-                                    <a
-                                        className="dropdown-item"
-                                        href="auth-login-basic.html"
-                                    >
+                                    <button className="dropdown-item">
                                         <i className="bx bx-power-off me-2"></i>
-                                        <span className="align-middle">
+                                        <span
+                                            className="align-middle"
+                                            onClick={handleSignOut}
+                                        >
                                             Đăng xuất
                                         </span>
-                                    </a>
+                                    </button>
                                 </li>
                             </ul>
                         </li>

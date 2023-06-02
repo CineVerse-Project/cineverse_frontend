@@ -1,7 +1,30 @@
 import React, { useEffect, useState } from "react";
 import clientService from "../../../../services/ClientService";
+import { Link } from "react-router-dom";
+import Carousel from "react-multi-carousel";
+import "react-multi-carousel/lib/styles.css";
+const responsive = {
+  desktop: {
+    breakpoint: { max: 3000, min: 1024 },
+    items: 3,
+    slidesToSlide: 1,
+  },
+  tablet: {
+    breakpoint: { max: 1024, min: 464 },
+    items: 2,
+    slidesToSlide: 1,
+  },
+  mobile: {
+    breakpoint: { max: 464, min: 0 },
+    items: 1,
+    slidesToSlide: 1,
+  },
+};
 
 function MovieListPremiereSoon() {
+  const handleClick = () => {
+    window.scrollTo(0, 0); // Di chuyển trang web đến đầu trang
+  };
   const [movieListPremiereSoon, setMovieListPremiereSoon] = useState();
 
   useEffect(() => {
@@ -22,28 +45,33 @@ function MovieListPremiereSoon() {
     <>
       <h1 className="movie-list-title">Phim sắp công chiếu</h1>
       <div className="movie-list-wrapper">
-        <div className="movie-list">
-          {movieListPremiereSoon &&
-            movieListPremiereSoon.map((moviePremiereSoon) => {
+        {movieListPremiereSoon && (
+          <Carousel responsive={responsive}>
+            {movieListPremiereSoon.map((moviePremiereSoon) => {
               return (
                 <div className="movie-list-item">
                   <img
                     className="movie-list-item-img"
                     src={moviePremiereSoon.imageUrl}
-                    alt
+                    alt=""
                   />
                   <span className="movie-list-item-title">
                     {moviePremiereSoon.movieName}
                   </span>
-                  <a href className="movie-list-item-button-detail">
-                    Chi tiết
-                  </a>
-                  <button className="movie-list-item-button">ĐẶT VÉ</button>
+
+                  <Link
+                    to={`/movie-detail/${moviePremiereSoon.movieId}`}
+                    onClick={handleClick}
+                  >
+                    <button className="movie-list-item-button-detail">
+                      Chi tiết
+                    </button>
+                  </Link>
                 </div>
               );
             })}
-        </div>
-        <i className="fas fa-chevron-right arrow" />
+          </Carousel>
+        )}
       </div>
     </>
   );

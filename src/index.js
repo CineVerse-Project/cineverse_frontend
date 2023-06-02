@@ -2,12 +2,19 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css"
+import { toastConfig } from "./constants/config";
+import { AuthProvider } from "./auth/AuthProvider";
 const root = ReactDOM.createRoot(document.getElementById("root"));
+// const toastConfig = {
+//     position: toast.POSITION.TOP_CENTER,
+//     autoClose: 1500,
+// }
 root.render(
-    <React.StrictMode>
-        <App />
-    </React.StrictMode>
+        <AuthProvider>
+                <App />
+        </AuthProvider>
 );
 
 // If you want to start measuring performance in your app, pass a function
