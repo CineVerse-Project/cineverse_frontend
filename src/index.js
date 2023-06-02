@@ -11,6 +11,9 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 //     position: toast.POSITION.TOP_CENTER,
 //     autoClose: 1500,
 // }
+const currentUsername = sessionStorage.getItem("username") ? sessionStorage.getItem("username") : '';
+const token = sessionStorage.getItem("access_token") ? sessionStorage.getItem("access_token") : '';
+const currentRole = sessionStorage.getItem("roles") ? sessionStorage.getItem("roles") : '';
 root.render(
         <AuthProvider>
                 <App />
