@@ -11,6 +11,7 @@ import { v4 } from "uuid";
 
 export default function EditMovie(props) {
   const navigate = useNavigate();
+  
   //firebase
   const [imgUpload, setImgUpload] = useState("");
 
@@ -31,6 +32,7 @@ export default function EditMovie(props) {
     editOriginPoster: "",
   });
 
+  const [reviewPoster,setReviewPoster] = useState("");
   //usestate input errror
   const [errors, setErrors] = useState({
     editTenPhim: "",
@@ -51,6 +53,7 @@ export default function EditMovie(props) {
   const handleInputChange = (event) => {
     const field = event.target.name;
     const value = event.target.value;
+    setReviewPoster(imgUpload);
     setEditData((preData) => ({ ...preData, [field]: value }));
   };
 
@@ -81,6 +84,7 @@ export default function EditMovie(props) {
           editTrailler: result.data.trailerUrl,
           editOriginPoster: result.data.imageUrl,
         });
+        setReviewPoster(result.data.imageUrl);
       })
       .catch((error) => {});
   };
@@ -88,7 +92,7 @@ export default function EditMovie(props) {
   useEffect(() => {
     getMovie();
   }, []);
-
+  
   const [type, setType] = useState([]);
   useEffect(() => {
     const getAllTypeAPI = async () => {
@@ -153,12 +157,13 @@ export default function EditMovie(props) {
       return;
     }
     const imgRef = ref(storage, `movie/${editData.editTenPhim + v4()}`);
-    uploadBytes(imgRef, editData.editPoster).then((snapshot) => {
+    uploadBytes(imgRef, editData.editOriginPoster).then((snapshot) => {
       getDownloadURL(snapshot.ref).then((url) => {
         setImgUpload(url);
+        
       });
     });
-  }, [editData.editPoster]);
+  }, [editData.editOriginPoster]);
   return (
     <>
       <div class="container-xxl flex-grow-1 container-p-y">
@@ -401,6 +406,28 @@ export default function EditMovie(props) {
                 </Button>
               </div>
             </form>
+            <div className="mb-3 col col-5">
+                <div className="mx-5">
+                  <img 
+                    width={440}
+                    height={450}
+                    src={editData.editOriginPoster}
+                    alt
+                  />
+                </div>
+                <div className="m-5 ">
+                  <div className="movie-list-item-detail-trailler">
+                    <iframe
+                      width={440}
+                      height={225}
+                      src={editData.editTrailler}
+                      title="YouTube video player"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                      allowFullScreen
+                    />
+                  </div>
+                </div>
+              </div>
           </div>
         </div>
       </div>
