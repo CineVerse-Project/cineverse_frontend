@@ -5,7 +5,7 @@ import RoomService from "../../../../services/RoomService";
 import TheaterService from "../../../../services/TheaterService";
 import { number } from "yup";
 import { handleValidationRoom } from "../../../../services/handleValidationRoom";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 export default function CreateRoom() {
   const [roomTmp, setRoomTmp] = useState([]);
@@ -109,9 +109,9 @@ export default function CreateRoom() {
           Thêm phòng
         </h4>
 
-        <a href="/room" class="btn btn btn-outline-primary mb-3">
+        <Link to="/room" class="btn btn btn-outline-primary mb-3">
           Trở về
-        </a>
+        </Link>
         <div class="card mb-4">
           <form onSubmit={handleCreate}>
             <h5 class="card-header">Thêm mới phòng</h5>

@@ -2,51 +2,32 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import useAuth from "../../auth/useAuth";
 function NavBarAdmin() {
-    const {auth} = useAuth();
-    const [user, setUser] = useState('');
-    const [token, setToken] = useState('');
-    const [role, setRole] = useState('');
-    // const username = localStorage.getItem('username') ? localStorage.getItem('username') : null;
-    // const accessToken = localStorage.getItem('access_token') ? localStorage.getItem('access_token') : null
-    // const roles = localStorage.getItem('roles') ? localStorage.getItem('roles') : null;
+    const { auth } = useAuth();
+    const [user, setUser] = useState("");
+    const [token, setToken] = useState("");
+    const [role, setRole] = useState("");
     const usernameAuth = auth?.username ? auth?.username : null;
     const roles = auth?.roles ? auth?.roles : null;
     const tokens = auth?.token ? auth?.token : null;
     const navigate = useNavigate();
     useEffect(() => {
-        if(usernameAuth!== null){
+        if (usernameAuth !== null) {
             setUser(usernameAuth);
         }
-        if(roles!==null){
+        if (roles !== null) {
             setRole(roles);
         }
-        if(tokens!==null){
+        if (tokens !== null) {
             setToken(tokens);
         }
-        // if (username) {
-        // setUser(username);
-        // } else {
-        // setUser(null);
-        // }
-        // if (accessToken) {
-        // setToken(accessToken)
-        // } else {
-        // setToken(null);
-        // }
-        // if (roles) {
-        // setRole(roles);
-        // } else {
-        // setRole(null);
-        // }
-    // }, [user, token, role, username, accessToken, roles])
-    }, [usernameAuth,roles,tokens])
+    }, [usernameAuth, roles, tokens]);
     const handleSignOut = () => {
-        localStorage.removeItem("username");
-        localStorage.removeItem("access_token");
-        localStorage.removeItem("roles");
+        localStorage.setItem("username","");
+        localStorage.setItem("access_token","");
+        localStorage.setItem("roles",[]);
+        navigate("/admin-sign-in");
         window.location.reload();
-        navigate("/admin-sign-in"); 
-    }
+    };
     return (
         <>
             {/* <!-- Navbar --> */}
@@ -76,7 +57,6 @@ function NavBarAdmin() {
                         <li className="nav-item navbar-dropdown dropdown-user dropdown">
                             <div
                                 className="nav-link dropdown-toggle hide-arrow"
-                                href=" "
                                 data-bs-toggle="dropdown"
                             >
                                 <div className="avatar avatar-online">
@@ -123,7 +103,7 @@ function NavBarAdmin() {
                                     </button>
                                 </li>
                                 <li>
-                                    <button className="dropdown-item" href=" ">
+                                    <button className="dropdown-item">
                                         <i className="bx bx-cog me-2"></i>
                                         <span className="align-middle">
                                             Cài đặt
@@ -134,12 +114,12 @@ function NavBarAdmin() {
                                     <div className="dropdown-divider"></div>
                                 </li>
                                 <li>
-                                    <button
-                                        className="dropdown-item"
-                                        href="auth-login-basic.html"
-                                    >
+                                    <button className="dropdown-item">
                                         <i className="bx bx-power-off me-2"></i>
-                                        <span className="align-middle" onClick={handleSignOut}>
+                                        <span
+                                            className="align-middle"
+                                            onClick={handleSignOut}
+                                        >
                                             Đăng xuất
                                         </span>
                                     </button>

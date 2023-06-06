@@ -5,7 +5,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup"
 import UserService from "../../../../services/UserService";
 import Notification from "../../../common/ToastNotification";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer,toast } from "react-toastify";
 /**
  * @author HuuNQ
  * 26-05-2023
@@ -28,14 +28,17 @@ const ForgotPassword = () => {
     })
 
     const submitForm = (e) => {
+        setLoading(true);
         UserService.forgotPassword(e)
             .then((data) => {
-                Notification.toastSuccessNotification(data);
+                toast.success(data)
+                setLoading(false);
                 navigate("/sign-in");
             })
             .catch(
                 (error) => {
-                    Notification.toastErrorNotification(error?.response?.data);
+                    toast.error(error?.response?.data);
+                    setLoading(false);
                 })
 
     }
@@ -46,7 +49,7 @@ const ForgotPassword = () => {
                 backgroundColor: 'rgba(0,0,0,0.6)',
                 height: 100 + '%',
                 position: 'absolute',
-                left: 0, right: 0, top: 0, bottom: 0, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', zIndex: '9000'
+                left: 0, right: 0, top: 0, bottom: 0, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', zIndex: 10
             }}>
                 <p className="spinner-border text-danger" role="status"></p>
                 <p className="text-gray-800 fw-semibold text-danger mt-0" >Đang xử lý...</p>

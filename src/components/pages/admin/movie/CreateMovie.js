@@ -7,7 +7,7 @@ import { handleValidationMovie } from "../../../../services/handleValidationMovi
 import { storage } from "../../../../constants/firebase";
 import { ref, uploadBytes, listAll, getDownloadURL } from "firebase/storage";
 import { v4 } from "uuid";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 export default function CreateMovie() {
   const navigate = useNavigate();
@@ -133,9 +133,9 @@ export default function CreateMovie() {
           Thêm phim
         </h4>
 
-        <a href="/movie" class="btn btn btn-outline-primary mb-3">
+        <Link to="/movie" class="btn btn btn-outline-primary mb-3">
           Trở về
-        </a>
+        </Link>
 
         <div class="card mb-4">
           <h5 class="card-header">Thêm mới phim</h5>

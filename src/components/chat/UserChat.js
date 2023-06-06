@@ -10,10 +10,14 @@ import {
     onValue,
     onChildAdded,
     set,
+    update,
 } from "firebase/database";
+
 import { useList } from "react-firebase-hooks/database";
-import { database, serverTimestamp } from "./firebase";
+import { database, serverTimestamp } from "./../../constants/firebase";
 import "./css/chat.css";
+import { useRef } from "react";
+import { Button } from "antd";
 
 const useAdminMessages = (username) => {
     const [adminMessages, setAdminMessages] = useState([]);
@@ -64,10 +68,13 @@ const useAdminMessages = (username) => {
     return { userMessages, adminMessages };
 };
 
-const UserChat = () => {
+const UserChat = ({ onHideDialog }) => {
     const [usernameSelected, setUsernameSelected] = useState();
     useState(() => {
-        if (localStorage.getItem("userChat")) {
+        if (localStorage.getItem("username")) {
+            setUsernameSelected(localStorage.getItem("username"));
+            setUsernameSelected(localStorage.getItem("username").split("@")[0]);
+        } else if (localStorage.getItem("userChat")) {
             setUsernameSelected(localStorage.getItem("userChat"));
         } else {
             const timestamp = Date.now();
@@ -95,6 +102,11 @@ const UserChat = () => {
             };
             push(ref(database, "messages"), newMessage);
             setMessage("");
+            const newUserPath = `users/` + usernameSelected;
+            update(ref(database, newUserPath), {
+                lastSend: serverTimestamp(),
+                adminRead: true,
+            });
         }
     };
 
@@ -102,6 +114,16 @@ const UserChat = () => {
         e.preventDefault();
         setUsernameSelected(username);
     };
+
+    const messageListRef = useRef(null);
+
+    useEffect(() => {
+        // Cuộn xuống dưới sau khi component render
+        if (messageListRef.current) {
+            messageListRef.current.scrollTop =
+                messageListRef.current?.scrollHeight;
+        }
+    }, [sortedMessages]);
 
     useEffect(() => {
         if (usernameSelected.trim() !== "") {
@@ -112,52 +134,20 @@ const UserChat = () => {
             get(userRef).then((snapshot) => {
                 if (!snapshot.exists()) {
                     const usersRef = ref(database, "users");
-                    const newUserKey = push(usersRef).key;
-                    const newUserPath = `users/${newUserKey}`;
-                    set(ref(database, newUserPath), usernameSelected);
+                    // const newUserKey = push(usersRef).key;
+                    const newUserPath = `users/` + usernameSelected;
+                    update(ref(database, newUserPath), {
+                        a: "a",
+                    });
                 }
             });
         }
     }, [usernameSelected]);
 
     return (
-        <div>
-            <h1>User Chat</h1>
-            <form onSubmit={handleUsernameSubmit}>
-                <input
-                    type="text"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    placeholder="Enter your username"
-                />
-            </form>
-            <input
-                type="text"
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                placeholder="Type a message..."
-            />
-            <button onClick={handleSendMessage}>Send</button>
-
-            <h2>List of users who messaged the admin:</h2>
-
-            <div>
-                {/* {messages.map((msg) => (
-                        <p key={msg.key}>
-                            {msg.val().sender}: {msg.val().text}
-                        </p>
-                    ))} */}
-
-                {/* {sortedMessages &&
-                    sortedMessages?.map((msg, index) => (
-                        <p key={index}>
-                            {msg.sender}: {msg.text}
-                        </p>
-                    ))} */}
-            </div>
-            <textarea placeholder="Send a message as the bot.."></textarea>
+        <div style={{ zIndex: "999999" }}>
             <div class="chat-ui">
-                <div class="chat-titlebar">
+                <div class="chat-titlebar" onClick={onHideDialog}>
                     <h5>Chat</h5>
                     <div class="chat-avatar">
                         <img
@@ -167,10 +157,10 @@ const UserChat = () => {
                     </div>
                 </div>
 
-                <div class="chat-scrollview">
-                    <div class="chat-messagelist">
-                        {sortedMessages &&
-                            sortedMessages?.map((msg, index) => {
+                {sortedMessages && (
+                    <div ref={messageListRef} class="chat-scrollview">
+                        <div class="chat-messagelist">
+                            {sortedMessages?.map((msg, index) => {
                                 if (msg.sender === "Admin") {
                                     return (
                                         <div class="chat-cluster">
@@ -193,37 +183,38 @@ const UserChat = () => {
                                     );
                                 }
                             })}
-                    </div>
-                    <div
-                        class="input-group mb-3 px-2"
-                        style={{
-                            position: "sticky",
-                            bottom: "0",
-                            backgroundColor: "#e6e6e6",
-                        }}
-                    >
-                        <form
+                        </div>
+                        <div
                             class="input-group mb-3 px-2"
-                            onSubmit={handleSendMessage}
+                            style={{
+                                position: "sticky",
+                                bottom: "0",
+                                backgroundColor: "#e6e6e6",
+                            }}
                         >
-                            <input
-                                type="text"
-                                class="form-control"
-                                placeholder="Nhập tin nhắn"
-                                aria-label="Username"
-                                aria-describedby="basic-addon1"
-                                value={message}
-                                onChange={(e) => setMessage(e.target.value)}
-                            />
-                            <div
-                                className="btn btn-primary"
-                                onClick={handleSendMessage}
+                            <form
+                                class="input-group mb-3 px-2"
+                                onSubmit={handleSendMessage}
                             >
-                                Gửi
-                            </div>
-                        </form>
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    placeholder="Nhập tin nhắn"
+                                    aria-label="Username"
+                                    aria-describedby="basic-addon1"
+                                    value={message}
+                                    onChange={(e) => setMessage(e.target.value)}
+                                />
+                                <div
+                                    className="btn btn-primary"
+                                    onClick={handleSendMessage}
+                                >
+                                    Gửi
+                                </div>
+                            </form>
+                        </div>
                     </div>
-                </div>
+                )}
             </div>
         </div>
     );

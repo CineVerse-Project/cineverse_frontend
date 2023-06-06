@@ -3,16 +3,15 @@ import {
     ref,
     query,
     equalTo,
-    getDatabase,
-    get,
     onValue,
     orderByChild,
     push,
-    onChildAdded,
+    update,
 } from "firebase/database";
 import { useObject, useList } from "react-firebase-hooks/database";
-import { database, serverTimestamp } from "./firebase";
+import { database, serverTimestamp } from "./../../constants/firebase";
 import "./css/admin-chat.css";
+import { useRef } from "react";
 
 const useUserMessages = (selectedUser) => {
     const [userMessages, setUserMessages] = useState([]);
@@ -21,7 +20,6 @@ const useUserMessages = (selectedUser) => {
 
     useEffect(() => {
         if (selectedUser !== "") {
-            const db = getDatabase();
             const adminMessagesRef = query(
                 messagesRef,
                 orderByChild("receiver"),
@@ -61,9 +59,8 @@ const useUserMessages = (selectedUser) => {
             );
 
             return () => {
-                // Clear the listeners when unmounting
-                userMessagesListener();
                 adminMessagesListener();
+                userMessagesListener();
             };
         }
     }, [selectedUser]);
@@ -80,9 +77,14 @@ const AdminChat = () => {
     const sortedMessages = allMessages.sort(
         (a, b) => a.timestamp - b.timestamp
     );
+    const [sortedUsernames, setSortedUsernames] = useState();
 
     const handleUserSelection = (username) => {
         setSelectedUser(username);
+        const newUserPath = `users/` + username;
+        update(ref(database, newUserPath), {
+            adminRead: false,
+        });
     };
 
     const handleSendMessage = (e) => {
@@ -99,11 +101,50 @@ const AdminChat = () => {
             setMessage("");
         }
     };
+    const messageListRef = useRef(null);
+
+    useEffect(() => {
+        if (messageListRef.current) {
+            messageListRef.current.scrollTop =
+                messageListRef.current?.scrollHeight;
+        }
+    }, [sortedMessages]);
+
+    // useEffect(() => {
+    //     if (usersSnapshot && usersSnapshot.val()) {
+    //         const users = usersSnapshot.val();
+    //         const sortedUsernames = Object.keys(users).sort(
+    //             (a, b) => users[b].lastSend - users[a].lastSend
+    //         );
+    //         setSortedUsernames(sortedUsernames);
+    //     }
+    // }, [usersSnapshot]);
+    // console.log(sortedUsernames);
+
+    useEffect(() => {
+        if (usersSnapshot && usersSnapshot.val()) {
+            const users = usersSnapshot.val();
+            const sortedUsernames = Object.keys(users).sort(
+                (a, b) => users[b].lastSend - users[a].lastSend
+            );
+            const sortedUsers = sortedUsernames.map((username) => ({
+                username: username,
+                adminRead: users[username].adminRead,
+            }));
+
+            setSortedUsernames(sortedUsers);
+        }
+    }, [usersSnapshot]);
+    console.log(sortedUsernames);
 
     return (
         <>
-            <div>
-                <div className="row chatroom mt-5 mb-5 w-75 ml-auto mr-auto h-100">
+            <div className="content-wrapper p-3">
+                <h4 className="fw-bold py-3 mb-4 text-center">Chat hỗ trợ</h4>
+                <div
+                    className="row chatroom  mt-1 h-100"
+                    style={{ marginLeft: "0", marginRight: "0" }}
+                >
                     <div className="listefriend d-none d-lg-block col-lg-4">
                         <div className="row listheader">
                             <div className="search h-100 w-100 position-relative"></div>
@@ -112,30 +153,44 @@ const AdminChat = () => {
                             className="row listbody position-relative h-100"
                             id="scrollstyle"
                         >
-                            {usersSnapshot && usersSnapshot.val() ? (
+                            {sortedUsernames && Object.keys(sortedUsernames) ? (
                                 <ul className="list-group">
-                                    {Array.from(
-                                        new Set(
-                                            Object.values(usersSnapshot.val())
-                                        )
-                                    ).map((value, index) => (
+                                    {sortedUsernames.map((value, index) => (
                                         <>
                                             <li
                                                 className="row"
                                                 key={index}
                                                 onClick={() =>
-                                                    handleUserSelection(value)
+                                                    handleUserSelection(
+                                                        value.username
+                                                    )
                                                 }
                                             >
-                                                <div className="col-4">
+                                                <div className="col-4 ">
                                                     <img
                                                         src="https://static.vecteezy.com/system/resources/previews/020/911/740/original/user-profile-icon-profile-avatar-user-icon-male-icon-face-icon-profile-icon-free-png.png"
                                                         className="img-fluid rounded-circle border border-secondary"
                                                         alt=""
                                                     />
                                                 </div>
-                                                <div className="col-8 mt-4">
-                                                    <span> {value}</span>
+                                                <div className="col-8 mt-4 d-flex align-items-center justify-space-between">
+                                                    {selectedUser ===
+                                                        value?.username && (
+                                                        <span className="fw-bolder">
+                                                            {value.username}
+                                                        </span>
+                                                    )}
+                                                    {selectedUser !==
+                                                        value?.username && (
+                                                        <span>
+                                                            {value.username}
+                                                        </span>
+                                                    )}{" "}
+                                                    {value?.adminRead && (
+                                                        <span class="badge bg-danger">
+                                                            new
+                                                        </span>
+                                                    )}
                                                 </div>
                                             </li>
                                         </>
@@ -149,19 +204,23 @@ const AdminChat = () => {
                     <div className="chatingzone col-sm-12 col-lg-8 position-relative">
                         <div className="row chatheader" style={{ height: 100 }}>
                             <div className="down col-9 row pr-0">
-                                <div className="col-3 pr-0">
+                                <div className="col-2 pr-0">
                                     <img
                                         src="https://static.vecteezy.com/system/resources/previews/020/911/740/original/user-profile-icon-profile-avatar-user-icon-male-icon-face-icon-profile-icon-free-png.png"
                                         className="img-fluid rounded-circle border border-secondary"
                                         alt=""
                                     />
                                 </div>
-                                <div className="col-9 mt-4">
+                                <div className="col-10 mt-4">
                                     {selectedUser && <h4>{selectedUser}</h4>}
                                 </div>
                             </div>
                         </div>
-                        <div className="row chatbody" id="scrollstyle">
+                        <div
+                            className="row chatbody"
+                            id="scrollstyle"
+                            ref={messageListRef}
+                        >
                             <ul className="list-group w-100 position-relative list-unstyled h-100">
                                 {sortedMessages &&
                                     sortedMessages?.map((msg, index) => {

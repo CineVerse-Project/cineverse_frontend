@@ -24,7 +24,7 @@ const InformationLayout = () => {
                             <div className="w-75 mx-auto mt-4 rounded border" >
 
                                 <ul className="list-group list-group-flush ">
-                                    <li className="list-group-item"><h4 className="text-center text-uppercase">Tài khoản</h4></li>
+                                    <li className="list-group-item"><p className="text-center text-uppercase h4 mb-0"><span className="p-2 d-flex justify-content-center align-item-center">Tài khoản</span></p></li>
                                     <li className="list-group-item text-uppercase"><Link to={user}>Thông tin tài khoản</Link></li>
                                     <li className="list-group-item text-uppercase"><Link to={`update-information/${user}`}>Cập nhật thông tin</Link></li>
                                     <li className="list-group-item text-uppercase"><Link to={`change-password/${user}`}>Thay đổi mật khẩu</Link></li>

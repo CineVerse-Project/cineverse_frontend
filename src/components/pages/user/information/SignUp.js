@@ -4,7 +4,7 @@ import { useFormik } from "formik";
 import * as Yup from 'yup'
 import UserService from "../../../../services/UserService";
 import Notification from "../../../common/ToastNotification";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
 /**
@@ -15,7 +15,9 @@ import { useNavigate } from "react-router-dom";
  */
 const SignUp = () => {
     const navigate = useNavigate();
-    const [showPassword,setShowPassword] = useState(false)
+    const [loading, setLoading] = useState(false);
+    const [policy, setPolicy] = useState(false);
+    const [showPassword, setShowPassword] = useState(false)
     const formik = useFormik({
         initialValues: {
             fullName: '',
@@ -24,18 +26,19 @@ const SignUp = () => {
             username: '',
             password: '',
             phoneNumber: '',
-            address: ''
+            address: '',
+            imgUrl: 'https://images.unsplash.com/photo-1661956602868-6ae368943878?ixlib=rb-4.0.3&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80'
         },
         validationSchema: Yup.object({
             fullName: Yup.string()
                 .required("Họ tên không được bỏ trống!")
                 .min(3, "Họ tên phải có ít nhất 3 ký tự!")
                 .max(50, "Họ tên quá dài!")
-                // .matches("/[^0-9~!@#$%^&*()_+=-/?><,.`]*$/", "Họ tên chỉ được chứa các ký tự chữ!")
-                ,
+            // .matches("/[^0-9~!@#$%^&*()_+=-/?><,.`]*$/", "Họ tên chỉ được chứa các ký tự chữ!")
+            ,
             birthday: Yup.date()
                 .required("Ngày sinh không được bỏ trống")
-               ,
+            ,
             gender: Yup.string()
                 .oneOf(["true", "false"], "Vui lòng điền đúng thông tin giới tính")
                 .required("Giới tính không được bỏ trống!"),
@@ -50,16 +53,25 @@ const SignUp = () => {
                 .matches(/^((09)|(07)|(08)|(05)|(03))\d{8}$/, "Số điện thoại không hợp lệ!").required("Số điện thoại không được bỏ trống!"),
             address: Yup.string(),
         }),
-        onSubmit: (e) =>{
-            UserService.signUp(e)
-                .then((data) => {
-                    navigate("/sign-in")
-                    Notification.toastSuccessNotification(data)
-                })
-                .catch((error) => {
-                    Notification.toastErrorNotification(error?.response?.data);
-                })
+        onSubmit: (e) => {
+            if (policy) {
+                setLoading(true)
+                UserService.signUp(e)
+                    .then((data) => {
+                        toast.success(data)
+                        setLoading(false)
+                        navigate("/sign-in")
+                    })
+                    .catch((error) => {
+                        toast.error(error?.response?.data);
+                        setLoading(false)
+                    })
+            }
+            else {
+                toast.warn("Vui lòng đồng ý chính sách của chúng tôi trước khi đăng ký!")
+            }
         }
+
     })
 
 
@@ -77,20 +89,20 @@ const SignUp = () => {
                                     </div>
                                     <div className="mb-1">
                                         <div className="mb-0">
-                                            <label htmlFor="fullName" className="form-label m-0"><strong className="">Họ tên</strong></label>
+                                            <label htmlFor="fullName" className="form-label m-0"><strong className="">Họ tên</strong>(<span className="text-danger">*</span>)</label>
                                             <input id="fullName" name='fullName' value={formik.fullName} onChange={formik.handleChange} type="text" className="input-red" placeholder="Nhập họ tên" />
                                         </div>
-                                        { (formik.errors.fullName && formik.touched.fullName) && <p className="text-danger mt-1 mb-0">{formik.errors.fullName}</p>}
+                                        {(formik.errors.fullName && formik.touched.fullName) && <p className="text-danger mt-1 mb-0">{formik.errors.fullName}</p>}
                                     </div>
 
                                     <div className="row mb-1">
                                         <div className="col-6">
-                                            <label htmlFor="birthday" className="form-label m-0"><strong className="" >Ngày sinh</strong></label>
-                                            <input id="birthday" type="date" className="input-red" name='birthday' value={formik.birthday} onChange={formik.handleChange} />
+                                            <label htmlFor="birthday" className="form-label m-0"><strong className="" >Ngày sinh</strong>(<span className="text-danger">*</span>)</label>
+                                            <input id="birthday" type="date" className="input-red" name='birthday' max={new Date().toISOString().split("T")[0]} value={formik.birthday} onChange={formik.handleChange} />
                                             {formik.errors.birthday && formik.touched.birthday && <p className="text-danger mt-1 mb-0">{formik.errors.birthday}</p>}
                                         </div>
                                         <div className="col-6">
-                                            <label htmlFor="gender" className="form-label m-0"><strong className="" >Giới tính</strong></label>
+                                            <label htmlFor="gender" className="form-label m-0"><strong className="" >Giới tính</strong>(<span className="text-danger">*</span>)</label>
                                             <div>
                                                 <select name="gender" id="" className="select-gender input-red" value={formik.gender} onChange={formik.handleChange}>
                                                     <option id="gender" type="radio" value="" defaultValue='1'>--Chọn giới tính--</option>
@@ -98,25 +110,25 @@ const SignUp = () => {
                                                     <option id="gender" type="radio" value="false" className="mx-2">Nữ</option>
                                                 </select>
                                             </div>
-                                            {formik.errors.gender  && formik.touched.gender && <p className="text-danger mt-1 mb-0">{formik.errors.gender}</p>}
+                                            {formik.errors.gender && formik.touched.gender && <p className="text-danger mt-1 mb-0">{formik.errors.gender}</p>}
                                         </div>
 
                                     </div>
                                     <div className="mb-1">
-                                        <label htmlFor="username" className="form-label m-0"><strong className="" >Email</strong></label>
+                                        <label htmlFor="username" className="form-label m-0"><strong className="" >Email</strong>(<span className="text-danger">*</span>)</label>
                                         <input id="username" type="text" className="input-red" placeholder="Nhập Email của bạn" name='username' value={formik.username} onChange={formik.handleChange} />
-                                        {formik.errors.username && formik.touched.username &&  <p className="text-danger mt-1 mb-0">{formik.errors.username}</p>}
+                                        {formik.errors.username && formik.touched.username && <p className="text-danger mt-1 mb-0">{formik.errors.username}</p>}
                                     </div>
                                     <div className="mb-1">
-                                        <label htmlFor="password" className="form-label m-0"><strong className="" >Mật khẩu</strong></label>
+                                        <label htmlFor="password" className="form-label m-0"><strong className="" >Mật khẩu</strong>(<span className="text-danger">*</span>)</label>
                                         <div className="icons">
-                                            <input type={showPassword ? "text":"password" } className="input-red input-with-icon" placeholder="Nhập mật khẩu" id="password" name='password' value={formik.password} onChange={formik.handleChange} />
-                                            <i className={showPassword ? "fas fa-eye-slash icons":"fas fa-eye icons"} id="show_hide_password-icon" style={{ cursor: 'pointer', padding: '12px 12px' }} onClick={()=>setShowPassword(!showPassword)}></i>
+                                            <input type={showPassword ? "text" : "password"} className="input-red input-with-icon" placeholder="Nhập mật khẩu" id="password" name='password' value={formik.password} onChange={formik.handleChange} />
+                                            <i className={showPassword ? "fas fa-eye-slash icons" : "fas fa-eye icons"} id="show_hide_password-icon" style={{ cursor: 'pointer', padding: '12px 12px' }} onClick={() => setShowPassword(!showPassword)}></i>
                                         </div>
                                         {formik.errors.password && formik.touched.password && <p className="text-danger mt-1 mb-0">{formik.errors.password}</p>}
                                     </div>
                                     <div className="mb-1">
-                                        <label htmlFor="phone" className="form-label m-0"><strong className="" >Số điện thoại</strong></label>
+                                        <label htmlFor="phone" className="form-label m-0"><strong className="" >Số điện thoại</strong>(<span className="text-danger">*</span>)</label>
                                         <input id="phone" type="text" className="input-red" placeholder="Nhập số điện thoại của bạn" name='phoneNumber' value={formik.phoneNumber} onChange={formik.handleChange} />
                                         {formik.errors.phoneNumber && formik.touched.phoneNumber && <p className="text-danger mt-1 mb-0">{formik.errors.phoneNumber}</p>}
                                     </div>
@@ -125,9 +137,12 @@ const SignUp = () => {
                                         <input id="address" type="text" className="input-red" placeholder="Nhập địa chỉ của bạn" name='address' value={formik.address} onChange={formik.handleChange} />
                                         {formik.errors.address && formik.touched.address && <p className="text-danger mt-1 mb-0">{formik.errors.address}</p>}
                                     </div>
+                                    <div>
+                                        <input type="checkbox" name="policy" onChange={() => setPolicy(!policy)}></input>
+                                        <label><strong >Tôi đồng ý với các chính sách của <span className="text-red">CINEVERSE</span></strong></label>
 
-                                    <strong >Tôi đồng ý với các chính sách của <span className="text-red">CINEVERSE</span> </strong>
 
+                                    </div>
                                     <div className="text-center mt-2">
                                         <button className="btn-red w-50 text-uppercase " type="submit">Đăng ký</button>
                                     </div>

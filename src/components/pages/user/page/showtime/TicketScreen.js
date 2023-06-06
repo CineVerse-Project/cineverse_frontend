@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import ticketService from "../../../../../services/TicketService";
 import { format } from "date-fns";
+import { Link } from "react-router-dom";
 
 function TicketScreen({ bookingId }) {
   const [tickets, setTickets] = useState([]);
@@ -32,8 +33,11 @@ function TicketScreen({ bookingId }) {
 
   return (
     <>
-      {tickets && (
-        <div className="box">
+      <h2 className="text-center">
+        Chúc mừng bạn đã đặt vé thành công, thông tin vé của bạn
+      </h2>
+      {tickets?.length > 0 && (
+        <div className="box mt-5">
           <ul className="left">
             <li />
             <li />
@@ -140,6 +144,11 @@ function TicketScreen({ bookingId }) {
           </div>
         </div>
       )}
+      <div className="text-center mt-2">
+        <Link to={"/"} className="btn btn-outline-dark">
+          Tiếp tục đặt vé
+        </Link>
+      </div>
     </>
   );
 }

@@ -3,11 +3,12 @@ import bgImage from '../../../../static/assets/img/backgrounds/form_image.jpg'
 import { Link, useLocation } from 'react-router-dom'
 import UserService from '../../../../services/UserService'
 import { useNavigate } from 'react-router-dom'
-import { ToastContainer} from 'react-toastify'
-import Notification from '../../../common/ToastNotification'
+import { ToastContainer, toast} from 'react-toastify'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import useAuth from '../../../../auth/useAuth'
+import "react-toastify/dist/ReactToastify.css";
+
 /**
  * @author HuuNQ
  * 26-05-2023
@@ -17,7 +18,7 @@ import useAuth from '../../../../auth/useAuth'
 const SignIn = () => {
     const navigate = useNavigate();
     const location = useLocation();
-    const from = location.state?.from?.pathname || "/";
+    const from = location?.state?.from?.pathname || "/";
     const { setAuth } = useAuth();
     const [loading,setLoading] = useState(false);
     const formik = useFormik({
@@ -44,16 +45,17 @@ const SignIn = () => {
                     localStorage.setItem('username',username)
                     localStorage.setItem('roles',roles)
                     setAuth({username,token,roles});
-                    Notification.toastSuccessNotification("Đăng nhập thành công");
-                    navigate(from, {replace:true});
+                    toast.success("Đăng nhập thành công");
+                    navigate(from,{replace:true});
                 })
                 .catch ((err) => {
                         if(err?.response?.status === 400){
-                            Notification.toastWarningNotification("Có lỗi xảy ra!");
+                            toast.warning("Có lỗi xảy ra!");
                         }else if(err?.response?.status ===401){
-                            Notification.toastWarningNotification("Tài khoản hoặc mật khẩu không chính xác!");}
+                            toast.warning("Tài khoản hoặc mật khẩu không chính xác!");
+                        }
                         else{
-                         Notification.toastErrorNotification(err?.response?.data);
+                            toast.warning(err?.response?.data);
                         }
                      })
                 setLoading(false)
@@ -70,7 +72,7 @@ const SignIn = () => {
                 backgroundColor: 'rgba(0,0,0,0.6)',
                 height: 100 + 'vh',
                 position: 'absolute',
-                left: 0, right: 0, top: 0, bottom: 0, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', zIndex: '9000'
+                left: 0, right: 0, top: 0, bottom: 0, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', zIndex: 10000
             }}>
                 <p className="spinner-border text-danger" role="status"></p>
                 <p className="text-gray-800 fw-semibold text-danger mt-0" >Đang xử lý...</p>

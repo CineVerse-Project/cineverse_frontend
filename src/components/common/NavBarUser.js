@@ -8,9 +8,6 @@ function NavBarUser() {
   const [user, setUser] = useState('');
   const [token, setToken] = useState('');
   const [role, setRole] = useState('');
-  // const username = localStorage.getItem('username') ? localStorage.getItem('username') : null;
-  // const accessToken = localStorage.getItem('access_token') ? localStorage.getItem('access_token') : null
-  // const roles = localStorage.getItem('roles') ? localStorage.getItem('roles') : null;
   const usernameAuth = auth?.username ? auth?.username : null;
   const roles = auth?.roles ? auth?.roles : null;
   const tokens = auth?.token ? auth?.token : null;
@@ -33,11 +30,12 @@ function NavBarUser() {
     }
   }, [usernameAuth,roles,tokens])
   const handleSignOut = () => {
-    localStorage.removeItem("username");
-    localStorage.removeItem("access_token");
-    localStorage.removeItem("roles");
+    localStorage.setItem("username","");
+    localStorage.setItem("access_token","");
+    localStorage.setItem("roles",[]);
     window.location.reload();
     navigate("/");
+
   }
   return (
     <>
@@ -49,29 +47,27 @@ function NavBarUser() {
           <ul className="menu-list">
             <li className="menu-list-item">
               <Link to="/">
-                <a>Trang chủ</a>
+                Trang chủ
               </Link>
             </li>
             <li className="menu-list-item">
               <Link to="/">
-                <a>Phim</a>
+                Phim
               </Link>
             </li>
             <li className="menu-list-item">
-              <a href="#">Rạp</a>
+              <Link to="#">Rạp</Link>
             </li>
             <li className="menu-list-item">
-              <a href="#">Thông tin</a>
+              <Link to="#">Thông tin</Link>
             </li>
           </ul>
         </div>
 
         <div className="profile-container">
-
-          {user ? <img className="profile-picture" src="../pages/user/style/img/18.jpg" alt="" /> : ''}
           <div className="profile-text-container">
            <div className="dropdown">
-            {!user ? <span className="profile-text dropbtn">Tài khoản</span> : <Link to={`/user/${user}`}className="profile-text">{user}</Link>}  
+            {!user ? <span className="profile-text dropbtn">Tài khoản</span> : <Link to={`/user/${user}`} className="profile-text">{user}</Link>}  
               <i className="fas fa-caret-down dropbtn" />
               <div className="dropdown-content">
                 {

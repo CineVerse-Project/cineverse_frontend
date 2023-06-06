@@ -5,6 +5,8 @@ import UserService from '../../../../services/UserService';
 import Notification from '../../../common/ToastNotification';
 import { Link, useNavigate } from 'react-router-dom';
 import useAuth from '../../../../auth/useAuth';
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer, toast } from 'react-toastify';
 const AdminSignIn = () => {
     const {setAuth} = useAuth();
     const navigate = useNavigate();
@@ -31,15 +33,17 @@ const AdminSignIn = () => {
                     localStorage.setItem('access_token',token)
                     localStorage.setItem('username',username)
                     localStorage.setItem('roles',roles)
-                    Notification.toastSuccessNotification("Đăng nhập thành công");
+                    // Notification.toastSuccessNotification("Đăng nhập thành công");
+                    toast.success("Đăng nhập thành công");
                     setAuth({username,token,roles})
-                    navigate("/");
+                    navigate("/dashboard");
                 })
                 .catch((error) => {
                     if(error?.response?.status === 401){
-                        Notification.toastErrorNotification("Tài khoản hoặc mật khẩu chưa đúng!");
+                        toast.warning("Tài khoản hoặc mật khẩu chưa đúng!");
+                        // Notification.toastErrorNotification("Tài khoản hoặc mật khẩu chưa đúng!");
                     }
-                    Notification.toastErrorNotification(error?.response?.data);
+                    toast.warning(error?.response?.data);
                 })
         }
     })
@@ -47,6 +51,7 @@ const AdminSignIn = () => {
         <div>
             <div>
                 <div className="layout-content-navbar">
+                    <ToastContainer></ToastContainer>
                     <header className="header-layout my-2 ">
                         <Link to="/" className="app-brand-link justify-content-center" >
                             <span className="app-brand-logo demo">
@@ -71,7 +76,7 @@ const AdminSignIn = () => {
                                         <div className="card-body">
 
                                             <div className="app-brand">
-                                                <a href={`index.html`} className="app-brand-link gap-2">
+                                                <Link to="" className="app-brand-link gap-2">
                                                     <span className="app-brand-logo demo">
                                                         <svg
                                                             width="25"
@@ -128,7 +133,7 @@ const AdminSignIn = () => {
                                                         </svg>
                                                     </span>
                                                     <span className="app-brand-text normal text-body fw-bolder">Đăng nhập</span>
-                                                </a>
+                                                </Link>
                                             </div>
 
                                             <h4 className="my-2">Rất vui khi gặp lại bạn! 👋</h4>

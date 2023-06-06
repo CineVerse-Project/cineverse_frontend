@@ -151,6 +151,12 @@ input[type="text"] .input-red:active{
   border: 1px solid #c23b1a
 }
 
+input[type="option"] .input-red:active{
+  width: 100%;
+  padding:6px 12px;
+  border: 1px solid #c23b1a
+}
+
 .icons{
 position: relative;
 }

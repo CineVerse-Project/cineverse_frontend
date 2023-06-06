@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import UserService from "../../../../services/UserService";
 import Notification from "../../../common/ToastNotification";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 
 /**
  * @author HuuNQ
@@ -16,9 +16,10 @@ const UserInformation = () => {
         'email':'',
         'fullName':'',
         'phoneNumber':'',
-        'gender':'',
+        'gender':null,
         'address':'',
-        'birthday':''
+        'birthday':'',
+        'imgUrl':''
     })
     const navigate = useNavigate();
     const {username} = useParams();
@@ -31,16 +32,22 @@ const UserInformation = () => {
         .catch((error)=>{
             console.log(error);
             if(error?.response?.status === 401){
+                toast.error("Hết phiên đăng nhập, vui lòng đăng nhập lại!");
+                localStorage.setItem("access_token","");
+                localStorage.setItem("username","");
+                localStorage.setItem("roles",[]);
                 navigate("/")
+                window.location.reload();
             }else if(error?.response?.status === 403){
                 navigate("/")
-                Notification.toastWarningNotification("Bạn không thể truy cập vào tài nguyên này!")
+                toast.error("Bạn không thể truy cập vào tài nguyên này!")
             }else if(error?.response?.status === 500){
-                localStorage.removeItem("access_token")
-                localStorage.removeItem("username")
-                localStorage.removeItem("roles")
+                localStorage.setItem("access_token","")
+                localStorage.setItem("username","")
+                localStorage.setItem("roles",[])
                 navigate("/sign-in")
-                Notification.toastWarningNotification("Hết phiên đăng nhập,vui lòng đăng nhập lại!")
+                toast.error("Hết phiên đăng nhập,vui lòng đăng nhập lại!")
+                window.location.reload();
             }
         })
     }
@@ -61,7 +68,7 @@ const UserInformation = () => {
                         </div>
                         <div className="form-group">
                             <label htmlFor="" className="form-label mt-3 mb-1">Giới tính</label>
-                            <input type="text" name="gender" id="" className="form-control" defaultValue={user.gender ? 'Nam': 'Nữ'} disabled />
+                            <input type="text" name="gender" id="" className="form-control" value={user.gender ? 'Nam': 'Nữ'} disabled />
                         </div>
                         <div className="form-group">
                             <label htmlFor="" className="form-label mt-3 mb-1">Ngày sinh</label>
@@ -85,8 +92,8 @@ const UserInformation = () => {
                     <div className="col-6">
                         <p className="text-center text-uppercase">Hình ảnh</p>
                         <hr />
-                        <div className="border w-75 mx-auto">
-                            <img src="https://images.unsplash.com/photo-1661956602868-6ae368943878?ixlib=rb-4.0.3&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80" alt="" className="w-100" />
+                        <div className="border w-75 mx-auto ">
+                            <img src={user.imgUrl} alt="" className="w-100" style={{maxHeight:400+'px'}}/>
                         </div>
                     </div>
                 </div>

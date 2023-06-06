@@ -1,7 +1,7 @@
 import { useFormik } from "formik";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import * as Yup from 'yup';
 import UserService from "../../../../services/UserService";
 import Notification from "../../../common/ToastNotification";
@@ -41,7 +41,7 @@ const ChangePassword = () => {
         onSubmit: (values) => {
             UserService.changePassword(values, username,token)
                 .then((data) => {
-                    Notification.toastSuccessNotification(data+",vui lòng đăng nhập lại!");
+                    toast.success(data+",vui lòng đăng nhập lại!");
                     localStorage.removeItem("access_token")
                     localStorage.removeItem("username")
                     localStorage.removeItem("roles")
@@ -49,16 +49,17 @@ const ChangePassword = () => {
                 })
                 .catch((error) => {
                     if(error?.response?.status  === 400){
-                        Notification.toastErrorNotification("Sai mật khẩu, vui lòng kiểm tra lại!")
+                        toast.error("Sai mật khẩu, vui lòng kiểm tra lại!")
                     }else if(error?.response?.status === 403){
                         navigate("/sign-in")
-                        Notification.toastErrorNotification("Bạn không thể truy cập vào tài nguyên này!")
+                        toast.error("Bạn không thể truy cập vào tài nguyên này!")
                     }else if(error?.response?.status === 500){
                         localStorage.removeItem("access_token")
                         localStorage.removeItem("username")
                         localStorage.removeItem("roles")
+                        toast.error("Hết phiên đăng nhập,vui lòng đăng nhập lại!")
                         navigate("/sign-in")
-                        Notification.toastWarningNotification("Hết phiên đăng nhập,vui lòng đăng nhập lại!")
+                        window.location.reload();
                     }
                 }
                 )
@@ -72,7 +73,7 @@ const ChangePassword = () => {
                 <div className="row">
                     <div className="col-6">
                         <div className="form-group">
-                            <label htmlFor="" className="form-label">Mật khẩu cũ (*)</label>
+                            <label htmlFor="" className="form-label">Mật khẩu cũ (<span className="text-danger">*</span>)</label>
                             <div className="icons">
                                 <input type={showOldPassword ? "text" : "password"}
                                     className="input-red input-with-icon"
@@ -90,7 +91,7 @@ const ChangePassword = () => {
                 <div className="row">
                     <div className="col-6">
                         <div className="form-group">
-                            <label htmlFor="" className="form-label">Mật khẩu mới (*)</label>
+                            <label htmlFor="" className="form-label">Mật khẩu mới (<span className="text-danger">*</span>)</label>
                             <div className="icons">
                                 <input type={showNewPassword ? "text" : "password"} className="input-red input-with-icon"
                                     placeholder="Nhập mật khẩu mới"
@@ -106,7 +107,7 @@ const ChangePassword = () => {
                     </div>
                     <div className="col-6">
                         <div className="form-group">
-                            <label htmlFor="" className="form-label">Xác nhận mật khẩu mới (*)</label>
+                            <label htmlFor="" className="form-label">Xác nhận mật khẩu mới (<span className="text-danger">*</span>)</label>
                             <div className="icons">
                                 <input type={showConfirmPassword ? "text" : "password"} className="input-red input-with-icon" placeholder="Nhập xác nhận mật khẩu mới" id="re-new-password"
                                     value={formik.confirmNewPassword}

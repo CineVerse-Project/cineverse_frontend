@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import ticketService from "../../../../../services/TicketService";
 import TicketScreen from "./TicketScreen";
 import "./css/payment.css";
@@ -7,6 +7,7 @@ import Cookies from "js-cookie";
 
 const Payment = () => {
   const state = useLocation();
+  const [success, setSuccess] = useState(false);
 
   const queryParams = new URLSearchParams(state.search);
   const [bookingId] = useState(queryParams.get("vnp_TxnRef"));
@@ -23,7 +24,10 @@ const Payment = () => {
     const fetchPaymentApi = async () => {
       if (transactionStatus === "00") {
         if (listArray) {
-          await ticketService.saveTicket(bookingId, listArray);
+          await ticketService.saveTicket(bookingId, listArray).then((data) => {
+            console.log("OKK!!!");
+            setSuccess(true);
+          });
         }
         await ticketService.changePaymentStatus(bookingId);
       }
@@ -32,13 +36,18 @@ const Payment = () => {
   }, []);
   return (
     <div>
-      {transactionStatus === "00" && <TicketScreen bookingId={bookingId} />}
+      {transactionStatus === "00" && success && (
+        <TicketScreen bookingId={bookingId} />
+      )}
       {transactionStatus !== "00" && (
-        <div>
+        <div className="ms-5 text-center">
           <h1>Bạn thanh toán không thành công!!</h1>
-          <a className="btn btn-outline-dark" href="/showtime">Mua vé</a>
+          <Link to={"/"} className="btn btn-outline-dark">
+            Tiếp tục đặt vé
+          </Link>
         </div>
       )}
+      ;
     </div>
   );
 };

@@ -57,15 +57,15 @@ function FooterUser() {
                   </p>
                 </div>
                 <div className="footer-social-icon">
-                  <a href="#">
+                  <Link to="#">
                     <i className="fab fa-facebook-f facebook-bg" />
-                  </a>
-                  <a href="#">
+                  </Link>
+                  <Link to="#">
                     <i className="fab fa-twitter twitter-bg" />
-                  </a>
-                  <a href="#">
+                  </Link>
+                  <Link to="#">
                     <i className="fab fa-google-plus-g google-bg" />
-                  </a>
+                  </Link>
                 </div>
               </div>
             </div>
@@ -76,34 +76,34 @@ function FooterUser() {
                 </div>
                 <ul>
                   <li>
-                    <a href="#">Về chúng tôi</a>
+                    <Link to="#">Về chúng tôi</Link>
                   </li>
                   <li>
-                    <a href="#">Góp ý</a>
+                    <Link to="#">Góp ý</Link>
                   </li>
                   <li>
-                    <a href="#">Quy chế</a>
+                    <Link to="#">Quy chế</Link>
                   </li>
                   <li>
-                    <a href="#">Sale &amp; service</a>
+                    <Link to="#">Sale &amp; service</Link>
                   </li>
                   <li>
-                    <a href="#">Lợi ích</a>
+                    <Link to="#">Lợi ích</Link>
                   </li>
                   <li>
-                    <a href="#">Rạp &amp; giá vé</a>
+                    <Link to="#">Rạp &amp; giá vé</Link>
                   </li>
                   <li>
-                    <a href="#">Thỏa thuận</a>
+                    <Link to="#">Thỏa thuận</Link>
                   </li>
                   <li>
-                    <a href="#">Tuyển dụng</a>
+                    <Link to="#">Tuyển dụng</Link>
                   </li>
                   <li>
-                    <a href="#">Bảo mật</a>
+                    <Link to="#">Bảo mật</Link>
                   </li>
                   <li>
-                    <a href="#">Blog</a>
+                    <Link to="#">Blog</Link>
                   </li>
                 </ul>
               </div>
@@ -139,7 +139,7 @@ function FooterUser() {
               <div className="copyright-text">
                 <p>
                   CINEMER © Rạp chiếu phim{" "}
-                  <a href="https://codepen.io/anupkumar92/">CineVerse</a>
+                  <Link to="https://codepen.io/anupkumar92/">CineVerse</Link>
                 </p>
               </div>
             </div>
@@ -148,20 +148,20 @@ function FooterUser() {
                 <ul>
                   <li>
                   <Link to="/" onClick={handleClick} >
-                    <a href="#">Trang chủ</a>
+                    Trang chủ
                   </Link>
                   </li>
                   <li>
-                    <a href="#">Phim</a>
+                    <Link to="#">Phim</Link>
                   </li>
                   <li>
-                    <a href="#">Rạp</a>
+                    <Link to="#">Rạp</Link>
                   </li>
                   <li>
-                    <a href="#">Thông tin</a>
+                    <Link to="#">Thông tin</Link>
                   </li>
                   <li>
-                    <a href="#">Bảo mật</a>
+                    <Link to="#">Bảo mật</Link>
                   </li>
                 </ul>
               </div>

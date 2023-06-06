@@ -194,3 +194,48 @@
 .chat-authoring:empty::after {
     content: "Say Something..";
 }
+
+/* 
+chat button */
+.chat-button-show {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #3498db;
+    color: #fff;
+    font-size: 16px;
+    border: none;
+    outline: none;
+    cursor: pointer;
+}
+
+.chat-ui {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 25%;
+    /* height: 500px; Thay đổi chiều cao theo nhu cầu */
+    background-color: #ffffff;
+    /* Các thuộc tính CSS khác cho giao diện người dùng chat */
+}
+
+.chat-scrollview {
+    height: calc(100%); /* Thay đổi chiều cao theo nhu cầu */
+    overflow-y: scroll;
+    /* Các thuộc tính CSS khác cho phần cuộn tin nhắn */
+}
+
+/* Các lớp CSS khác như chat-titlebar, chat-messagelist, chat-cluster, ... */
+
+.input-group {
+    position: sticky;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 40px; /* Thay đổi chiều cao theo nhu cầu */
+    background-color: #e6e6e6;
+    /* Các thuộc tính CSS khác cho phần nhập tin nhắn */
+}

@@ -10,10 +10,10 @@ const scheduleSchema = Yup.object().shape({
     room: Yup.object().nullable().required("Phòng chiếu phải được nhập"),
     movie: Yup.object().nullable().required("Phim phải được nhập"),
     scheduleDate: Yup.date()
-        .min(
-            moment().add(1, "weeks"),
-            "Ngày chiếu phải lớn hơn ngày hiện tại 1 tuần"
-        )
+        // .min(
+        //     moment().add(1, "weeks"),
+        //     "Ngày chiếu phải lớn hơn ngày hiện tại 1 tuần"
+        // )
         .required("Ngày chiếu phải được nhập"),
     scheduleTime: Yup.string().required("Giờ chiếu phải được nhập"),
 });
@@ -38,7 +38,7 @@ function ScheduleFormCreate() {
                 .getAllMovie()
                 .then((data) => {
                     const movieAvailable = data.filter(
-                        (movie) => movie.status !== 0
+                        (movie) => movie.status === 1
                     );
                     setMovies(movieAvailable);
                 })
@@ -159,10 +159,7 @@ function ScheduleFormCreate() {
                     </h4>
 
                     <Link to="/schedule">
-                        <div
-                            href="list-schedule.html"
-                            className="btn btn btn-outline-primary mb-3"
-                        >
+                        <div className="btn btn btn-outline-primary mb-3">
                             Trở về
                         </div>
                     </Link>
