@@ -6,14 +6,13 @@ import TypeMovieService from "../../../../services/TypeMovieService";
 import MovieService from "../../../../services/MovieService";
 import { handleValidationMovie } from "../../../../services/handleValidationMovie";
 import { storage } from "../../../../constants/firebase";
-import { ref, uploadBytes, listAll, getDownloadURL } from "firebase/storage";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { v4 } from "uuid";
 
 export default function EditMovie(props) {
   const navigate = useNavigate();
   //firebase
   const [imgUpload, setImgUpload] = useState("");
-
   //data luu du lieu detail
   const [editData, setEditData] = useState({
     editTenPhim: "",
@@ -30,7 +29,6 @@ export default function EditMovie(props) {
     editStatus: "",
     editOriginPoster: "",
   });
-
   //usestate input errror
   const [errors, setErrors] = useState({
     editTenPhim: "",
@@ -46,20 +44,17 @@ export default function EditMovie(props) {
     editTrailler: "",
     editStatus: "",
   });
-
   //nhan gia tri thay doi trong o input
   const handleInputChange = (event) => {
     const field = event.target.name;
     const value = event.target.value;
     setEditData((preData) => ({ ...preData, [field]: value }));
   };
-
   const handleInputFile = (event) => {
     const field = event.target.name;
     const value = event.target.files[0];
     setEditData((preData) => ({ ...preData, [field]: value }));
   };
-
   const { movieId } = useParams();
   const getMovie = () => {
     const url = `localhost:8080/api/v1/movie/` + movieId;
@@ -88,7 +83,7 @@ export default function EditMovie(props) {
   useEffect(() => {
     getMovie();
   }, []);
-
+  
   const [type, setType] = useState([]);
   useEffect(() => {
     const getAllTypeAPI = async () => {
@@ -173,8 +168,8 @@ export default function EditMovie(props) {
 
         <div class="card mb-4">
           <h5 class="card-header">Chỉnh sửa thông tin phim:</h5>
-          <div class="card-body">
-            <form onSubmit={handleEdit}>
+          <div class="card-body row">
+            <form onSubmit={handleEdit} class="col col-6">
               {errors.editTenPhim && (
                 <p
                   className="col-md-10 invalid-feedback"
@@ -401,6 +396,28 @@ export default function EditMovie(props) {
                 </Button>
               </div>
             </form>
+            <div className="mb-3 col col-6">
+                <div className="mx-5">
+                  <img 
+                    width={440}
+                    height={450}
+                    src={imgUpload}
+                    alt
+                  />
+                </div>
+                <div className="m-5 ">
+                  <div className="movie-list-item-detail-trailler">
+                    <iframe
+                      width={440}
+                      height={225}
+                      src={editData.editTrailler}
+                      title="YouTube video player"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                      allowFullScreen
+                    />
+                  </div>
+                </div>
+              </div>
           </div>
         </div>
       </div>

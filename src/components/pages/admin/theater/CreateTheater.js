@@ -173,7 +173,7 @@ export default function CreateTheater() {
                                     Địa chỉ
                                 </label>
                                 <div class="col-md-10">
-                                    <textarea
+                                    <input
                                         class="form-control"
                                         id="exampleFormControlTextarea1"
                                         rows="3"

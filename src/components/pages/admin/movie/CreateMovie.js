@@ -1,19 +1,20 @@
 import { useState, useEffect } from "react";
 import { Modal, Button } from "antd";
-import axios from "axios";
 import TypeMovieService from "../../../../services/TypeMovieService";
 import MovieService from "../../../../services/MovieService";
 import { handleValidationMovie } from "../../../../services/handleValidationMovie";
 import { storage } from "../../../../constants/firebase";
-import { ref, uploadBytes, listAll, getDownloadURL } from "firebase/storage";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { v4 } from "uuid";
-import { Link, useNavigate, useParams } from "react-router-dom";
-
+import { Link, useNavigate} from "react-router-dom";
+import TextArea from "antd/es/input/TextArea";
+import form_image from "../../../../static/assets/img/backgrounds/form_image.jpg"
 export default function CreateMovie() {
   const navigate = useNavigate();
-      //firebase
-    const [imgUpload, setImgUpload] = useState("");
-  
+  //firebase
+  const [imgUpload, setImgUpload] = useState("");
+  const [reviewPoster,setReviewPoster] = useState(form_image);
+
   const [editData, setEditData] = useState({
     editTenPhim: "",
     editPoster: "",
@@ -42,30 +43,28 @@ export default function CreateMovie() {
     editNgayChieu: "",
     editNgayDong: "",
     editTrailler: "",
-    editStatus:"",
+    editStatus: "",
   });
 
   const handleInputChange = (event) => {
     const field = event.target.name;
     const value = event.target.value;
-
     setEditData((preData) => ({ ...preData, [field]: value }));
   };
 
   const handleInputFile = (event) => {
-      const field = event.target.name;
-      const value = event.target.files[0];
-
-      setEditData((preData) => ({...preData, [field]: value}));
-    }
+    const field = event.target.name;
+    const value = event.target.files[0];
+    setEditData((preData) => ({ ...preData, [field]: value }));
+  };
   //create movie
   const handleCreate = (event) => {
     event.preventDefault();
     let errors = [];
     const data = {
       movieName: editData.editTenPhim,
-      imageUrl : imgUpload,
-      trailerUrl : editData.editTrailler,
+      imageUrl: imgUpload,
+      trailerUrl: editData.editTrailler,
       startDate: editData.editNgayChieu,
       endDate: editData.editNgayDong,
       actor: editData.editDienVien,
@@ -76,26 +75,25 @@ export default function CreateMovie() {
       movieType: {
         movieTypeId: editData.editLoaiPhim,
       },
-      status: Number(editData.editStatus)
+      status: Number(editData.editStatus),
     };
     handleValidationMovie(editData, errors);
-    if(Object.keys(errors).length === 0){
-        Modal.confirm({
-            title: "Bạn muốn thêm mới phim?",
-            okText: "Thêm",
-            onOk: () => {
-              MovieService.createMovie(data);
-              setEditData("");
-              setErrors([]);
-              navigate("/movie");
-            },
-            cancelText: "Đóng",
-            onCancel: () => {},
-          });
+    if (Object.keys(errors).length === 0) {
+      Modal.confirm({
+        title: "Bạn muốn thêm mới phim?",
+        okText: "Thêm",
+        onOk: () => {
+          MovieService.createMovie(data);
+          setEditData("");
+          setErrors([]);
+          navigate("/movie");
+        },
+        cancelText: "Đóng",
+        onCancel: () => {},
+      });
     } else {
-        setErrors(errors);
+      setErrors(errors);
     }
-    
   };
 
   //lay danh sach movie
@@ -104,7 +102,7 @@ export default function CreateMovie() {
     const getAllTypeAPI = async () => {
       TypeMovieService.getAllType()
         .then((data) => {
-            setTypeMovies(data)
+          setTypeMovies(data);
         })
         .catch((error) => {
           console.log(error);
@@ -122,13 +120,17 @@ export default function CreateMovie() {
     uploadBytes(imgRef, editData.editPoster).then((snapshot) => {
       getDownloadURL(snapshot.ref).then((url) => {
         setImgUpload(url);
+        setReviewPoster(url);
+       
       });
     });
   }, [editData.editPoster]);
+
+  console.log("review +"+reviewPoster);
   return (
     <>
       <div class="container-xxl flex-grow-1 container-p-y">
-        <h4 class="fw-bold py-3 mb-4">
+        <h4 class="fw-bold py-3 mb-4 ">
           <span class="text-muted fw-light">Phim /</span>
           Thêm phim
         </h4>
@@ -137,11 +139,18 @@ export default function CreateMovie() {
           Trở về
         </Link>
 
-        <div class="card mb-4">
+        <div class="card mb-4 ">
           <h5 class="card-header">Thêm mới phim</h5>
-          <div class="card-body">
-            <form onSubmit={handleCreate}>
-            {errors.editTenPhim && <p className="col-md-10 invalid-feedback" style={{ display: "block", color: "red"}}>{errors.editTenPhim}</p>}
+          <div class="card-body row">
+            <form onSubmit={handleCreate} class="col col-6">
+              {errors.editTenPhim && (
+                <p
+                  className="col-md-10 invalid-feedback"
+                  style={{ display: "block", color: "red" }}
+                >
+                  {errors.editTenPhim}
+                </p>
+              )}
               <div class="mb-3 row">
                 <label for="html5-text-input" class="col-md-2 col-form-label">
                   Tên phim:
@@ -167,7 +176,6 @@ export default function CreateMovie() {
                     class="form-control"
                     type="file"
                     id="formFile"
-        
                     onChange={handleInputFile}
                     name="editPoster"
                   />
@@ -175,7 +183,7 @@ export default function CreateMovie() {
               </div>
               <div class="mb-3 row">
                 <label for="html5-search-input" class="col-md-2 col-form-label">
-                  Danh sách diễn viên:
+                  Diễn viên:
                 </label>
                 <div class="col-md-10">
                   <input
@@ -221,7 +229,14 @@ export default function CreateMovie() {
                   />
                 </div>
               </div>
-              {errors.editLoaiPhim && <p className="col-md-10 invalid-feedback" style={{ display: "block", color: "red"}}>{errors.editLoaiPhim}</p>}
+              {errors.editLoaiPhim && (
+                <p
+                  className="col-md-10 invalid-feedback"
+                  style={{ display: "block", color: "red" }}
+                >
+                  {errors.editLoaiPhim}
+                </p>
+              )}
 
               <div class="mb-3 row">
                 <label for="html5-email-input" class="col-md-2 col-form-label">
@@ -236,7 +251,10 @@ export default function CreateMovie() {
                   >
                     <option value="">Chọn loại phim</option>
                     {typeMovies.map((typeItem) => (
-                      <option key={typeItem.movieTypeId} value={typeItem.movieTypeId}>
+                      <option
+                        key={typeItem.movieTypeId}
+                        value={typeItem.movieTypeId}
+                      >
                         {typeItem.moveTypeName}
                       </option>
                     ))}
@@ -255,7 +273,7 @@ export default function CreateMovie() {
                     onChange={handleInputChange}
                   >
                     <option value="">Chọn trạng thái</option>
-                    <option value="0" >Đã Chiếu</option>
+                    <option value="0">Đã Chiếu</option>
                     <option value="1">Đang chiếu</option>
                     <option value="2">Sắp chiếu</option>
                   </select>
@@ -266,7 +284,7 @@ export default function CreateMovie() {
                   Mô tả:
                 </label>
                 <div class="col-md-10">
-                  <input
+                  <TextArea
                     class="form-control"
                     type="text"
                     id="html5-email-input"
@@ -293,7 +311,14 @@ export default function CreateMovie() {
                   />
                 </div>
               </div>
-              {errors.editNgayChieu && <p className="col-md-10 invalid-feedback" style={{ display: "block", color: "red"}}>{errors.editNgayChieu}</p>}
+              {errors.editNgayChieu && (
+                <p
+                  className="col-md-10 invalid-feedback"
+                  style={{ display: "block", color: "red" }}
+                >
+                  {errors.editNgayChieu}
+                </p>
+              )}
               <div class="mb-3 row">
                 <label for="html5-date-input" class="col-md-2 col-form-label">
                   Ngày chiếu:
@@ -309,7 +334,14 @@ export default function CreateMovie() {
                   />
                 </div>
               </div>
-              {errors.editNgayDong && <p className="col-md-10 invalid-feedback" style={{ display: "block", color: "red"}}>{errors.editNgayDong}</p>}
+              {errors.editNgayDong && (
+                <p
+                  className="col-md-10 invalid-feedback"
+                  style={{ display: "block", color: "red" }}
+                >
+                  {errors.editNgayDong}
+                </p>
+              )}
               <div class="mb-3 row">
                 <label for="html5-date-input" class="col-md-2 col-form-label">
                   Ngày đóng:
@@ -325,7 +357,7 @@ export default function CreateMovie() {
                   />
                 </div>
               </div>
-              <div class="mb-3 row">
+              <div class="mb-3 b-4 row">
                 <label for="formFile" class="col-md-2 col-form-label">
                   Trailer:
                 </label>
@@ -342,11 +374,34 @@ export default function CreateMovie() {
               </div>
               <div class="d-flex justify-content-center">
                 <Button type="primary" htmlType="submit">
-                  Them
+                  Thêm phim 
                 </Button>
               </div>
+              
             </form>
-          </div>
+            <div className="mb-3 col col-6">
+                <div className="mx-5">
+                  <img 
+                    width={440}
+                    height={450}
+                    src={reviewPoster}
+                    alt
+                  />
+                </div>
+                <div className="m-5 ">
+                  <div className="movie-list-item-detail-trailler">
+                    <iframe
+                      width={440}
+                      height={225}
+                      src={editData.editTrailler}
+                      title="YouTube video player"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                      allowFullScreen
+                    />
+                  </div>
+                </div>
+              </div>
+          </div>         
         </div>
       </div>
     </>
