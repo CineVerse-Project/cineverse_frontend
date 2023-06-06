@@ -6,15 +6,13 @@ import TypeMovieService from "../../../../services/TypeMovieService";
 import MovieService from "../../../../services/MovieService";
 import { handleValidationMovie } from "../../../../services/handleValidationMovie";
 import { storage } from "../../../../constants/firebase";
-import { ref, uploadBytes, listAll, getDownloadURL } from "firebase/storage";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { v4 } from "uuid";
 
 export default function EditMovie(props) {
   const navigate = useNavigate();
-  
   //firebase
   const [imgUpload, setImgUpload] = useState("");
-
   //data luu du lieu detail
   const [editData, setEditData] = useState({
     editTenPhim: "",
@@ -31,8 +29,6 @@ export default function EditMovie(props) {
     editStatus: "",
     editOriginPoster: "",
   });
-
-  const [reviewPoster,setReviewPoster] = useState("");
   //usestate input errror
   const [errors, setErrors] = useState({
     editTenPhim: "",
@@ -48,21 +44,17 @@ export default function EditMovie(props) {
     editTrailler: "",
     editStatus: "",
   });
-
   //nhan gia tri thay doi trong o input
   const handleInputChange = (event) => {
     const field = event.target.name;
     const value = event.target.value;
-    setReviewPoster(imgUpload);
     setEditData((preData) => ({ ...preData, [field]: value }));
   };
-
   const handleInputFile = (event) => {
     const field = event.target.name;
     const value = event.target.files[0];
     setEditData((preData) => ({ ...preData, [field]: value }));
   };
-
   const { movieId } = useParams();
   const getMovie = () => {
     const url = `localhost:8080/api/v1/movie/` + movieId;
@@ -84,7 +76,6 @@ export default function EditMovie(props) {
           editTrailler: result.data.trailerUrl,
           editOriginPoster: result.data.imageUrl,
         });
-        setReviewPoster(result.data.imageUrl);
       })
       .catch((error) => {});
   };
@@ -157,13 +148,12 @@ export default function EditMovie(props) {
       return;
     }
     const imgRef = ref(storage, `movie/${editData.editTenPhim + v4()}`);
-    uploadBytes(imgRef, editData.editOriginPoster).then((snapshot) => {
+    uploadBytes(imgRef, editData.editPoster).then((snapshot) => {
       getDownloadURL(snapshot.ref).then((url) => {
         setImgUpload(url);
-        
       });
     });
-  }, [editData.editOriginPoster]);
+  }, [editData.editPoster]);
   return (
     <>
       <div class="container-xxl flex-grow-1 container-p-y">
@@ -178,8 +168,8 @@ export default function EditMovie(props) {
 
         <div class="card mb-4">
           <h5 class="card-header">Chỉnh sửa thông tin phim:</h5>
-          <div class="card-body">
-            <form onSubmit={handleEdit}>
+          <div class="card-body row">
+            <form onSubmit={handleEdit} class="col col-6">
               {errors.editTenPhim && (
                 <p
                   className="col-md-10 invalid-feedback"
@@ -406,12 +396,12 @@ export default function EditMovie(props) {
                 </Button>
               </div>
             </form>
-            <div className="mb-3 col col-5">
+            <div className="mb-3 col col-6">
                 <div className="mx-5">
                   <img 
                     width={440}
                     height={450}
-                    src={editData.editOriginPoster}
+                    src={imgUpload}
                     alt
                   />
                 </div>

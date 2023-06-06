@@ -379,7 +379,7 @@ export default function CreateMovie() {
               </div>
               
             </form>
-            <div className="mb-3 col col-5">
+            <div className="mb-3 col col-6">
                 <div className="mx-5">
                   <img 
                     width={440}
